@@ -1,0 +1,8 @@
+CompileFlags:
+  Add:
+    - "-Ic:/Users/dell/BigProject/monsoon/Include"
+    - "-std=c11"
+    - "-xc"
+    - "-D__PROJECT_PART__"
+    - "-D__FILE_NUMBER__"
+    - -Wno-incompatible-pointer-types-discards-qualifiers
