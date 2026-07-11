@@ -1,13 +1,13 @@
-#include "Monsoon/MONS_Types.h"
+#include "Monsoon/MONS_Log.h"
 #include <Monsoon/Monsoon.h>
 #include <stdio.h>
-#include <windows.h>
 
 MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
 {
+  printf("dskdjkkkkkkkkk\n");
   if (!WinProc)
   {
-    MONS_SetErrorCode(__LINE__,__FILE_NUMBER__,__PROJECT_PART__,1);
+    LOG("WinProc was NULL",MONSOON_LOG_ERROR,1);
     return NULL;
   }
 

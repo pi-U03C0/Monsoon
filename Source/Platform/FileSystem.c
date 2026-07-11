@@ -1,4 +1,5 @@
 #include <Monsoon/Monsoon.h>
+#include <shlwapi.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -27,8 +28,9 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
 
 int MONS_WriteFile(MONS_File* FileHandle,char* Buffer,uint64_t Length)
 {
+  int len = 0;
   #ifdef _WIN32
-    MONS_Win32_WriteFile(FileHandle -> OSHandle,Buffer,Length);
+    len =MONS_Win32_WriteFile(FileHandle -> OSHandle,Buffer,Length);
   #endif
 
   #ifndef MONSOON_DONT_LOG
@@ -42,6 +44,7 @@ int MONS_WriteFile(MONS_File* FileHandle,char* Buffer,uint64_t Length)
       );
     #endif
   #endif
+  return len;
 }
 
 char* MONS_FullFilePath(char* FilePath)
@@ -64,4 +67,11 @@ char* MONS_FullFilePath(char* FilePath)
   #endif
 
   return Path;
+}
+
+MSBool MONS_FileExists(char* FilePath)
+{
+  #ifdef _WIN32
+    return PathFileExistsA(FilePath);
+  #endif
 }

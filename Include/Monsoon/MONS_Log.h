@@ -13,11 +13,8 @@
 #define MONSOON_LOG_FATAL 1
 #define MONSOON_LOG_NONE 0
 
-#if MONSON_LOG_LEVEL >= MONSOON_LOG_FATAL
-#endif
-
 #define LOG(Message,Severity,ErrorReason,...)\
-     MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity,__VA_ARGS__)
+     MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity, ##__VA_ARGS__)
 
 void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...);
 

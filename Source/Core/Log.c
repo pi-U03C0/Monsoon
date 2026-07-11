@@ -1,3 +1,5 @@
+
+
 #include <Monsoon/Monsoon.h>
 
 #include <stdarg.h>
@@ -14,7 +16,7 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
   va_start(args, Severity);
   va_copy(backup_args,args);
 
-  bufferLen += snprintf(NULL,0,"[%s],[%s],[%020llu]: ",FunctionName,MONS_SeverityToString(Severity),Code);
+  bufferLen += snprintf(NULL,0,"[%s],[%s],[%020llu]: ",FunctionName,MONS_SeverityToString(Severity,True),Code);
 
   bufferLen += vsnprintf(NULL,0,Message,args);
 
@@ -27,7 +29,7 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
     return;
   }
 
-  int prefix = snprintf(buffer, bufferLen+1, "[%s],[%020llu]: ",MONS_SeverityToString(Severity),Code);
+  int prefix = snprintf(buffer,bufferLen+1,"[%s],[\033[34m%s\033[0m],[%020llu]: ",MONS_SeverityToString(Severity,True),FunctionName,Code);
   vsnprintf(buffer+prefix,bufferLen,Message,backup_args);
 
   va_end(args);

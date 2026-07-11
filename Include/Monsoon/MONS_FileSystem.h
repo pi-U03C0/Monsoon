@@ -9,7 +9,7 @@
 
 MSBool MONS_FileExists(char* FilePath);
 
-MONS_File* MONS_Open(char* FilePath,char* Mode);
+MONS_File* MONS_OpenFile(char* FilePath,char Mode);
 
 /*Get The Full path to a file
 *`NOTE: dealloc with RemoveMemory Or there will a memory leak */

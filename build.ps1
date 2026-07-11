@@ -35,6 +35,7 @@ $LIBRARY = "$OWD/Library"
 $INCLUDE = "$OWD/include"
 $CFLAG = @("-Wall","-Wextra")
 $TEST = "$OWD/Test"
+$TOOLS = "$OWD/Tools"
 
 $Verbose = $false
 
@@ -43,6 +44,34 @@ $Env:CCACHE_DIR = "$BIN/ccache"
 function ClearFile
 {
   remove-item -r $BIN/*
+}
+
+function Get-LogDefine
+{
+  param(
+    [string]$Name,
+    [string]$L_TOOLS="-=-",
+    [string]$L_LIB="-=-"
+  )
+
+  $__Tools = $L_TOOLS
+  $lib = $L_LIB
+
+  if ($__Tools -eq "-=-")
+  {
+    $__Tools = $TOOLS
+  }
+
+  if ($lib -eq "-=-")
+  {
+    $lib = $LIBRARY
+  }
+
+  $file_number = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name $Name)[0]
+  $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0]
+  $define = ("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part")
+
+  return $define
 }
 
 function Compile-Monsoon
@@ -55,11 +84,11 @@ function Compile-Monsoon
   }
 
   $DidError = $false
-  $SOURCE_OBJ = (Get-ChildIte "$SOURCE" -r -Name -File *.c) | ForEach-Object {
+  $SOURCE_OBJ = (Get-ChildItem "$SOURCE" -r -Name -File *.c) | ForEach-Object {
     echo "$_".Replace("\","/")
   }
 
-  $SOURCE_PATH = (Get-ChildIte "$SOURCE" -r -Name -Directory) | ForEach-Object {
+  $SOURCE_PATH = (Get-ChildItem "$SOURCE" -r -Name -Directory) | ForEach-Object {
     if (-not (Test-Path -Path "$BIN/Monsoon/$_"))
     {
       New-Item -ItemType Directory -Path "$BIN/Monsoon/$_"
@@ -68,15 +97,19 @@ function Compile-Monsoon
 
   echo $SOURCE_OBJ
 
+  $GetLogDefine = ${function:Get-LogDefine}.ToString()
+
   $Results = $SOURCE_OBJ | ForEach-Object -Parallel {
+    $function:Get_LogDefine = [scriptblock]::Create($using:GetLogDefine)
+
     Write-Host "SRC: Source/$_ -> Bin/Monsoon/$_.o"
 
     if ($using:Verbose)
     {
-      Write-Host "gcc -o $using:BIN/Monsoon/$_.o -c  $using:SOURCE/$_ -I$using:INCLUDE $using:CFLAG"
+      Write-Host "gcc -o $using:BIN/Monsoon/$_.o -c  $using:SOURCE/$_ -I$using:INCLUDE $using:CFLAG $(Get_LogDefine -Name "$using:SOURCE/$_" -L_TOOLS $using:TOOLS -L_LIB $using:LIBRARY)"
     }
 
-    & "ccache" "gcc" "-o" "$using:BIN/Monsoon/$_.o" "-c" "$using:SOURCE/$_" "-I$using:INCLUDE" $using:CFLAG
+    & "ccache" "gcc" "-o" "$using:BIN/Monsoon/$_.o" "-c" "$using:SOURCE/$_" "-I$using:INCLUDE" $using:CFLAG $(Get_LogDefine -Name "$using:SOURCE/$_" -L_TOOLS $using:TOOLS -L_LIB $using:LIBRARY)
     return ($LASTEXITCODE -ne 0)
 
   } -ThrottleLimit $CoreConuter
@@ -99,8 +132,13 @@ function Make-MonsoonDLL
     echo "$BIN/Monsoon/$_"
   }
 
+  if ($Verbose)
+  {
+    Write-Host "gcc -o $BIN/Monsoon.dll $OBJECT -shared -Wl,--out-implib,$LIBRARY/Monsoon.a"
+  }
+
   Write-Host "DLL: -> Bin/Monsoon.dll"
-  & "ccache" "gcc" "-o" "$BIN/Monsoon.dll" $OBJECT "-shared" "-Wl,--out-implib,$LIBRARY/Monsoon.a"
+  & "ccache" "gcc" "-o" "$BIN/Monsoon.dll" $OBJECT "-shared" "-Wl,--out-implib,$LIBRARY/Monsoon.a" "-lShlwapi"
 
   return $true
 }
@@ -160,6 +198,11 @@ if ($PSBoundParameters.ContainsKey("ClearFile"))
 {
   ClearFile
   exit
+}
+
+if (-not (Test-Path -Path "$LIBRARY/FileIndex.index"))
+{
+  & "$TOOLS/FileIndex.ps1" -CreateIndex -IndexFile "$LIBRARY/FileIndex.index" -SourcePath $SOURCE
 }
 
 if ((-not (Test-Path -Path "$BIN/Monsoon/LibInit.c.o")) -or ($CompileMonsoon))

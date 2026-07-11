@@ -6,7 +6,7 @@ int MONS_WriteStdOutput(char* Message)
 {
   #ifdef _WIN32
   static HANDLE hConsole = NULL;
-  LPDWORD WriteLen = 0;
+  DWORD WriteLen = 0;
 
   if (!hConsole) hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -14,11 +14,11 @@ int MONS_WriteStdOutput(char* Message)
     hConsole,
     Message,
     strlen(Message),
-    WriteLen,
+    &WriteLen,
     NULL
   );
 
-  return *WriteLen;
+  return WriteLen;
   #endif
 }
 

@@ -2,20 +2,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Monsoon/MONS_Types.h"
 #include "Monsoon/Monsoon.h"
 
 MONS_LIBRARY_InternalObject* __Monsoon = NULL;
 
 MSBool MONSInit()
 {
-  printf("djskjs\n");
 
   __Monsoon = (MONS_LIBRARY_InternalObject*)GetMemory(sizeof(MONS_LIBRARY_InternalObject));
 
   if (!__Monsoon) return False;
 
   __Monsoon -> IsInitialized = True;
+
+  #if MONSOON_LOG_LEVEL >= MONSOON_LOG_INFO
+    LOG("Initialized Monsoon",MONSOON_LOG_INFO,1);
+  #endif
+
   return True;
 }
 

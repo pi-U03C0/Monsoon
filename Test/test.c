@@ -1,5 +1,6 @@
 #include <Monsoon/Monsoon.h>
-#include <windows.h>
+#include <Monsoon/SystemHeaders.h>
+
 #include <stdio.h>
 
 LRESULT CALLBACK WindowProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -18,10 +19,6 @@ int main(int argc, char** argv)
   }
 
   MONS_Window* Window = MONS_CreateWindow("test", &((MONS_Rect){100,200,300,300}),WindowProc);
-  if (!Window)
-  {
-    printf("Error Createing Window(%llu)",MONS_GetErrorCode(NULL));
-  }
 
   MONSTerminate();
 
