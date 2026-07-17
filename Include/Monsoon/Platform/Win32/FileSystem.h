@@ -9,7 +9,14 @@
 
 
 HANDLE MONS_Win32_OpenFile(char* FilePath,char Mode);
-int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,int Length);
+
+int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
+
+int MONS_Win32_ReadFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
+
+MSBool MONS_Win32_CloseFile(HANDLE hFile);
+
+MSBool MONS_Win32_MakeFile(char* FilePath);
 
 char* Win32_GetError();
 

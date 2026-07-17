@@ -22,6 +22,6 @@ char* MONS_SearchErrorFile(uint16_t SourceFile);
 
 char* MONS_SearchErrorMessage(uint16_t ErrorReason,uint16_t ProjectPart);
 
-char* MONS_SeverityToString(char Severity,MSBool Colour);
+char* MOND_ReadAndParserFileIndex();
 
 #endif

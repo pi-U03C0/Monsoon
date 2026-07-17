@@ -16,6 +16,12 @@
 #define LOG(Message,Severity,ErrorReason,...)\
      MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity, ##__VA_ARGS__)
 
+#ifndef MONSOON_LOG_LEVEL
+  #defie MONSOON_LOG_LEVEL 10
+#endif
+
 void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...);
+
+char* MONS_SeverityToString(char Severity,MSBool Colour);
 
 #endif

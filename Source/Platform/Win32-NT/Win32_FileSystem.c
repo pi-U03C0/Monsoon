@@ -1,14 +1,14 @@
-#include "Monsoon/Platform/Win32/FileSystem.h"
 #include <Monsoon/Monsoon.h>
+#include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
 
 DWORD MONS_ModeToWin32Mode(char Mode)
 {
   switch (Mode)
   {
-    case MONSOON_MODE_READ:return GENERIC_READ;
-    case MONSOON_MODE_WRITE:return GENERIC_WRITE;
-    case MONSOON_MODE_READ_WRITE:return GENERIC_WRITE|GENERIC_READ;
+    case MONSOON_FILE_READ:return GENERIC_READ;
+    case MONSOON_FILE_WRITE:return GENERIC_WRITE;
+    case MONSOON_FILE_READ_WRITE:return GENERIC_WRITE|GENERIC_READ;
     default:return 0;
   }
 }
@@ -59,7 +59,12 @@ HANDLE MONS_Win32_OpenFile(char* FilePath,char Mode)
   return hFile;
 }
 
-int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,int Length)
+MSBool MONS_Win32_CloseFile(HANDLE hFile)
+{
+  return CloseHandle(hFile);
+}
+
+int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,uint64_t Length)
 {
   DWORD WriteLen = 0;
 
@@ -74,7 +79,7 @@ int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,int Length)
   return WriteLen;
 }
 
-int MONS_Win32_ReadFile(HANDLE FileHandle,char* Buffer,int Length)
+int MONS_Win32_ReadFile(HANDLE FileHandle,char* Buffer,uint64_t Length)
 {
    DWORD ReadLen = 0;
    ReadFile(

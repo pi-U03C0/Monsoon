@@ -1,5 +1,5 @@
 #define __FILE_NUMBER__ 1
-#define __PROJECT_PART__ -1
+#define __PROJECT_PART__ 1
 
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
@@ -12,9 +12,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
-        case WM_CREATE:
-            // Window has been created.
-            return 0;
+        case WM_CREATE: return 0;
 
         case WM_CLOSE:
             DestroyWindow(hwnd);
@@ -24,8 +22,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             PostQuitMessage(0);
             return 0;
 
-        default:
-            return DefWindowProc(hwnd, uMsg, wParam, lParam);
+        default: return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
 }
 
@@ -37,27 +34,20 @@ int main(int argc, char** argv)
      return 1;
   }
 
-  MONS_Rect window_corrd = {100,200,300,300};
+  if (!MONS_FileExists("ls.txt")) MONS_Win32_MakeFile("ls.txt");
 
-  MONS_Window* Window = MONS_CreateWindow("test", &window_corrd,WindowProc);
-  if (!Window)
-  {
-    LOG("Window was NULL", MONSOON_LOG_FATAL, 1);
-    goto exit;
-  }
-  MONS_ShoWindow(Window,MONS_SHOW_WINDOW);;
+  MONS_File* FileHandle = MONS_OpenFile("ls.txt", MONSOON_FILE_READ);
 
-  MSG msg;
-  while (GetMessageA(&msg, NULL , 0,0))
-  {
-     TranslateMessage(&msg);
-     DispatchMessageA(&msg);
-  }
+  char* buffer = GetMemory(FileHandle -> FileSize);
 
-  MONS_CloseWindow(Window);
+  MONS_ReadFile(FileHandle,buffer,FileHandle -> FileSize);
+  buffer[FileHandle -> FileSize] = 0;
 
+  printf("%s", buffer);
+
+  RemoveMemory(buffer);
+  MONS_CloseFile(FileHandle);
   MONSTerminate();
 
-exit:
   return 0;
 }

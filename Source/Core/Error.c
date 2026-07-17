@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_FileSystem.h"
 #define FILE_INDEX_NOT_EMBED
 
 #include <stdio.h>
@@ -94,7 +95,7 @@ char* MOND_ReadAndParserFileIndex()
     }
     MONS_File* hFile = MONS_OpenFile(FilePath,MONSOON_FILE_READ);
     buffer = GetMemory(hFile -> FileSize);
-  #else
+    MONS_ReadFile(hFile, buffer, hFile -> FileSize);
   #endif
 
   return FilePath;
@@ -102,40 +103,12 @@ char* MOND_ReadAndParserFileIndex()
 
 char* MONS_SearchErrorFile(uint16_t SourceFile)
 {
+  MOND_ReadAndParserFileIndex();
+
   return NULL;
 }
 
 char* MONS_SearchErrorMessage(uint16_t ErrorReason,uint16_t ProjectPart)
 {
-
-}
-
-char* MONS_SeverityToString(char Severity,MSBool Colour)
-{
-  if (Colour)
-  {
-    switch (Severity)
-    {
-      case MONSOON_LOG_ERROR:return "\033[91mERROR\033[0m";
-      case MONSOON_LOG_CRITICAL:return "CRITICAL";
-      case MONSOON_LOG_FATAL:return "FATAL";
-      case MONSOON_LOG_INFO:return "\033[94mINFO\033[0m";
-      case MONSOON_LOG_SUCCESS:return "\033[92mSUCCESS\033[0m";
-      case MONSOON_LOG_WARNING:return "\033[93WARNING\033[0m";
-      default:return "?";
-    }
-  }
-  else
-  {
-    switch (Severity)
-    {
-      case MONSOON_LOG_ERROR:return "ERROR";
-      case MONSOON_LOG_CRITICAL:return "CRITICAL";
-      case MONSOON_LOG_FATAL:return "FATAL";
-      case MONSOON_LOG_INFO:return "INFO";
-      case MONSOON_LOG_SUCCESS:return "SUCCESS";
-      case MONSOON_LOG_WARNING:return "WARNING";
-      default:return "?";
-    }
-  }
+   return NULL;
 }
