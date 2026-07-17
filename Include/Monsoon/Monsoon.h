@@ -8,12 +8,19 @@ extern "C" {
 #define MONSOON_USE_MALLOC
 #define MONSON_DEBUG
 
+#ifndef MONSOON_FILE_INDEX_NAME
+  #define MONSOON_FILE_INDEX_NAME "FileIndex.index"
+#endif
+
+#ifndef MONSOON_ONEXIT_LEN
+  #define MONSOON_ONEXIT_LEN 16
+#endif
 #ifdef MONSOON_USE_MALLOC
-#define GetMemory malloc
-#define RemoveMemory free
+  #define GetMemory malloc
+  #define RemoveMemory free
 #else
-#define GetMemory MONS_AllocMemory
-#define RemoveMemory MONS_DeAllocMemory
+  #define GetMemory MONS_AllocMemory
+  #define RemoveMemory MONS_DeAllocMemory
 #endif
 
 #include <Monsoon/MONS_Types.h>

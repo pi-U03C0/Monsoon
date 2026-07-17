@@ -8,7 +8,7 @@
 
 uint64_t MONS_GetErrorCode(char* Message);
 
-void MONS_SetErrorCode(uint16_t ErrorLine,uint16_t ErrorFile,uint16_t ErrorProjectPart,uint16_t ErrorReason);
+void MONS_SetErrorCode(uint64_t Code);
 
 uint64_t EnCodeError(uint16_t ErrorLine, uint16_t SourceFile, uint16_t ProjectPart, uint16_t ErrorReason);
 

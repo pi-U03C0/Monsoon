@@ -1,7 +1,4 @@
 #include <Monsoon/SystemHeaders.h>
-
-#include <stdlib.h>
-
 #include <Monsoon/Monsoon.h>
 
 char* MONS_GetCurrentWorkingDirectory()

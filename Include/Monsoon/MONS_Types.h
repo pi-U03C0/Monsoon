@@ -15,7 +15,7 @@ typedef HANDLE OSFileHandle;
 #endif
 
 #if defined (__unix__)
-typedef int OSFileHandle
+  typedef int OSFileHandle
 #endif
 
 #ifndef True
@@ -35,6 +35,7 @@ struct MONS_Rect
 
 struct LibraryState {
   unsigned char WindowCount;
+  unsigned char LogLevel;
   char extra[128];
 }; typedef struct LibraryState LibraryState;
 
@@ -53,6 +54,7 @@ struct MONS_LIBRARY_InternalObject
   MSBool IsInitialized;
   LibraryState state;
   MONSError Error;
+  void (**OnExit)(void);
 }; typedef struct MONS_LIBRARY_InternalObject MONS_LIBRARY_InternalObject;
 
 struct MONS_Window

@@ -26,7 +26,7 @@ int MONS_WriteStdError(char* Message)
 {
   #ifdef _WIN32
   static HANDLE hConsole = NULL;
-  LPDWORD WriteLen = 0;
+  DWORD WriteLen = 0;
 
   if (!hConsole) hConsole = GetStdHandle(STD_ERROR_HANDLE);
 
@@ -34,11 +34,11 @@ int MONS_WriteStdError(char* Message)
     hConsole,
     Message,
     strlen(Message),
-    WriteLen,
+    &WriteLen,
     NULL
   );
 
-  return *WriteLen;
+  return WriteLen;
   #endif
 }
 
@@ -46,7 +46,7 @@ int MONS_WriteStdInput(char* Message)
 {
   #ifdef _WIN32
   static HANDLE hConsole = NULL;
-  LPDWORD WriteLen = 0;
+  DWORD WriteLen = 0;
 
   if (!hConsole) hConsole = GetStdHandle(STD_INPUT_HANDLE);
 
@@ -54,11 +54,11 @@ int MONS_WriteStdInput(char* Message)
     hConsole,
     Message,
     strlen(Message),
-    WriteLen,
+    &WriteLen,
     NULL
   );
 
-  return *WriteLen;
+  return WriteLen;
   #endif
 }
 

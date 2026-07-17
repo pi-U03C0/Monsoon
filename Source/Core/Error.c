@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_FileSystem.h"
 #define FILE_INDEX_NOT_EMBED
 
 #include <stdio.h>
@@ -17,10 +16,9 @@ uint64_t MONS_GetErrorCode(char* MessageBuffer)
   return __Monsoon -> Error.Code;
 }
 
-void MONS_SetErrorCode(uint16_t ErrorLine,uint16_t ErrorFile,uint16_t ErrorProjectPart,uint16_t ErrorReason)
+void MONS_SetErrorCode(uint64_t Code)
 {
-  __Monsoon -> Error.Code = EnCodeError(ErrorLine, ErrorFile, ErrorProjectPart, ErrorReason);
-  __Monsoon -> Error.Message = MONS_GetErrorMessage(__Monsoon -> Error.Code);
+  __Monsoon -> Error.Code = Code;
 }
 
 char* MONS_GetErrorMessage(uint64_t Code)
@@ -82,7 +80,7 @@ char* MOND_ReadAndParserFileIndex()
 
     if (!CurrentDirectory) return NULL;
 
-    snprintf(FilePath, 1024, "%s/FileIndex.txt",CurrentDirectory);
+    snprintf(FilePath, 1024, "%s/"MONSOON_FILE_INDEX_NAME,CurrentDirectory);
 
     if (!MONS_FileExists(FilePath))
     {
@@ -95,6 +93,7 @@ char* MOND_ReadAndParserFileIndex()
       return NULL;
     }
     MONS_File* hFile = MONS_OpenFile(FilePath,MONSOON_FILE_READ);
+    buffer = GetMemory(hFile -> FileSize);
   #else
   #endif
 

@@ -33,7 +33,7 @@ $SOURCE = "$OWD/source"
 $BIN = "$OWD/bin"
 $LIBRARY = "$OWD/Library"
 $INCLUDE = "$OWD/include"
-$CFLAG = @("-Wall","-Wextra")
+$CFLAG = @("-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
 
@@ -67,8 +67,12 @@ function Get-LogDefine
     $lib = $LIBRARY
   }
 
-  $file_number = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name $Name)[0]
-  $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0]
+  try { $file_number = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name $Name)[0] }
+  catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
+
+  try { $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0] }
+  catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
+
   $define = ("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part")
 
   return $define
@@ -152,6 +156,10 @@ function Compile-Test
   if (Test-Path -Path "$TEST/$Name.c")
   {
     Write-Host "TEST: Test/$Name.c -> Bin/$Name.exe"
+    if ($Verbose)
+    {
+      Write-Host "gcc -o $BIN/$Name.exe $TEST/$Name.c -L$LIBRARY -I$INCLUDE -l:monsoon.a $CFLAG"
+    }
     & "ccache" "gcc" "-o" "$BIN/$Name.exe" "$TEST/$Name.c" "-L$LIBRARY" "-I$INCLUDE" "-l:monsoon.a" $CFLAG
     return $?
   }
@@ -204,6 +212,7 @@ if (-not (Test-Path -Path "$LIBRARY/FileIndex.index"))
 {
   & "$TOOLS/FileIndex.ps1" -CreateIndex -IndexFile "$LIBRARY/FileIndex.index" -SourcePath $SOURCE
 }
+
 
 if ((-not (Test-Path -Path "$BIN/Monsoon/LibInit.c.o")) -or ($CompileMonsoon))
 {

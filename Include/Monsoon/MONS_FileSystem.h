@@ -15,4 +15,7 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode);
 *`NOTE: dealloc with RemoveMemory Or there will a memory leak */
 char* MONS_FullFilePath(char* FilePath);
 
+uint64_t MONS_GetFileSize(MONS_File* hFile);
+
+
 #endif

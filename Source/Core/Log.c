@@ -1,5 +1,6 @@
 
 
+#include "Monsoon/MONS_Console.h"
 #include <Monsoon/Monsoon.h>
 
 #include <stdarg.h>
@@ -11,31 +12,26 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
   va_list args;
   va_list backup_args;
 
-  int bufferLen = 0;
-
   va_start(args, Severity);
   va_copy(backup_args,args);
 
-  bufferLen += snprintf(NULL,0,"[%s],[%s],[%020llu]: ",FunctionName,MONS_SeverityToString(Severity,True),Code);
-
-  bufferLen += vsnprintf(NULL,0,Message,args);
-
-  char* buffer = malloc(bufferLen+1);
+  char* buffer = malloc(1024);
   if (!buffer)
   {
-    printf("Error: MONS_Log malloc err");
+    MONS_WriteStdOutput("Error: MONS_Log malloc err");
     va_end(args);
     va_end(backup_args);
     return;
   }
 
-  int prefix = snprintf(buffer,bufferLen+1,"[%s],[\033[34m%s\033[0m],[%020llu]: ",MONS_SeverityToString(Severity,True),FunctionName,Code);
-  vsnprintf(buffer+prefix,bufferLen,Message,backup_args);
+  int prefix = snprintf(buffer,1024,"[%s],[\033[34m%s\033[0m],[%020llu]: ",MONS_SeverityToString(Severity,True),FunctionName,Code);
+  vsnprintf(buffer+prefix,1024-prefix,Message,backup_args);
 
   va_end(args);
   va_end(backup_args);
 
   MONS_WriteStdOutput(buffer);
+  MONS_WriteStdOutput("\n");
 
   free(buffer);
 }
