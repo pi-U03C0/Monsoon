@@ -47,7 +47,7 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
 
 char* MONS_SeverityToString(char Severity,MSBool Colour)
 {
-  if (Colour)
+  if (Colour == 1)
   {
     switch (Severity)
     {

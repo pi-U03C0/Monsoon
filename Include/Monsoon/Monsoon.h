@@ -12,9 +12,6 @@ extern "C" {
   #define MONSOON_FILE_INDEX_NAME "FileIndex.index"
 #endif
 
-#ifndef MONSOON_ONEXIT_LEN
-  #define MONSOON_ONEXIT_LEN 16
-#endif
 #ifdef MONSOON_USE_MALLOC
   #define GetMemory malloc
   #define RemoveMemory free

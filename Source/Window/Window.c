@@ -1,112 +1,129 @@
 #include <Monsoon/Monsoon.h>
+#include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
 
-#include <stdio.h>
-#include <windows.h>
-
-MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  #if MONSOON_LOG_LEVEL >= MONSOON_LOG_INFO
-     LOG("Createing Window",MONSOON_LOG_INFO,10);
+    switch (uMsg)
+    {
+        case WM_CREATE: return 0;
+
+        case WM_CLOSE:
+            PostQuitMessage(0);
+            return 0;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+
+        default: return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    }
+}
+
+MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
+{
+  LOG("Createing Window",MONSOON_LOG_INFO,10);
+
+  if (!WinProc) //check proc
+  {
+    LOG("WinProc was NULL",MONSOON_LOG_ERROR,1);
+    MONS_SetErrorCode(Make_Code(1));
+
+    return NULL;
+  }
+
+  #ifdef _WIN32 //Create Window for Win32
+     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, WinProc);
+     uint64_t Code = MONS_Win32_GetErrorCode();
   #endif
 
-  if (!WinProc)
+  if (!WindowHandle) //check Window Handle
   {
-    #if MONSOON_LOG_LEVEL >= MONSOON_LOG_ERROR
-      LOG("WinProc was NULL",MONSOON_LOG_ERROR,1);
-    #endif
-
-    return NULL;
-  }
-
-  char* window_name =   GetMemory(256);
-  MONS_Window* window = GetMemory(sizeof(MONS_Window));
-
-  if (!window || !window_name)
-  {
-    Error_Memory();
-    return NULL;
-  }
-
-  snprintf(window_name, 256, "Monsoon Win32 Window: %d",__Monsoon -> state.WindowCount);
-
-  #ifdef _WIN32
-
-  WNDCLASSA window_class = {0};
-  window_class.lpfnWndProc = WinProc;
-  window_class.hInstance = NULL;
-  window_class.lpszClassName = window_name;
-
-  if (!RegisterClassA(&window_class))
-  {
-    RemoveMemory(window_name);
-    RemoveMemory(window);
-
-    #if MONSOON_LOG_LEVEL >= MONSOON_LOG_ERROR
-       LOG("Unable to Register Window class name=%s",MONSOON_LOG_ERROR,2,window_class.lpszClassName);
-    #endif
-
-    return NULL;
-  }
-
-  HANDLE WindowHandle = CreateWindowExA(
-      0,
-      window_class.lpszClassName,
-      Title,
-      WS_OVERLAPPEDWINDOW,
-      rect -> X,
-      rect -> Y,
-      rect -> Width,
-      rect -> Height,
-      NULL,
-      NULL,
-      NULL,
-      NULL
-  );
-  #endif
-
-  if (!WindowHandle)
-  {
-    #if MONSOON_LOG_LEVEL >= MONSOON_LOG_ERROR
-      LOG("OS Window Handle was NULL,Window was not Create",MONSOON_LOG_ERROR,3);
-    #endif
-
+    LOG("OS Window Handle was NULL,Window was not Create [%d]",MONSOON_LOG_ERROR,3,Code);
     MONS_SetErrorCode(Make_Code(3));
     return NULL;
   }
 
-  #if MONSOON_LOG_LEVEL >= MONSOON_LOG_INFO
-     LOG("Create Window %s at (%d,%d,%d,%d)",MONSOON_LOG_INFO,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
-  #endif
+  LOG("Create Window %s at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
 
+  MONS_Window* window = GetMemory(sizeof(MONS_Window));
+  if (!window) //check memory
+  {
+    Error_Memory();
+    goto close_window;
+  }
+
+  //set Window value
   window -> OSHandle = WindowHandle;
   window -> WindowArea = rect;
+  window -> Title = Title;
 
   __Monsoon -> state.WindowCount++;
 
   return window;
+
+close_window:
+  #ifdef _WIN32
+     MONS_Win32_CloseWindow(WindowHandle);
+  #endif
+  return NULL;
 }
 
 MSBool MONS_CloseWindow(MONS_Window* Window)
 {
+  if (!Window)
+  {
+    LOG("Window was NULL",MONSOON_LOG_ERROR,1);
+    return False;
+  }
+
   #ifdef _WIN32
-    return CloseWindow(Window -> OSHandle);
-    RemoveMemory(Window);
+     MSBool Success = MONS_Win32_CloseWindow(Window -> OSHandle);
+     uint64_t Code = MONS_Win32_GetErrorCode();
   #endif
 
+  LOG("Success=%d,Code=%d",MONSOON_LOG_DEBUG,255,Success,Code);
+
+  if (Success)
+  {
+    LOG("Closed Window \"%s\"",MONSOON_LOG_INFO,3,Window -> Title);
+    RemoveMemory(Window);
+    __Monsoon -> state.WindowCount--;
+  }
+  else
+  {
+     LOG("Unable to Close Window \"%s\" Win32 Error %d",MONSOON_LOG_ERROR,2,Window -> Title,Code);
+  }
+  return Success;
 }
 
 MSBool MONS_ShoWindow(MONS_Window* Window,char act)
 {
+  if (!Window)
+  {
+    LOG("Window was NULL",MONSOON_LOG_ERROR,1);
+    return False;
+  }
+
   int Mode = MONS_ActToMode(act);
   if (!Mode)
   {
-      return False;
+    LOG("Invaild act %d",MONSOON_LOG_ERROR,4,act);
+    return False;
   }
 
   #ifdef _WIN32
-    return ShowWindow(Window -> OSHandle, Mode);
+    MSBool Success = ShowWindow(Window -> OSHandle, Mode);
   #endif
+
+  LOG("Success=%d,Mode=%d",MONSOON_LOG_DEBUG,255,Success,Mode);
+
+  if (Success)
+    LOG("Cannot Show Window \"%s\"",MONSOON_LOG_ERROR,2,Window -> Title);
+  else
+    LOG("Show Window \"%s\"",MONSOON_LOG_SUCCESS,3,Window -> Title);
+
+  return Success;
 }
 
 int MONS_ActToMode(char act)
@@ -115,7 +132,14 @@ int MONS_ActToMode(char act)
     switch (act)
     {
       case MONS_SHOW_WINDOW:return SW_SHOWNORMAL;
-      default:return -1;
+      default:return 0;
     }
+  #endif
+}
+
+MONS_Event* MONS_WindowPollEvent(MONS_Window* Window)
+{
+  #ifdef _WIN32
+     MONS_Win32_WindowPollEvent(Window -> OSHandle);
   #endif
 }

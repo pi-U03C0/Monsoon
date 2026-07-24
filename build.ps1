@@ -36,6 +36,7 @@ $INCLUDE = "$OWD/include"
 $CFLAG = @("-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
+$VERSION = 1
 
 $Verbose = $false
 
@@ -51,11 +52,13 @@ function Get-LogDefine
   param(
     [string]$Name,
     [string]$L_TOOLS="-=-",
-    [string]$L_LIB="-=-"
+    [string]$L_LIB="-=-",
+    [int]$L_VERSION=-1
   )
 
   $__Tools = $L_TOOLS
   $lib = $L_LIB
+  $ver = $L_VERSION
 
   if ($__Tools -eq "-=-")
   {
@@ -67,13 +70,18 @@ function Get-LogDefine
     $lib = $LIBRARY
   }
 
+  if ($ver -eq -1)
+  {
+    $ver = $VERSION
+  }
+
   try { $file_number = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name $Name)[0] }
   catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
 
   try { $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0] }
   catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
 
-  $define = ("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part")
+  $define = ("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part","-DMONSOON_VERSION=$ver")
 
   return $define
 }
@@ -113,7 +121,7 @@ function Compile-Monsoon
       Write-Host "gcc -o $using:BIN/Monsoon/$_.o -c  $using:SOURCE/$_ -I$using:INCLUDE $using:CFLAG $(Get_LogDefine -Name "$using:SOURCE/$_" -L_TOOLS $using:TOOLS -L_LIB $using:LIBRARY)"
     }
 
-    & "ccache" "gcc" "-o" "$using:BIN/Monsoon/$_.o" "-c" "$using:SOURCE/$_" "-I$using:INCLUDE" $using:CFLAG $(Get_LogDefine -Name "$using:SOURCE/$_" -L_TOOLS $using:TOOLS -L_LIB $using:LIBRARY)
+    & "ccache" "gcc" "-o" "$using:BIN/Monsoon/$_.o" "-c" "$using:SOURCE/$_" "-I$using:INCLUDE" $using:CFLAG $(Get_LogDefine -Name "$using:SOURCE/$_" -L_TOOLS $using:TOOLS -L_LIB $using:LIBRARY -L_VERSION $using:VERSION)
     return ($LASTEXITCODE -ne 0)
 
   } -ThrottleLimit $CoreConuter
@@ -213,6 +221,10 @@ if (-not (Test-Path -Path "$LIBRARY/FileIndex.index"))
   & "$TOOLS/FileIndex.ps1" -CreateIndex -IndexFile "$LIBRARY/FileIndex.index" -SourcePath $SOURCE
 }
 
+if (-not (&"$TOOLS/FileIndex.ps1" -IndexFile "$LIBRARY/FileIndex.index" -Test))
+{
+  & "$TOOLS/FileIndex.ps1" -Create -IndexFile "$LIBRARY/FileIndex.index" -SourcePath "$SOURCE"
+}
 
 if ((-not (Test-Path -Path "$BIN/Monsoon/LibInit.c.o")) -or ($CompileMonsoon))
 {

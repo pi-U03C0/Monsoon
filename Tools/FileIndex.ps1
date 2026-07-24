@@ -16,7 +16,10 @@ param
   [string]$IndexFile="-=-",
 
   [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
-  [string]$Name = "-=-"
+  [string]$Name = "-=-",
+
+  [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
+  [switch]$Test
 )
 
 $OWD = Split-Path $MyInvocation.MyCommand.Path
@@ -92,6 +95,32 @@ function Get-Index
   return -2
 }
 
+function Test-Index
+{
+  param(
+    [string]$IndexPath = "-=-"
+  )
+
+  if ((-not(Test-Path -Path $IndexPath)) -or ($IndexPath -eq "-=-"))
+  {
+    return $false
+  }
+
+  foreach ($Indexs in (Get-Content $IndexPath).Split("`n"))
+  {
+    $Index_Split = $indexs.Split(",")
+    if ($Index_Split[0] -eq "") {continue}
+    if ($Index_Split.Length -ne 3) {$false}
+
+    if (-not(Test-Path -Path $Index_Split[2]))
+    {
+      return $false
+    }
+  }
+  return $true
+}
+
+
 function Main
 {
   param(
@@ -108,6 +137,10 @@ function Main
   {
     (Create-Index -Source $SourcePath) > $IndexFilePath
     Write-host "index file at `"$IndexFilePath`""
+  }
+  elseif ($Test)
+  {
+    return Test-Index  -IndexPath $IndexFilePath
   }
   else
   {

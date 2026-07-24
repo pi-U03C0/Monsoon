@@ -13,11 +13,19 @@
 #define MONSOON_LOG_FATAL 1
 #define MONSOON_LOG_NONE 0
 
+#ifndef MONSOON_NO_LOG
 #define LOG(Message,Severity,ErrorReason,...)\
      MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity, ##__VA_ARGS__)
+#else
+     #define LOG(Message,Severity,ErrorReason,...)
+#endif
+
+#ifndef MONSOON_LOG_DEFAULT
+#define  MONSOON_LOG_DEFAULT 10
+#endif
 
 #ifndef MONSOON_LOG_LEVEL
-  #defie MONSOON_LOG_LEVEL 10
+  #define MONSOON_LOG_LEVEL MONSOON_LOG_DEFAULT
 #endif
 
 void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...);

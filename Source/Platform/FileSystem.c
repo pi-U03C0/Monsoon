@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_Log.h"
 #include "Monsoon/Platform/Platform.h"
 #include <Monsoon/Monsoon.h>
 
@@ -67,17 +68,9 @@ int MONS_WriteFile(MONS_File* FileHandle,char* Buffer,uint64_t Length)
     len = MONS_Win32_WriteFile(FileHandle -> OSHandle,Buffer,Length);
   #endif
 
-  #if MONSOON_LOG_LEVEL >= MONSOON_LOG_DEBUG
-    LOG(
-      "File=%s,Length=%llu",
-      MONSOON_LOG_DEBUG,
-      255,
-      FileHandle -> FilePath,
-      Length
-    );
-  #endif
+  LOG( "File=%s,Length=%llu", MONSOON_LOG_DEBUG, 255, FileHandle -> FilePath, Length);
 
-  FileHandle -> FileSize = MONS_GetFileSize(FileHandle -> OSHandle);
+  FileHandle -> FileSize = MONS_GetFileSize(FileHandle);
 
   return len;
 }
@@ -135,6 +128,12 @@ inline MSBool MONS_FileExists(char* FilePath)
 
 inline uint64_t MONS_GetFileSize(MONS_File* hFile)
 {
+  if (!hFile)
+  {
+    LOG("hFile was NULL",MONSOON_LOG_ERROR,1);
+    return 0;
+  }
+
   #ifdef _WIN32
     return GetFileSize(hFile -> OSHandle,NULL);
   #endif

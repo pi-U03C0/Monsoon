@@ -9,6 +9,7 @@ typedef char MSBool;
 
 #ifdef _WIN32
 typedef HANDLE OSFileHandle;
+typedef HANDLE OSWindowHandle;
 #define PATH_SEP '\\'
 #else
 #define PATH_SEP '/'
@@ -25,6 +26,9 @@ typedef HANDLE OSFileHandle;
   #define False 0
 #endif
 
+//OnExitFunction type
+typedef void (*ExitFunciton)(void);
+
 struct MONS_Rect
 {
   short X;
@@ -33,11 +37,6 @@ struct MONS_Rect
   short Height;
 }; typedef struct MONS_Rect MONS_Rect;
 
-struct LibraryState {
-  unsigned char WindowCount;
-  unsigned char LogLevel;
-  char extra[128];
-}; typedef struct LibraryState LibraryState;
 
 struct MONSError {
   uint64_t Code;
@@ -49,6 +48,12 @@ struct MONSError {
   char* Message;
 }; typedef struct MONSError MONSError;
 
+struct LibraryState {
+  uint8_t WindowCount;
+  uint8_t LogLevel;
+  char extra[128];
+}; typedef struct LibraryState LibraryState;
+
 struct MONS_LIBRARY_InternalObject
 {
   MSBool IsInitialized;
@@ -59,8 +64,9 @@ struct MONS_LIBRARY_InternalObject
 
 struct MONS_Window
 {
-  void* OSHandle;
+  OSWindowHandle OSHandle;
   MONS_Rect* WindowArea;
+  char* Title;
 }; typedef struct MONS_Window MONS_Window;
 
 struct MONS_File
@@ -69,5 +75,10 @@ struct MONS_File
   char* FilePath;
   uint64_t FileSize;
 }; typedef struct MONS_File MONS_File;
+
+struct MONS_Event {
+  uint64_t Type;
+  void* Prarms;
+};typedef struct MONS_Event MONS_Event;
 
 #endif

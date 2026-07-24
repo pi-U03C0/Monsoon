@@ -5,5 +5,6 @@ CompileFlags:
     - "-xc"
     - "-D__PROJECT_PART__"
     - "-D__FILE_NUMBER__"
-    - -Wno-incompatible-pointer-types-discards-qualifiers
     - "-DMONSOON_LOG_LEVEL=10"
+    - "-DMONSOON_VERSION"
+    - -Wno-incompatible-pointer-types-discards-qualifiers

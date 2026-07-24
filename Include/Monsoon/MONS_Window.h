@@ -14,6 +14,10 @@ MSBool MONS_ShoWindow(MONS_Window* Window,char act);
 //Close the Widnow
 MSBool MONS_CloseWindow(MONS_Window* Window);
 
+//Convert Act to OS show command
 int MONS_ActToMode(char act);
+
+//Poll Event from the window
+MONS_Event* MONS_WindowPollEvent(MONS_Window* Window);
 
 #endif

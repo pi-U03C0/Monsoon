@@ -1,0 +1,15 @@
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\bin\Debug\net8.0\Import.exe
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\bin\Debug\net8.0\Import.deps.json
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\bin\Debug\net8.0\Import.runtimeconfig.json
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\bin\Debug\net8.0\Import.dll
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\bin\Debug\net8.0\Import.pdb
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.AssemblyInfoInputs.cache
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.AssemblyInfo.cs
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.csproj.CoreCompileInputs.cache
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.sourcelink.json
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.dll
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\refint\Import.dll
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.pdb
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.genruntimeconfig.cache
+C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\ref\Import.dll
