@@ -11,9 +11,16 @@ char* MONS_GetCurrentWorkingDirectory()
   #endif
 }
 
-int MONS_GetProcessId()
+uint32_t MONS_GetProcessId()
 {
   #ifdef _WIN32
     return GetProcessId(NULL);
+  #endif
+}
+
+void* MONS_GetProcAddress(char* ProcName)
+{
+  #ifdef _WIN32
+    return GetProcAddress(NULL,ProcName);
   #endif
 }

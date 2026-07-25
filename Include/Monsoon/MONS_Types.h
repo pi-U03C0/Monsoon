@@ -54,13 +54,14 @@ struct LibraryState {
   char extra[128];
 }; typedef struct LibraryState LibraryState;
 
-struct MONS_LIBRARY_InternalObject
+struct MONS_Library
 {
   MSBool IsInitialized;
   LibraryState state;
   MONSError Error;
   void (**OnExit)(void);
-}; typedef struct MONS_LIBRARY_InternalObject MONS_LIBRARY_InternalObject;
+  uint16_t* Components;
+}; typedef struct MONS_Library MONS_Library;
 
 struct MONS_Window
 {

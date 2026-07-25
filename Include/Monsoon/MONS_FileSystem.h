@@ -2,7 +2,6 @@
 #define MONSOON_FILESYSTEM_H
 
 #include <Monsoon/MONS_Types.h>
-#include <stdint.h>
 
 #define MONSOON_FILE_READ 0
 #define MONSOON_FILE_WRITE 1

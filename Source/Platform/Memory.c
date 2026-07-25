@@ -1,5 +1,4 @@
 #include <Monsoon/Monsoon.h>
-
 #include <Monsoon/SystemHeaders.h>
 
 void* MONS_AllocMemory(size_t size)
@@ -32,3 +31,33 @@ MSBool MONS_SystemRemoveMemory(void* memory,uint64_t size)
       return MONS_Win32_RemoveMemory(memory,size);
   #endif
 }
+
+void* MONS_DupeMemory(char* Memory,uint64_t Size)
+{
+  if (!Memory)
+  {
+    LOG("Memory was NULL",MONSOON_LOG_ERROR,1);
+    return NULL;
+  }
+  if (!Size)
+  {
+    LOG("Size was 0",MONSOON_LOG_ERROR,2);
+    return NULL;
+  }
+
+  char* dMemory = GetMemory(Size);
+  if (!dMemory)
+  {
+    Error_Memory();
+    return NULL;
+  }
+
+  for (uint64_t i = 0 ; i < Size ; i++)
+  {
+    dMemory[i] = Memory[i];
+  }
+
+  LOG("Dupe %d to 0x%p",MONSOON_LOG_INFO,3,Size,dMemory);
+  return dMemory;
+}
+

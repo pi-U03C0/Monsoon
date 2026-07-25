@@ -1,16 +1,8 @@
-#include "Monsoon/Platform/Win32/Window.h"
 #define __FILE_NUMBER__ 1
 #define __PROJECT_PART__ 1
 
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
-
-void printinfo()
-{
-  LOG("OnExit",MONSOON_LOG_INFO,0);
-  LOG("MONS_GetVersion = %d",MONSOON_LOG_DEBUG,255,MONS_GetVersion());
-}
-
 
 int main(int argc, char** argv)
 {
@@ -21,12 +13,16 @@ int main(int argc, char** argv)
      return 1;
   }
 
-  MONS_Window* Window = MONS_CreateWindow("test", &(MONS_Rect){100,100,400,400}, WindowProc);
+  MONS_Window* Window = MONS_CreateWindow("test", &(MONS_Rect){100,100,400,400});
   MONS_ShoWindow(Window, MONS_SHOW_WINDOW);
 
   while (IsRunning)
   {
-    MONS_WindowPollEvent(Window);
+    MONS_Event* Event = MONS_WindowPollEvent(Window);
+    if (Event)
+    {
+      if (Event -> Type == MONSOON_EVENT_QUIT) IsRunning = False;
+    }
   }
 
   MONS_CloseWindow(Window);

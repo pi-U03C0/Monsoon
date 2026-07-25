@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 #include <Monsoon/MONS_Types.h>
-extern MONS_LIBRARY_InternalObject* __Monsoon;
+extern MONS_Library* __Monsoon;
 
 #include <Monsoon/MONS_Init.h>
 #include <Monsoon/MONS_Window.h>
@@ -31,6 +31,8 @@ extern MONS_LIBRARY_InternalObject* __Monsoon;
 #include <Monsoon/MONS_Log.h>
 #include <Monsoon/MONS_Console.h>
 #include <Monsoon/MONS_FileSystem.h>
+#include <Monsoon/MONS_Event.h>
+#include <Monsoon/MONS_Proc.h>
 
 #include <Monsoon/Platform/Platform.h>
 

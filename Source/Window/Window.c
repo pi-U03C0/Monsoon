@@ -1,39 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-        case WM_CREATE: return 0;
-
-        case WM_CLOSE:
-            PostQuitMessage(0);
-            return 0;
-
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-
-        default: return DefWindowProc(hwnd, uMsg, wParam, lParam);
-    }
-}
 
 MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
 {
   LOG("Createing Window",MONSOON_LOG_INFO,10);
 
-  if (!WinProc) //check proc
-  {
-    LOG("WinProc was NULL",MONSOON_LOG_ERROR,1);
-    MONS_SetErrorCode(Make_Code(1));
-
-    return NULL;
-  }
-
   #ifdef _WIN32 //Create Window for Win32
-     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, WinProc);
+     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, MONS_GetProc(MONS_PROC_WINDOW));
      uint64_t Code = MONS_Win32_GetErrorCode();
   #endif
 
@@ -140,6 +126,6 @@ int MONS_ActToMode(char act)
 MONS_Event* MONS_WindowPollEvent(MONS_Window* Window)
 {
   #ifdef _WIN32
-     MONS_Win32_WindowPollEvent(Window -> OSHandle);
+     return MONS_Win32_WindowPollEvent(Window -> OSHandle);
   #endif
 }

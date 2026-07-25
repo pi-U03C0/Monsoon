@@ -6,7 +6,7 @@
 #define MONS_SHOW_WINDOW 1
 
 // Create A Window
-MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc);
+MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect);
 
 //Show a Window
 MSBool MONS_ShoWindow(MONS_Window* Window,char act);

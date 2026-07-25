@@ -1,7 +1,26 @@
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
 #include <stdio.h>
-#include <windows.h>
+
+LRESULT CALLBACK Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+        case WM_CREATE: return 0;
+
+        case WM_CLOSE:
+            printf("WM_CLOSE");
+            PostQuitMessage(0);
+            return 0;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+
+        default: return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    }
+}
+
 
 uint32_t MONS_Win32_ActToMode(char act)
 {
@@ -74,12 +93,13 @@ MSBool MONS_Win32_CloseWindow(HANDLE Window)
   return DestroyWindow(Window);
 }
 
-MSBool MONS_Win32_WindowPollEvent(HANDLE Window)
+MONS_Event* MONS_Win32_WindowPollEvent(HANDLE Window)
 {
   MSG msg;
   if (PeekMessage(&msg,NULL,0,0,True))
   {
     TranslateMessage(&msg);
-    DispatchMessage(&msg);
+    return DispatchMessage(&msg);
   }
+  return False;
 }
