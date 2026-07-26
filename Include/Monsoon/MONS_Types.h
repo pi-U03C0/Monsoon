@@ -82,4 +82,9 @@ struct MONS_Event {
   void* Prarms;
 };typedef struct MONS_Event MONS_Event;
 
+struct MONS_Proc {
+  uint16_t Type;
+  void* Proc;
+};typedef struct MONS_Proc MONS_Proc;
+
 #endif

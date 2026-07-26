@@ -13,8 +13,6 @@
 #define MONSOON_COMPONENTS_LEN 1
 #define MakeInit_ComponentsOption(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,0}
 
-extern void* MONS_Procs;
-
 // Initialized The Monsoon Library
 MSBool MONSInit(uint16_t* Components,uint8_t LogLevel);
 
@@ -38,5 +36,7 @@ uint64_t MONS_GetVersion();
 
 //Count the Amout of the Components
 uint16_t MONS_ComponentsCount(uint16_t* Components);
+
+MSBool MONS_InitProcArray();
 
 #endif

@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_Init.h"
 #include "Monsoon/Monsoon.h"
 #include <stdio.h>
 
@@ -30,8 +29,13 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
   //set log Level
   __Monsoon -> state.LogLevel = LogLevel;
 
-  //check if Components is NULL
-  if (Components)
+  //check if ProcArray was Initialized
+  if (!MONS_InitProcArray())
+  {
+    LOG("Unable to Initializ ProcArray",MONSOON_LOG_WARNING,10);
+  }
+
+  if (Components)//check if Components is NULL
   {
     //Initialized Components
     if (!MONS_InitializComponents(Components))
@@ -40,10 +44,6 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
       return False;
     }
     __Monsoon -> Components = (uint16_t*)MONS_DupeMemory((void*)Components, sizeof(uint16_t) * (MONS_ComponentsCount(Components)+1));
-    for (int i = 0 ; __Monsoon -> Components[i] ; i++)
-    {
-      printf("%d\n",__Monsoon -> Components[i]);
-    }
   }
 
   LOG("Initialized Monsoon",MONSOON_LOG_INFO,1);
@@ -129,10 +129,19 @@ char* MONS_ComponentToString(uint16_t Component)
 
 MSBool MONS_InitProcArray()
 {
-  MONS_Procs = GetMemory(sizeof(uint16_t)*MONSOON_COMPONENTS_LEN);
-  if (!MONS_Procs) return 0;
+  MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
+  if (!MONS_Procs) return False;
 
-  MONS_Procs[0] = MONS_GetProcAddress(MONSOON_PROC_WINDOW_NAME);
+  uint16_t i = 0;
+  for (; i < MONSOON_PROC_LEN ; i++)
+  {
+    MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
+    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc);
+  }
+  MONS_Procs[i+1].Type = 0;
+  MONS_Procs[i+1].Proc = NULL;
+
+  return True;
 }
 
 uint16_t MONS_ComponentsCount(uint16_t* Components)

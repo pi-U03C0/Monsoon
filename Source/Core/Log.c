@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_Log.h"
 #include <Monsoon/Monsoon.h>
 
 #include <stdarg.h>
@@ -6,7 +7,10 @@
 
 void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
 {
-  if (!(__Monsoon -> state.LogLevel >= Severity)) return;
+  //check if the LogLevel not is more or equal to Severity
+  //and is not MONSOON_LOG_UNIGNORE
+  //if true than return
+  if ((!(__Monsoon -> state.LogLevel >= Severity)) && (!(Severity == MONSOON_LOG_UNIGNORE))) return;
 
   if (!Message)
   {
@@ -58,6 +62,7 @@ char* MONS_SeverityToString(char Severity,MSBool Colour)
       case MONSOON_LOG_SUCCESS:return "\033[92mSUCCESS\033[0m";
       case MONSOON_LOG_WARNING:return "\033[93mWARNING\033[0m";
       case MONSOON_LOG_DEBUG:return "\033[93mDEBUG\033[0m";
+      case MONSOON_LOG_UNIGNORE:return "\033[90mUNIGNORE\033[0m";
       default:return "?";
     }
   }
@@ -76,7 +81,15 @@ char* MONS_SeverityToString(char Severity,MSBool Colour)
       case MONSOON_LOG_SUCCESS:return "SUCCESS";
       case MONSOON_LOG_WARNING:return "WARNING";
       case MONSOON_LOG_DEBUG:return "DEBUG";
+      case MONSOON_LOG_UNIGNORE:return "UNIGNORE";
       default:return "?";
     }
   }
+}
+
+MSBool MONS_SetLogLevel(uint8_t Level)
+{
+  LOG("Setting LogLevel to %s(%d)",MONSOON_LOG_UNIGNORE,1,MONS_SeverityToString(Level, True));
+  __Monsoon -> state.LogLevel = Level;
+  return True;
 }

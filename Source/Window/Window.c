@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
@@ -18,8 +6,14 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
 {
   LOG("Createing Window",MONSOON_LOG_INFO,10);
 
+  void* proc = MONS_GetProc(MONS_PROC_WINDOW);
+  if (!proc)
+  {
+    LOG("Window proc was NULL",MONSOON_LOG_ERROR,11);
+  }
+
   #ifdef _WIN32 //Create Window for Win32
-     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, MONS_GetProc(MONS_PROC_WINDOW));
+     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
      uint64_t Code = MONS_Win32_GetErrorCode();
   #endif
 
@@ -30,23 +24,23 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
     return NULL;
   }
 
-  LOG("Create Window %s at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
+  LOG("Create Window \"%s\" at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
 
-  MONS_Window* window = GetMemory(sizeof(MONS_Window));
-  if (!window) //check memory
+  MONS_Window* Window = GetMemory(sizeof(MONS_Window));
+  if (!Window) //check memory
   {
     Error_Memory();
     goto close_window;
   }
 
   //set Window value
-  window -> OSHandle = WindowHandle;
-  window -> WindowArea = rect;
-  window -> Title = Title;
+  Window -> OSHandle = WindowHandle;
+  Window -> WindowArea = rect;
+  Window -> Title = Title;
 
   __Monsoon -> state.WindowCount++;
 
-  return window;
+  return Window;
 
 close_window:
   #ifdef _WIN32
@@ -123,9 +117,14 @@ int MONS_ActToMode(char act)
   #endif
 }
 
-MONS_Event* MONS_WindowPollEvent(MONS_Window* Window)
+MSBool* MONS_WindowPollEvent(MONS_Window* Window)
 {
   #ifdef _WIN32
      return MONS_Win32_WindowPollEvent(Window -> OSHandle);
   #endif
+}
+
+MONS_Event* MONS_PopWindowEvent(MONS_Window* Window)
+{
+  if ()
 }

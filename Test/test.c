@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_Window.h"
 #define __FILE_NUMBER__ 1
 #define __PROJECT_PART__ 1
 
@@ -16,9 +17,12 @@ int main(int argc, char** argv)
   MONS_Window* Window = MONS_CreateWindow("test", &(MONS_Rect){100,100,400,400});
   MONS_ShoWindow(Window, MONS_SHOW_WINDOW);
 
+  MONS_Event* Event = NULL;
   while (IsRunning)
   {
-    MONS_Event* Event = MONS_WindowPollEvent(Window);
+    MONS_WindowPollEvent(Window);
+    Event = MONS_PopWindowEvent(Window);
+
     if (Event)
     {
       if (Event -> Type == MONSOON_EVENT_QUIT) IsRunning = False;

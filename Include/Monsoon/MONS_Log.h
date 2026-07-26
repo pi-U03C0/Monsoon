@@ -4,6 +4,7 @@
 #include <Monsoon/MONS_Types.h>
 #include <Monsoon/MONS_Error.h>
 
+#define MONSOON_LOG_UNIGNORE 8
 #define MONSOON_LOG_DEBUG 7
 #define MONSOON_LOG_SUCCESS 6
 #define MONSOON_LOG_INFO 5
