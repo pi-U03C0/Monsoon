@@ -35,6 +35,7 @@ extern MONS_Library* __Monsoon;
 #include <Monsoon/MONS_Proc.h>
 
 #include <Monsoon/Platform/Platform.h>
+#include <Monsoon/Structure/Structure.h>
 
 #ifdef INCLUDE_STD
 #endif

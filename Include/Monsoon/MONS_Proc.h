@@ -3,6 +3,7 @@
 
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/MONS_Types.h>
+#include <windows.h>
 
 #define MONS_PROC_WINDOW 1
 #define MONSOON_PROC_LEN 1
@@ -13,9 +14,7 @@
 
 extern MONS_Proc* MONS_Procs;
 
-MONS_Proc MONS_ProcsDefine[] = {
-    {MONS_PROC_WINDOW,MONSOON_PROC_WINDOW_NAME}
-};
+extern MONS_Proc MONS_ProcsDefine[];
 
 void* MONS_GetProc(uint16_t ProcType);
 

@@ -7,7 +7,7 @@
 #define MONSOON_PROC_WIN32_WINDOW_NAME "MONS_Win32_WindowProc"
 
 //Monsoon Win32 WindowProc
-LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+__declspec(dllexport) LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);;
 
 //Win32 Create Window runing directly Win32 API functions
 HANDLE MONS_Win32_CreateWindow(char* window_name,MONS_Rect* rect,void* WinProc);

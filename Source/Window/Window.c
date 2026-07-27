@@ -10,33 +10,42 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
   if (!proc)
   {
     LOG("Window proc was NULL",MONSOON_LOG_ERROR,11);
-  }
-
-  #ifdef _WIN32 //Create Window for Win32
-     void* WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
-     uint64_t Code = MONS_Win32_GetErrorCode();
-  #endif
-
-  if (!WindowHandle) //check Window Handle
-  {
-    LOG("OS Window Handle was NULL,Window was not Create [%d]",MONSOON_LOG_ERROR,3,Code);
-    MONS_SetErrorCode(Make_Code(3));
     return NULL;
   }
-
-  LOG("Create Window \"%s\" at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
 
   MONS_Window* Window = GetMemory(sizeof(MONS_Window));
   if (!Window) //check memory
   {
     Error_Memory();
-    goto close_window;
+    return NULL;
   }
+
+  #ifdef _WIN32 //Create Window for Win32
+     OSWindowHandle WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
+     uint64_t Code = MONS_Win32_GetErrorCode();
+
+    if (!WindowHandle) //check Window Handle
+    {
+      LOG("OS Window Handle was NULL,Window was not Create [%d]",MONSOON_LOG_ERROR,3,Code);
+      MONS_SetErrorCode(Make_Code(3));
+      return NULL;
+    }
+
+    SetWindowLongPtrA(WindowHandle,GWLP_USERDATA,(LONG_PTR)Window);
+  #endif
+
+  LOG("Create Window \"%s\" at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
 
   //set Window value
   Window -> OSHandle = WindowHandle;
   Window -> WindowArea = rect;
   Window -> Title = Title;
+  Window -> Events = MONS_InitQueue(256);
+  if (!Window -> Events)
+  {
+    LOG("Unable to Create Window Event Queue",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    goto close_window;
+  }
 
   __Monsoon -> state.WindowCount++;
 
@@ -67,6 +76,7 @@ MSBool MONS_CloseWindow(MONS_Window* Window)
   if (Success)
   {
     LOG("Closed Window \"%s\"",MONSOON_LOG_INFO,3,Window -> Title);
+    MONS_TerminateQueue(Window -> Events);
     RemoveMemory(Window);
     __Monsoon -> state.WindowCount--;
   }
@@ -117,7 +127,7 @@ int MONS_ActToMode(char act)
   #endif
 }
 
-MSBool* MONS_WindowPollEvent(MONS_Window* Window)
+MSBool MONS_WindowPollEvent(MONS_Window* Window)
 {
   #ifdef _WIN32
      return MONS_Win32_WindowPollEvent(Window -> OSHandle);
@@ -126,5 +136,15 @@ MSBool* MONS_WindowPollEvent(MONS_Window* Window)
 
 MONS_Event* MONS_PopWindowEvent(MONS_Window* Window)
 {
-  if ()
+  if (!Window)
+  {
+    LOG("Window was NULL",MONSOON_LOG_ERROR,1);
+    return NULL;
+  }
+  return  (MONS_Event*)MONS_PopQueue(Window -> Events);
+}
+
+MSBool MONS_PushWindowEvent(MONS_Window* Window,MONS_Event* Event)
+{
+  return MONS_PushQueue(Window -> Events, (uint64_t)Event);
 }

@@ -1,40 +1,35 @@
-
-
-
-
-
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
 #include <stdio.h>
 
-LRESULT CALLBACK Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
         case WM_CREATE: return 0;
 
-        case WM_CLOSE:
-        {
+        case WM_CLOSE: {
           MONS_Event event = {
             MONSOON_EVENT_WINDOW_CLOSE,
             NULL
           };
 
-          MONS_PushWindowEvent(&event);
-        }
+          MONS_PushWindowEvent((MONS_Window*)GetWindowLongPtrA(hwnd,GWLP_USERDATA),&event);
+          return 0;
+        };
 
         case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
+        {
+          PostQuitMessage(0);
+          return 0;
+        }
 
         default:
         {
-          DefWindowProc(hwnd, uMsg, wParam, lParam);
-          return NULL;
+          return DefWindowProc(hwnd, uMsg, wParam, lParam);
         }
     }
 }
-
 
 uint32_t MONS_Win32_ActToMode(char act)
 {
@@ -72,10 +67,11 @@ HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
     RemoveMemory(window_class_name);
     return NULL;
   }
+  RemoveMemory(window_class_name);
 
   HANDLE WindowHandle = CreateWindowExA(
     0,
-    window_class_name,
+    window_class.lpszClassName,
     Title,
     WS_OVERLAPPEDWINDOW,
     rect -> X,
@@ -90,7 +86,6 @@ HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
 
   if (!WindowHandle)
   {
-    RemoveMemory(window_class_name);
     return NULL;
   }
   return WindowHandle;

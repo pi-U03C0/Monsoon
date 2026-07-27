@@ -14,9 +14,14 @@
 #define MONSOON_LOG_FATAL 1
 #define MONSOON_LOG_NONE 0
 
+#define MONSOON_LOG_OS_ERROR 40
+#define MONSOON_LOG_EMPTY 300
+#define MONSOON_LOG_WAS_NULL 301
+#define MONSOON_LOG_WAS_FULL 302
+
 #ifndef MONSOON_NO_LOG
-#define LOG(Message,Severity,ErrorReason,...)\
-     MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity, ##__VA_ARGS__)
+   #define LOG(Message,Severity,ErrorReason,...)\
+      MONS_Log(__FUNCTION__,Message,Make_Code(ErrorReason),Severity, ##__VA_ARGS__)
 #else
      #define LOG(Message,Severity,ErrorReason,...)
 #endif

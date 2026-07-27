@@ -8,13 +8,14 @@
 int main(int argc, char** argv)
 {
   MSBool IsRunning = True;
-  if (!MONSInit(MakeInit_ComponentsOption(1,2),MONSOON_LOG_LEVEL))
+  if (!MONSInit(MakeInit_ComponentsOption(1),MONSOON_LOG_LEVEL))
   {
      MONS_WriteStdOutput("MONSInit filed\n");
      return 1;
   }
 
   MONS_Window* Window = MONS_CreateWindow("test", &(MONS_Rect){100,100,400,400});
+  if (!Window) return 2;
   MONS_ShoWindow(Window, MONS_SHOW_WINDOW);
 
   MONS_Event* Event = NULL;
