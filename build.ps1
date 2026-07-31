@@ -33,7 +33,7 @@ $SOURCE = "$OWD/source"
 $BIN = "$OWD/bin"
 $LIBRARY = "$OWD/Library"
 $INCLUDE = "$OWD/include"
-$CFLAG = @("-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
+$CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
 $VERSION = 1
@@ -45,6 +45,8 @@ $Env:CCACHE_DIR = "$BIN/ccache"
 function ClearFile
 {
   remove-item -r $BIN/*
+  remove-item "$LIBRARY/FileIndex.index"
+  remove-item "$LIBRARY/Monsoon.a"
 }
 
 function Get-LogDefine
@@ -276,6 +278,10 @@ if ($TestName -ne "-=-")
     if ($LASTEXITCODE -eq -1073740791)
     {
       $Message = "`e[31mBUFFER OVERRUN`e[0m"
+    }
+    if ($LASTEXITCODE -eq -1073741510)
+    {
+      $Message = "`e[31mCtrl+C`e[0m"
     }
     Write-Host "`nLASTEXITCODE: $LASTEXITCODE $Message" -nonewline
   }

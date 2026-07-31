@@ -17,3 +17,12 @@ void* MONS_GetProc(uint16_t ProcType)
   }
   return NULL;
 }
+
+void MONS_InitProcDefine()
+{
+  uint16_t NextIndex = 0;
+  #ifdef MONSOON_PLATFORM_NT
+     MONS_ProcsDefine[NextIndex].Proc = MONSOON_PROC_WINDOW_NAME;
+     MONS_ProcsDefine[NextIndex].Type = MONS_PROC_WINDOW;
+  #endif
+}

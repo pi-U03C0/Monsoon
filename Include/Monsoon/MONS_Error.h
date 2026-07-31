@@ -5,11 +5,11 @@
 
 #define Make_Code(ErrorReason) EnCodeError(__LINE__,__FILE_NUMBER__,__PROJECT_PART__,ErrorReason)
 #define Error_Memory() \
-     LOG("Memory Error",MONSOON_LOG_CRITICAL,100);\
+     LOG("Memory Error",MONSOON_LOG_FATAL,100);\
      MONS_SetErrorCode(Make_Code(100))
 
 
-uint64_t MONS_GetErrorCode(char* Message);
+uint64_t MONS_GetErrorCode();
 
 //Set the gloable Error
 void MONS_SetErrorCode(uint64_t Code);

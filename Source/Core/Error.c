@@ -8,12 +8,8 @@
 
 #include <Monsoon/SystemHeaders.h>
 
-uint64_t MONS_GetErrorCode(char* MessageBuffer)
+uint64_t MONS_GetErrorCode()
 {
-  if (MessageBuffer != NULL)
-  {
-  }
-
   return __Monsoon -> Error.Code;
 }
 

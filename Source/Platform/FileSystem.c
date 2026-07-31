@@ -24,9 +24,7 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
     FileHandle -> OSHandle = MONS_Win32_OpenFile(FileHandle -> FilePath, Mode);
     if (FileHandle -> OSHandle == NULL)
     {
-      #if MONSOON_LOG_LEVEL >= MONSOON_LOG_ERROR
-          LOG("Unable to Open file %s %d",MONSOON_LOG_ERROR,1,FileHandle -> FilePath,GetLastError());
-      #endif
+      LOG("Unable to Open file %s %d",MONSOON_LOG_ERROR,1,FileHandle -> FilePath,GetLastError());
 
       RemoveMemory(FileHandle -> FilePath);
       RemoveMemory(FileHandle);
@@ -80,9 +78,7 @@ uint64_t MONS_ReadFile(MONS_File* FileHandle,char* Buffer,uint64_t Length)
   uint64_t len = 0;
   if (!Buffer)
   {
-    #if MONSOON_LOG_LEVEL >= MONSOON_LOG_ERROR
-       LOG("Buffer was NULL",MONSOON_LOG_ERROR,1);
-    #endif
+    LOG("Buffer was NULL",MONSOON_LOG_ERROR,1);
 
     return 0;
   }
@@ -123,6 +119,9 @@ inline MSBool MONS_FileExists(char* FilePath)
 {
   #ifdef _WIN32
     return PathFileExistsA(FilePath);
+  #endif
+
+  #ifdef MONSOON_OS_UNIX_POSIX
   #endif
 }
 

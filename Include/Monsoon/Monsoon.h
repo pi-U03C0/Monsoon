@@ -5,8 +5,28 @@
 extern "C" {
 #endif
 
-#define MONSOON_USE_MALLOC
-#define MONSON_DEBUG
+#if defined(_WIN32)
+  #define MONSOON_OS_WINDOWS 1
+  #define MONSOON_PLATFORM_NT 1
+#endif
+
+#if defined(__linux__) || defined (__linux)
+  #define MONSOON_OS_LINUX 1
+  #define MONSOON_PLATFORM_POSIX 1
+#endif
+
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+  #define MONSOON_OS_BSD 1
+  #define MONSOON_PLATFORM_POSIX 1
+#endif
+
+#if defined(__ANDROID__)
+  #define MONSOON_OS_ANDROID 1
+  #define MONSOON_PLATFORM_POSIX 1
+#endif
+
+#define MONSOON_USE_MALLOC 1
+#define MONSON_DEBUG 1
 
 #ifndef MONSOON_FILE_INDEX_NAME
   #define MONSOON_FILE_INDEX_NAME "FileIndex.index"
@@ -33,11 +53,14 @@ extern MONS_Library* __Monsoon;
 #include <Monsoon/MONS_FileSystem.h>
 #include <Monsoon/MONS_Event.h>
 #include <Monsoon/MONS_Proc.h>
+#include <Monsoon/MONS_Time.h>
+#include <Monsoon/MONS_Components.h>
 
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/Structure/Structure.h>
 
 #ifdef INCLUDE_STD
+  #include <stdio.h>
 #endif
 
 #ifdef __cplusplus

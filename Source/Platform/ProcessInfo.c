@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_Log.h"
 #include <Monsoon/SystemHeaders.h>
 #include <Monsoon/Monsoon.h>
 
@@ -6,6 +5,11 @@ char* MONS_GetCurrentWorkingDirectory()
 {
   #ifdef _WIN32
     char* directory = (char*)GetMemory(1024);
+    if (!directory)
+    {
+      Error_Memory();
+      return NULL;
+    }
     GetCurrentDirectoryA(1024,directory);
     return directory;
   #endif

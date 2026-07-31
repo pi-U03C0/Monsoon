@@ -6,15 +6,12 @@ LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 {
     switch (uMsg)
     {
-        case WM_CREATE: return 0;
-
         case WM_CLOSE: {
-          MONS_Event event = {
-            MONSOON_EVENT_WINDOW_CLOSE,
-            NULL
-          };
+          MONS_Event* event = GetMemory(sizeof(MONS_Event));
+          event -> Type = MONSOON_EVENT_WINDOW_CLOSE;
+          event -> Prarms = NULL;
 
-          MONS_PushWindowEvent((MONS_Window*)GetWindowLongPtrA(hwnd,GWLP_USERDATA),&event);
+          MONS_PushWindowEvent((MONS_Window*)GetWindowLongPtrA(hwnd,GWLP_USERDATA),event);
           return 0;
         };
 

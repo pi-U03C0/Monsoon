@@ -15,6 +15,9 @@ uint64_t MONS_PopQueue(MONS_Queue* Queue);
 //Push/Write the Item to the Queue and Move the PushPos
 MSBool MONS_PushQueue(MONS_Queue* Queue,uint64_t Item);
 
+//Read from the Queue and return it without moveing the PopPos
+uint64_t MONS_PeekQueue(MONS_Queue* Queue);
+
 //Check if a Queue is Empty
 MSBool MONS_IsQueueEmpty(MONS_Queue* Queue);
 
@@ -26,6 +29,14 @@ uint16_t MONS_NextQueuePopIndex(MONS_Queue* Queue);
 
 //Return the Next Push/Write Index
 uint16_t MONS_NextQueuePushIndex(MONS_Queue* Queue);
+
+MSBool MONS_CanPopQueue(MONS_Queue* Queue);
+
+MSBool MONS_CanPushQueue(MONS_Queue* Queue);
+
+
+
+void MONS_PrintQueue(MONS_Queue* Queue);
 
 #endif
 

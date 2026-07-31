@@ -9,6 +9,6 @@ char* MONS_GetCurrentWorkingDirectory();
 uint32_t MONS_GetProcessId();
 
 //Get a Function Address
-void* MONS_GetProcAddress(char* ProcName);
+void* MONS_GetProcAddress(const char* ProcName);
 
 #endif

@@ -18,9 +18,12 @@ MSBool MONS_CloseWindow(MONS_Window* Window);
 int MONS_ActToMode(char act);
 
 //Poll Event from the window
-MSBool MONS_WindowPollEvent(MONS_Window* Window);
+MSBool MONS_PollWindowEvent(MONS_Window* Window);
 
+//Pop the Last Event
 MONS_Event* MONS_PopWindowEvent(MONS_Window* Window);
+
+//Push a Event to the window Event
 MSBool MONS_PushWindowEvent(MONS_Window* Window,MONS_Event* Event);
 
 #endif

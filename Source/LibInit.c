@@ -120,15 +120,6 @@ MSBool MONS_DeInitializComponents(int Components)
   return False;
 }
 
-char* MONS_ComponentToString(uint16_t Component)
-{
-  switch (Component)
-  {
-    case MONSOON_INIT_OPENGL:return "OpenGL";
-    default:return "?";
-  }
-}
-
 MSBool MONS_InitProcArray()
 {
   MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
@@ -143,10 +134,7 @@ MSBool MONS_InitProcArray()
   {
     MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
     MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc);
-    if (!MONS_Procs[i].Proc)
-    {
-      LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
-    }
+    if (!MONS_Procs[i].Proc) LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
   }
   MONS_Procs[i].Type = 0;
   MONS_Procs[i].Proc = NULL;

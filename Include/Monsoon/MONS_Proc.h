@@ -3,7 +3,6 @@
 
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/MONS_Types.h>
-#include <windows.h>
 
 #define MONS_PROC_WINDOW 1
 #define MONSOON_PROC_LEN 1

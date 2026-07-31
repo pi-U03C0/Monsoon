@@ -127,7 +127,7 @@ int MONS_ActToMode(char act)
   #endif
 }
 
-MSBool MONS_WindowPollEvent(MONS_Window* Window)
+MSBool MONS_PollWindowEvent(MONS_Window* Window)
 {
   #ifdef _WIN32
      return MONS_Win32_WindowPollEvent(Window -> OSHandle);
