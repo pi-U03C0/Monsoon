@@ -1,4 +1,4 @@
-#include "Monsoon/Monsoon.h"
+#include <Monsoon/Monsoon.h>
 #include <stdio.h>
 
 MONS_Library* __Monsoon = NULL;
@@ -8,27 +8,9 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
   //check if Monsoon was Initialized
   if (!__Monsoon)
   {
-    //allocate and Initializ __Monsoon
-    __Monsoon = (MONS_Library *)GetMemory( sizeof(MONS_Library));
-    if (!__Monsoon)//mem error
-    {
-      Error_Memory();
-      return False;
-    }
-    __Monsoon -> IsInitialized = True;
-    __Monsoon -> state.WindowCount = 0;
-
-    //Initializ OnExit
-    __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
-    if (!__Monsoon -> OnExit)
-    {
-      Error_Memory();
-      return False;
-    }
-    for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
+    if (!MONS_AllocatMonsoon())return False;
   }
 
-  //set log Level
   __Monsoon -> state.LogLevel = LogLevel;
 
   //check if ProcArray was Initialized
@@ -39,6 +21,7 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
 
   if (Components)//check if Components is NULL
   {
+    MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
     //Initialized Components
     if (!MONS_InitializComponents(Components))
     {
@@ -80,6 +63,37 @@ MSBool MONSTerminate()
   not_init: return False;
 }
 
+MSBool MONS_AllocatMonsoon()
+{
+     //allocate and Initializ __Monsoon
+    __Monsoon = (MONS_Library *)GetMemory( sizeof(MONS_Library));
+    if (!__Monsoon)
+    {
+      Error_Memory();
+      return False;
+    }
+    //set Init values
+    __Monsoon -> IsInitialized = True;
+    __Monsoon -> state.WindowCount = 0;
+
+    //Initializ OnExit
+    __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
+    if (!__Monsoon -> OnExit)
+    {
+      Error_Memory();
+      return False;
+    } for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
+
+    __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary)*MONSOON_LIBRARY_LIMIT);
+    if (!__Monsoon -> LoadedLibrary)
+    {
+      Error_Memory();
+      return False;
+    } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (MONS_DynamicLibrary){NULL,NULL,0};
+
+    return True;
+}
+
 MSBool MONS_AddOnExitFunction(ExitFunciton fn)
 {
   //check if a slot is free if yes add the function and return
@@ -110,7 +124,24 @@ MSBool MONS_InitializComponents(uint16_t* Components)
 {
   for (uint16_t i = 0 ; Components[i] ; i++)
   {
-    LOG("Components: %s",MONSOON_LOG_DEBUG,255,MONS_ComponentToString(Components[i]));
+    if (MONS_IsComponent(Components[i]))
+    {
+       for (uint16_t j = 0 ; j < MONS_Components -> Lenght ; j++)
+       {
+          if (MONS_Components -> Components[j].Type == Components[i])
+          {
+             if (!(MONS_Components -> Components[j].Init()))
+             {
+                LOG("Unable to Initializ Component \"%s\"",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_GET);
+                return False;
+             }
+          }
+       }
+    }
+    else
+    {
+       LOG("UnKnown Component %d",MONSOON_LOG_ERROR,MONSOON_LOG_UNKNOWN,Components[i]);
+    }
   }
   return True;
 }
@@ -133,7 +164,7 @@ MSBool MONS_InitProcArray()
   for (; i < MONSOON_PROC_LEN ; i++)
   {
     MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
-    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc);
+    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc,NULL);
     if (!MONS_Procs[i].Proc) LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
   }
   MONS_Procs[i].Type = 0;
@@ -142,12 +173,6 @@ MSBool MONS_InitProcArray()
   return True;
 }
 
-uint16_t MONS_ComponentsCount(uint16_t* Components)
-{
-  uint16_t i = 0;
-  for (; Components[i] ; i++);
-  return i;
-}
 
 uint64_t MONS_GetVersion()
 {

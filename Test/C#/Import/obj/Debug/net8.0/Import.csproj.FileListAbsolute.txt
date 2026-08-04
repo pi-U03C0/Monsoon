@@ -1,5 +1,0 @@
-C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.AssemblyInfoInputs.cache
-C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.AssemblyInfo.cs
-C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.csproj.CoreCompileInputs.cache
-C:\Users\dell\BigProject\Monsoon\Test\C#\Import\obj\Debug\net8.0\Import.sourcelink.json

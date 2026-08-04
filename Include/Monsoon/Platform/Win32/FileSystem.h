@@ -2,6 +2,7 @@
 #define MONSOON_PLATFORM_WIN32_FILESYSTEM
 
 #include <Monsoon/MONS_Types.h>
+#include <Monsoon/SystemHeaders.h>
 
 #define MONSOON_MODE_READ 1
 #define MONSOON_MODE_WRITE 2

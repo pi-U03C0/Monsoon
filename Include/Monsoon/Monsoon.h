@@ -47,7 +47,7 @@ extern MONS_Library* __Monsoon;
 #include <Monsoon/MONS_Window.h>
 #include <Monsoon/MONS_Memory.h>
 #include <Monsoon/MONS_Error.h>
-#include <Monsoon/MONS_ProcessInfo.h>
+#include <Monsoon/MONS_Process.h>
 #include <Monsoon/MONS_Log.h>
 #include <Monsoon/MONS_Console.h>
 #include <Monsoon/MONS_FileSystem.h>
@@ -58,6 +58,8 @@ extern MONS_Library* __Monsoon;
 
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/Structure/Structure.h>
+#include <Monsoon/Utils/Utils.h>
+#include <Monsoon/Graphic/Graphic.h>
 
 #ifdef INCLUDE_STD
   #include <stdio.h>

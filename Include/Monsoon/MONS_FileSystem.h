@@ -25,4 +25,6 @@ uint64_t MONS_GetFileSize(MONS_File* hFile);
 
 char* MONS_OpenModeToString(char Mode);
 
+char* MONS_FindFile(char* FileName);
+
 #endif

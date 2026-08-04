@@ -5,6 +5,7 @@
 #include <Monsoon/Platform/Win32/FileSystem.h>
 #include <Monsoon/Platform/Win32/Window.h>
 #include <Monsoon/Platform/Win32/Error.h>
+#include <Monsoon/Platform/Win32/Library.h>
 
 #endif
 

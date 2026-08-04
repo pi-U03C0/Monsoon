@@ -1,5 +1,3 @@
-#include "Monsoon/MONS_Log.h"
-#include "Monsoon/Platform/Platform.h"
 #include <Monsoon/Monsoon.h>
 
 #include <stdlib.h>
@@ -147,4 +145,9 @@ char* MONS_OpenModeToString(char Mode)
     case (MONSOON_FILE_READ_WRITE):return "Read&Write";
     default:return "?";
   }
+}
+
+char* MONS_FindFile(char* FileName)
+{
+  return NULL;
 }

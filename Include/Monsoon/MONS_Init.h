@@ -19,6 +19,8 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel);
 // UnInitialized The Monsoon Library
 MSBool MONSTerminate();
 
+MSBool MONS_AllocatMonsoon();
+
 //Add a Function to a array with is run when MONSTerminate is called
 MSBool MONS_AddOnExitFunction(ExitFunciton fn);
 
@@ -31,9 +33,7 @@ MSBool MONS_InitializComponents(uint16_t* Components);
 //Get The Monsoon version
 uint64_t MONS_GetVersion();
 
-//Count the Amout of the Components
-uint16_t MONS_ComponentsCount(uint16_t* Components);
-
+//Initializ the procs Array
 MSBool MONS_InitProcArray();
 
 #endif

@@ -3,13 +3,12 @@
 
 #include <stdint.h>
 
-#include <Monsoon/SystemHeaders.h>
 
 typedef char MSBool;
 
 #ifdef _WIN32
-typedef HANDLE OSFileHandle;
-typedef HANDLE OSWindowHandle;
+typedef void* OSFileHandle;
+typedef void* OSWindowHandle;
 #define PATH_SEP '\\'
 #else
 #define PATH_SEP '/'
@@ -28,6 +27,7 @@ typedef HANDLE OSWindowHandle;
 
 //OnExitFunction type
 typedef void (*ExitFunciton)(void);
+typedef MSBool (*MONS_InitComponent)(void);
 
 struct MONS_Rect
 {
@@ -47,6 +47,13 @@ struct MONS_Queue
   uint64_t* Items;
 };typedef struct MONS_Queue MONS_Queue;
 
+struct MONS_DynamicLibrary
+{
+  char* DLLPath;
+  void* OSHandle;
+  uint16_t LoadFlags;
+};typedef struct MONS_DynamicLibrary MONS_DynamicLibrary;
+
 struct MONSError {
   uint64_t Code;
   uint8_t  ErrorReason;
@@ -60,6 +67,8 @@ struct MONSError {
 struct LibraryState {
   uint8_t WindowCount;
   uint8_t LogLevel;
+  uint16_t LoadedLibraryCount;
+  char* FileSearchPath;
   char extra[128];
 }; typedef struct LibraryState LibraryState;
 
@@ -69,6 +78,7 @@ struct MONS_Library
   LibraryState state;
   MONSError Error;
   void (**OnExit)(void);
+  MONS_DynamicLibrary* LoadedLibrary;
   uint16_t* Components;
 }; typedef struct MONS_Library MONS_Library;
 
@@ -98,5 +108,20 @@ struct MONS_Proc
   uint16_t Type;
   void* Proc;
 };typedef struct MONS_Proc MONS_Proc;
+
+struct MONS_Component
+{
+  uint16_t Type;
+  MONS_InitComponent Init;
+  MSBool IsInitialized;
+};typedef struct MONS_Component MONS_Component;
+
+struct MONS_ComponentList
+{
+  MONS_Component* Components;
+  uint16_t Lenght;
+};typedef struct MONS_ComponentList MONS_ComponentList;
+
+
 
 #endif
