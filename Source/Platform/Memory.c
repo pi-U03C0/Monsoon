@@ -57,7 +57,7 @@ void* MONS_DupeMemory(char* Memory,uint64_t Size)
     dMemory[i] = Memory[i];
   }
 
-  LOG("Dupe %d to 0x%p",MONSOON_LOG_INFO,3,Size,dMemory);
+  LOG("Dupe %d to 0x%p",MONSOON_LOG_DEBUG,3,Size,dMemory);
   return dMemory;
 }
 

@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_Components.h"
 #include <Monsoon/Monsoon.h>
 
 MONS_ComponentList* MONS_Components = NULL;
@@ -88,7 +87,7 @@ char* MONS_ComponentToString(uint16_t Component)
 
 MSBool MONS_IsComponent(uint16_t Component)
 {
-  for (uint16_t i = 0 ; i > MONS_Components -> Lenght ; i++)
+  for (uint16_t i = 0 ; i < MONS_Components -> Lenght ; i++)
   {
     if (MONS_Components -> Components[i].Type == Component)
     {

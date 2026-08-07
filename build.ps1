@@ -55,7 +55,7 @@ function Get-LogDefine
     [string]$Name,
     [string]$L_TOOLS="-=-",
     [string]$L_LIB="-=-",
-    [int]$L_VERSION=-1
+    [int]$L_VERSION=0
   )
 
   $__Tools = $L_TOOLS
@@ -72,7 +72,7 @@ function Get-LogDefine
     $lib = $LIBRARY
   }
 
-  if ($ver -eq -1)
+  if ($ver -eq 0)
   {
     $ver = $VERSION
   }
@@ -83,7 +83,7 @@ function Get-LogDefine
   try { $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0] }
   catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
 
-  $define = ("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part","-DMONSOON_VERSION=$ver")
+  $define = @("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part","-DMONSOON_VERSION=$ver")
 
   return $define
 }

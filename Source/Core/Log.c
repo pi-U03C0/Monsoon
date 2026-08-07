@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_Log.h"
 #include <Monsoon/Monsoon.h>
 
 #include <stdarg.h>

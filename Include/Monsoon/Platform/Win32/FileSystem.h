@@ -8,7 +8,6 @@
 #define MONSOON_MODE_WRITE 2
 #define MONSOON_MODE_READ_WRITE 3
 
-
 HANDLE MONS_Win32_OpenFile(char* FilePath,char Mode);
 
 int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,uint64_t Length);

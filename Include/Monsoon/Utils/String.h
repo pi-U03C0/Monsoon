@@ -15,4 +15,9 @@ int MONS_StringToInt(char* text);
 
 MSBool MONS_FindInString(char* text,char on);
 
+char* MONS_MergeString(char** Strings,uint64_t Lenght);
+
+MSBool MONS_CheckIfEqualStringFromPos(char* Original,char* Find);
+
+uint64_t MONS_StringLength(char* String);
 #endif

@@ -1,21 +1,47 @@
 #include <Monsoon/Monsoon.h>
 
+uint64_t MONS_StringLength(char* String)
+{
+  if (!String)return 0;
+
+  uint64_t i = 0;
+  while (String[i])
+    i++;
+
+  return i;
+}
+
+MSBool MONS_StringCopy(char* CopyTo,char* From)
+{
+  if ((!CopyTo) || (!From))
+  {
+    LOG("CopyTo and or From was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    return False;
+  }
+
+  uint64_t From_Length = MONS_StringLength(From);
+  for (uint64_t i = 0 ; i < From_Length ; i++)
+  {
+     CopyTo[i] = From[i];
+  }
+  return True;
+}
+
 char** MONS_SplitString(char* text,char on)
 {
-  //get the split count
-  int sp_count = 1;
+  int Split_Count = 1;
   for (int i = 0 ; text[i] ; i++)
-    if (text[i] == on) sp_count++;
+    if (text[i] == on) Split_Count++;
 
-  char** ret_s = (char**)malloc(sizeof(char**)*(sp_count+1));
-  if (!ret_s)return NULL;
+  char** Return_Split = (char**)GetMemory(sizeof(char**)*(Split_Count+1));
+  if (!Return_Split)return NULL;
 
-  ret_s[0] =  ((char*)(long long)sp_count);
-  ret_s++;
+  Return_Split[0] =  ((char*)(long long)Split_Count);
+  Return_Split++;
 
-  char* text_buffer = malloc(strlen(text)+1);
+  char* text_buffer = GetMemory(MONS_StringLength(text)+1);
   if (!text_buffer)return NULL;
-  int s_count = 0;
+  int String_Count = 0;
   int c_char = 0;
 
   for (int i = 0 ; text[i] ; i++)
@@ -23,8 +49,8 @@ char** MONS_SplitString(char* text,char on)
      if (text[i] == on)
      {
         text_buffer[c_char+1] = 0;
-        ret_s[s_count] = strdup(text_buffer);
-        s_count++;
+        Return_Split[String_Count] = strdup(text_buffer);
+        String_Count++;
         c_char = 0;
         continue;
      }
@@ -35,21 +61,166 @@ char** MONS_SplitString(char* text,char on)
   if (c_char)
   {
     text_buffer[c_char+1] = 0;
-    ret_s[s_count] = strdup(text_buffer);
+    Return_Split[String_Count] = strdup(text_buffer);
   }
-  ret_s[sp_count+1] = NULL;
+  Return_Split[Split_Count+1] = NULL;
 
-  free(text_buffer);
+  RemoveMemory(text_buffer);
 
-  return ret_s;
+  return Return_Split;
+}
+
+char* findandreplace(char* Original,char* Find,char* Replace)
+{
+  //check NULL
+  if (!Original || !Find || !Replace) return NULL;
+
+  //cache Length
+  uint64_t Original_Length = MONS_StringLength(Original);
+  uint64_t Replace_Length = MONS_StringLength(Replace);;
+  uint64_t Find_Length = MONS_StringLength(Find);
+
+
+  //check if any Length is 0
+  if (!(Original_Length) || !(Find_Length) || !(Replace_Length))return NULL;
+
+  //get the split Length
+  uint64_t Replace_Count = 1;
+  for (uint64_t i = 0 ; i < Original_Length ; i++)
+  {
+    if (MONS_CheckIfEqualStringFromPos(&Original[i],Find))
+    {
+      Replace_Count += 2;
+    }
+  }
+
+  //alloc split and temp string
+  char** ReturnS = GetMemory(sizeof(char*)*Replace_Count);
+  if (!ReturnS)return NULL;
+
+  char* Temp_String = GetMemory(Original_Length+1);
+  if (!Temp_String)return NULL;
+
+  uint64_t ReturnS_Index = 0;
+  uint64_t Temp_Index = 0;
+  for (uint64_t i = 0 ; i < Original_Length ; i++)
+  {
+    if (MONS_CheckIfEqualStringFromPos(&Original[i], Find))
+    {
+      Temp_String[Temp_Index] = 0;
+
+      ReturnS[ReturnS_Index] = strdup(Temp_String);
+
+      if (!ReturnS[ReturnS_Index])
+      {
+        RemoveMemory(Temp_String);
+        RemoveMemory(ReturnS);
+        return NULL;
+      }
+
+      Temp_Index = 0;
+      ReturnS_Index++;
+      ReturnS[ReturnS_Index] = strdup(Replace);
+
+      if (!ReturnS[ReturnS_Index])
+      {
+        RemoveMemory(Temp_String);
+        RemoveMemory(ReturnS);
+        return NULL;
+      }
+
+      ReturnS_Index++;
+      i += Find_Length - 1;
+    }
+    else
+    {
+      Temp_String[Temp_Index] = Original[i];
+      Temp_Index++;
+    }
+  }
+
+  if (Temp_Index)
+  {
+    Temp_String[Temp_Index] = 0;
+    ReturnS[ReturnS_Index++] = strdup(Temp_String);
+  }
+
+  char* ReturnString = MONS_MergeString(ReturnS, ReturnS_Index);
+  if (!ReturnString)
+  {
+    for (uint64_t i = 0 ; i < ReturnS_Index ; i++) RemoveMemory(ReturnS[i]);
+    RemoveMemory(Temp_String);
+    RemoveMemory(ReturnS);
+    return NULL;
+  }
+
+  for (uint64_t i = 0 ; i < ReturnS_Index ; i++)
+  {
+    RemoveMemory(ReturnS[i]);
+  }
+
+  RemoveMemory(Temp_String);
+  RemoveMemory(ReturnS);
+
+  return ReturnString;
+}
+
+char* MONS_MergeString(char** Strings,uint64_t Length)
+{
+  uint64_t s_len = 0 ;
+  for (uint64_t i = 0 ; i < Length ; i++)
+  {
+     s_len += MONS_StringLength(Strings[i]);
+  }
+
+  char* r_s = malloc(s_len+1);
+  if (!r_s) return NULL;
+
+  uint64_t s = 0;
+  for (uint64_t i = 0 ; i < Length ; i++)
+  {
+    for (uint64_t j = 0 ; j < MONS_StringLength(Strings[i]) ; j++)
+    {
+      r_s[s] = Strings[i][j];
+      s++;
+    }
+  }
+
+  r_s[s_len] = 0;
+  return r_s;
+}
+
+MSBool MONS_CheckIfEqualStringFromPos(char* Original,char* Find)
+{
+   uint64_t Find_Length = MONS_StringLength(Find);
+
+   for (uint64_t i = 0 ; i < Find_Length ; i++)
+   {
+     if (!(Original[i] == Find[i]))return False;
+   }
+   return True;
+}
+
+char* MONS_DupeString(char* String)
+{
+  uint64_t String_Length = MONS_StringLength(String);
+  char* ReturnString = GetMemory(String_Length+1);
+  if (!ReturnString)return NULL;
+
+  for (uint64_t i = 0 ; i <= String_Length ; i++)
+  {
+    ReturnString[i] = String[i];
+  }
+
+  return ReturnString;
 }
 
 char* MONS_AddString(char* fires,char* toadd)
 {
-  size_t fires_len = strlen(fires);
-  size_t toadd_len = strlen(toadd);
+  size_t fires_len = MONS_StringLength(fires);
+  size_t toadd_len = MONS_StringLength(toadd);
 
-  char* return_string = malloc(fires_len+toadd_len+1);
+  char* return_string = GetMemory(fires_len+toadd_len+1);
 
   for (size_t i = 0 ; i < fires_len ; i++)
   {
@@ -76,7 +247,7 @@ MSBool MONS_FindInString(char* text,char on)
 
 int MONS_StringToInt(char* text)
 {
-  if (!strlen(text)) return 0;
+  if (!MONS_StringLength(text)) return 0;
 
   size_t r = 0;
   for (int i = 0 ; text[i] ; i++)
@@ -92,8 +263,8 @@ int MONS_StringToInt(char* text)
 
 char* strevs(char* string)
 {
-  char* r_buffer = malloc(strlen(string));
-  int string_len = strlen(string);
+  char* r_buffer = GetMemory(MONS_StringLength(string));
+  int string_len = MONS_StringLength(string);
   for (int i = 1 ; i <= string_len ; i++)
   {
     r_buffer[i-1] = string[string_len-i];
@@ -105,7 +276,7 @@ char* strevs(char* string)
 
 char* MONS_IntToString(int num)
 {
-  char* d = malloc(10);
+  char* d = GetMemory(10);
   int c = 0;
 
   for (int i = 0 ; num ; i++ ) 
@@ -118,6 +289,6 @@ char* MONS_IntToString(int num)
   d[c+1] = 0;
   char* e = d;
   d = strevs(d);
-  free(e);
+  RemoveMemory(e);
   return d;
 }

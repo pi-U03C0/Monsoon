@@ -1,7 +1,6 @@
+#include "Monsoon/MONS_Process.h"
+#define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
-
-#include <stdlib.h>
-#include <string.h>
 
 MONS_File* MONS_OpenFile(char* FilePath,char Mode)
 {
@@ -147,7 +146,27 @@ char* MONS_OpenModeToString(char Mode)
   }
 }
 
-char* MONS_FindFile(char* FileName)
+char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
 {
-  return NULL;
+  if (!FileName)
+  {
+    LOG("FineName was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    return NULL;
+  }
+
+  char* FilePath = NULL;
+
+  char* PathBuffer = GetMemory(MONS_StringLength(MONS_GetEnvironmentVariable("PATH"))+MONS_StringLength(FileSearchPath));
+
+  if (!PathBuffer)
+  {
+    Error_Memory();
+    return NULL;
+  }
+
+  if (FileSearchPath)
+  {
+    
+  }
+  return FilePath;
 }

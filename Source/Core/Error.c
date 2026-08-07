@@ -24,7 +24,7 @@ char* MONS_GetErrorMessage(uint64_t Code)
   char* File =  MONS_SearchErrorFile(DeCode -> SourceFile);
   char* ErrorMessage = MONS_SearchErrorMessage(DeCode -> ErrorReason,DeCode -> ProjectPart);
   int i = snprintf(NULL, 0, "Monsoon Error(%020llu): %s at %s(%d):%d",Code,ErrorMessage,File,DeCode -> SourceFile,DeCode -> ErrorLine);
-  char* buffer = malloc(i);
+  char* buffer = GetMemory(i);
   if (!buffer)return NULL;
   snprintf(buffer,i+1, "Monsoon Error(%020llu): %s at %s(%d):%d",Code,ErrorMessage,File,DeCode -> SourceFile,DeCode -> ErrorLine);
   return buffer;

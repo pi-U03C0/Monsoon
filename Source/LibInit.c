@@ -1,5 +1,6 @@
+#include "Monsoon/MONS_Log.h"
+#define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
-#include <stdio.h>
 
 MONS_Library* __Monsoon = NULL;
 
@@ -10,8 +11,9 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
   {
     if (!MONS_AllocatMonsoon())return False;
   }
-
   __Monsoon -> state.LogLevel = LogLevel;
+
+  LOG("Initializing Monsoon",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
   //check if ProcArray was Initialized
   if (!MONS_InitProcArray())
@@ -25,13 +27,13 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
     //Initialized Components
     if (!MONS_InitializComponents(Components))
     {
-      LOG("Unable to Initialized Components",MONSOON_LOG_CRITICAL,2);
+      LOG("Unable to Initialized Components",MONSOON_LOG_CRITICAL,MONSOON_LOG_INIT);
       return False;
     }
     __Monsoon -> Components = (uint16_t*)MONS_DupeMemory((void*)Components, sizeof(uint16_t) * (MONS_ComponentsCount(Components)+1));
   }
 
-  LOG("Initialized Monsoon",MONSOON_LOG_INFO,1);
+  LOG("Initialized Monsoon",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
   return True;
 }
@@ -65,33 +67,33 @@ MSBool MONSTerminate()
 
 MSBool MONS_AllocatMonsoon()
 {
-     //allocate and Initializ __Monsoon
-    __Monsoon = (MONS_Library *)GetMemory( sizeof(MONS_Library));
-    if (!__Monsoon)
-    {
-      Error_Memory();
-      return False;
-    }
-    //set Init values
-    __Monsoon -> IsInitialized = True;
-    __Monsoon -> state.WindowCount = 0;
+  //allocate and Initializ __Monsoon
+  __Monsoon = (MONS_Library *)GetMemory( sizeof(MONS_Library));
+  if (!__Monsoon)
+  {
+    Error_Memory();
+    return False;
+  }
+  //set Init values
+  __Monsoon -> IsInitialized = True;
+  __Monsoon -> state.WindowCount = 0;
 
-    //Initializ OnExit
-    __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
-    if (!__Monsoon -> OnExit)
-    {
-      Error_Memory();
-      return False;
-    } for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
+  //Initializ OnExit
+  __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
+  if (!__Monsoon -> OnExit)
+  {
+    Error_Memory();
+    return False;
+  } for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
 
-    __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary)*MONSOON_LIBRARY_LIMIT);
-    if (!__Monsoon -> LoadedLibrary)
-    {
-      Error_Memory();
-      return False;
-    } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (MONS_DynamicLibrary){NULL,NULL,0};
+  __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary)*MONSOON_LIBRARY_LIMIT);
+  if (!__Monsoon -> LoadedLibrary)
+  {
+    Error_Memory();
+    return False;
+  } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (MONS_DynamicLibrary){NULL,NULL,0};
 
-    return True;
+  return True;
 }
 
 MSBool MONS_AddOnExitFunction(ExitFunciton fn)
@@ -153,6 +155,7 @@ MSBool MONS_DeInitializComponents(int Components)
 
 MSBool MONS_InitProcArray()
 {
+  //MONS_Procs allocateion
   MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
   if (!MONS_Procs)
   {
@@ -160,6 +163,7 @@ MSBool MONS_InitProcArray()
     return False;
   }
 
+  //seting procs
   uint16_t i = 0;
   for (; i < MONSOON_PROC_LEN ; i++)
   {
@@ -172,7 +176,6 @@ MSBool MONS_InitProcArray()
 
   return True;
 }
-
 
 uint64_t MONS_GetVersion()
 {

@@ -13,7 +13,7 @@ int MONS_WriteStdOutput(char* Message)
   WriteFile(
     hConsole,
     Message,
-    strlen(Message),
+    MONS_StringLength(Message),
     &WriteLen,
     NULL
   );
@@ -33,7 +33,7 @@ int MONS_WriteStdError(char* Message)
   WriteFile(
     hConsole,
     Message,
-    strlen(Message),
+    MONS_StringLength(Message),
     &WriteLen,
     NULL
   );
@@ -53,7 +53,7 @@ int MONS_WriteStdInput(char* Message)
   WriteFile(
     hConsole,
     Message,
-    strlen(Message),
+    MONS_StringLength(Message),
     &WriteLen,
     NULL
   );

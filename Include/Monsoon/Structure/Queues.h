@@ -30,12 +30,13 @@ uint16_t MONS_NextQueuePopIndex(MONS_Queue* Queue);
 //Return the Next Push/Write Index
 uint16_t MONS_NextQueuePushIndex(MONS_Queue* Queue);
 
+//check if a value can pop off the Queue
 MSBool MONS_CanPopQueue(MONS_Queue* Queue);
 
+//check if a value can push on the Queue
 MSBool MONS_CanPushQueue(MONS_Queue* Queue);
 
-
-
+//print the Queue and items
 void MONS_PrintQueue(MONS_Queue* Queue);
 
 #endif

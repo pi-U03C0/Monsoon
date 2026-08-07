@@ -33,7 +33,7 @@ char* MONS_GetEnvironmentVariable(char* Name)
     if (!envLenght)
     {
        return NULL;
-    };
+    }
 
     envBuffer = GetMemory(envLenght+1);
     if (!envBuffer)
@@ -45,7 +45,7 @@ char* MONS_GetEnvironmentVariable(char* Name)
     GetEnvironmentVariableA(Name, envBuffer, envLenght);
   #endif
 
-  #ifndef MONSOON_PLATFORM_POSIX
+  #ifdef MONSOON_PLATFORM_POSIX
     char* envFilePath = GetMemory(1024);
     if (!envFilePath)
     {
@@ -57,7 +57,12 @@ char* MONS_GetEnvironmentVariable(char* Name)
     MONS_File* envFile = MONS_OpenFile(envFilePath,MONSOON_FILE_READ);
 
     char* rBuffer = GetMemory(envFile -> FileSize);
-    if (!rBuffer)goto err_mem;
+    if (!rBuffer)
+    {
+      RemoveMemory(envFilePath);
+      Error_Memory();
+      return NULL;
+    }
 
     MONS_ReadFile(envFile,rBuffer,envFile -> FileSize);
     MONS_SplitString(rBuffer, 0);
@@ -67,5 +72,4 @@ char* MONS_GetEnvironmentVariable(char* Name)
   #endif
 
   return envBuffer;
-
 }
