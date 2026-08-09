@@ -1,4 +1,5 @@
-#include "Monsoon/MONS_Log.h"
+#include "Monsoon/MONS_Error.h"
+#include "Monsoon/MONS_FileSystem.h"
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 
@@ -32,6 +33,9 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
     }
     __Monsoon -> Components = (uint16_t*)MONS_DupeMemory((void*)Components, sizeof(uint16_t) * (MONS_ComponentsCount(Components)+1));
   }
+
+  MONS_AddOnExitFunction(MONS_CloseAllFile);
+  MONS_AddOnExitFunction(MONS_CloseAllLibrary);
 
   LOG("Initialized Monsoon",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
@@ -74,6 +78,7 @@ MSBool MONS_AllocatMonsoon()
     Error_Memory();
     return False;
   }
+
   //set Init values
   __Monsoon -> IsInitialized = True;
   __Monsoon -> state.WindowCount = 0;
@@ -86,12 +91,21 @@ MSBool MONS_AllocatMonsoon()
     return False;
   } for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
 
-  __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary)*MONSOON_LIBRARY_LIMIT);
+  //Init the list of loaded Library
+  __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary*) * MONSOON_LIBRARY_LIMIT);
   if (!__Monsoon -> LoadedLibrary)
   {
     Error_Memory();
     return False;
-  } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (MONS_DynamicLibrary){NULL,NULL,0};
+  } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (void*)MONSOON_LIBRARY_UNUSED;
+
+  //Init the list of loaded files
+  __Monsoon -> OpenFiles = GetMemory(sizeof(MONS_File*) * MONSOON_FILEOPEN_LIMIT);
+  if (!__Monsoon -> OpenFiles)
+  {
+    Error_Memory();
+    return False;
+  } for (uint16_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++) __Monsoon -> OpenFiles[i] = (void*)MONSOON_FILE_UNUSED;
 
   return True;
 }
@@ -128,7 +142,7 @@ MSBool MONS_InitializComponents(uint16_t* Components)
   {
     if (MONS_IsComponent(Components[i]))
     {
-       for (uint16_t j = 0 ; j < MONS_Components -> Lenght ; j++)
+       for (uint16_t j = 0 ; j < MONS_Components -> Length ; j++)
        {
           if (MONS_Components -> Components[j].Type == Components[i])
           {

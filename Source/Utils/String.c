@@ -11,7 +11,7 @@ uint64_t MONS_StringLength(char* String)
   return i;
 }
 
-MSBool MONS_StringCopy(char* CopyTo,char* From)
+uint64_t MONS_StringCopy(char* CopyTo,char* From)
 {
   if ((!CopyTo) || (!From))
   {
@@ -19,12 +19,14 @@ MSBool MONS_StringCopy(char* CopyTo,char* From)
     return False;
   }
 
+  //get the Length and copy it to "CopyTo" from "From"
   uint64_t From_Length = MONS_StringLength(From);
-  for (uint64_t i = 0 ; i < From_Length ; i++)
+  uint64_t i = 0;
+  for ( ; i <= From_Length ; i++)
   {
      CopyTo[i] = From[i];
   }
-  return True;
+  return From_Length;
 }
 
 char** MONS_SplitString(char* text,char on)
@@ -48,8 +50,8 @@ char** MONS_SplitString(char* text,char on)
   {
      if (text[i] == on)
      {
-        text_buffer[c_char+1] = 0;
-        Return_Split[String_Count] = strdup(text_buffer);
+        text_buffer[c_char] = 0;
+        Return_Split[String_Count] = MONS_DupeString(text_buffer);
         String_Count++;
         c_char = 0;
         continue;
@@ -60,8 +62,8 @@ char** MONS_SplitString(char* text,char on)
 
   if (c_char)
   {
-    text_buffer[c_char+1] = 0;
-    Return_Split[String_Count] = strdup(text_buffer);
+    text_buffer[c_char] = 0;
+    Return_Split[String_Count] = MONS_DupeString(text_buffer);
   }
   Return_Split[Split_Count+1] = NULL;
 
@@ -70,7 +72,7 @@ char** MONS_SplitString(char* text,char on)
   return Return_Split;
 }
 
-char* findandreplace(char* Original,char* Find,char* Replace)
+char* MONS_FindAndReplaceString(char* Original,char* Find,char* Replace)
 {
   //check NULL
   if (!Original || !Find || !Replace) return NULL;
@@ -109,7 +111,7 @@ char* findandreplace(char* Original,char* Find,char* Replace)
     {
       Temp_String[Temp_Index] = 0;
 
-      ReturnS[ReturnS_Index] = strdup(Temp_String);
+      ReturnS[ReturnS_Index] = MONS_DupeString(Temp_String);
 
       if (!ReturnS[ReturnS_Index])
       {
@@ -120,7 +122,7 @@ char* findandreplace(char* Original,char* Find,char* Replace)
 
       Temp_Index = 0;
       ReturnS_Index++;
-      ReturnS[ReturnS_Index] = strdup(Replace);
+      ReturnS[ReturnS_Index] = MONS_DupeString(Replace);
 
       if (!ReturnS[ReturnS_Index])
       {
@@ -139,26 +141,21 @@ char* findandreplace(char* Original,char* Find,char* Replace)
     }
   }
 
+  //check if there is any left and add append it
   if (Temp_Index)
   {
     Temp_String[Temp_Index] = 0;
-    ReturnS[ReturnS_Index++] = strdup(Temp_String);
+    ReturnS[ReturnS_Index++] = MONS_DupeString(Temp_String);
   }
 
+  //merge string and if failed ReturnString is allredey NULL
   char* ReturnString = MONS_MergeString(ReturnS, ReturnS_Index);
-  if (!ReturnString)
-  {
-    for (uint64_t i = 0 ; i < ReturnS_Index ; i++) RemoveMemory(ReturnS[i]);
-    RemoveMemory(Temp_String);
-    RemoveMemory(ReturnS);
-    return NULL;
-  }
 
+  //dealloc
   for (uint64_t i = 0 ; i < ReturnS_Index ; i++)
   {
     RemoveMemory(ReturnS[i]);
   }
-
   RemoveMemory(Temp_String);
   RemoveMemory(ReturnS);
 
@@ -167,27 +164,27 @@ char* findandreplace(char* Original,char* Find,char* Replace)
 
 char* MONS_MergeString(char** Strings,uint64_t Length)
 {
-  uint64_t s_len = 0 ;
+  uint64_t TotalLength = 0 ;
   for (uint64_t i = 0 ; i < Length ; i++)
   {
-     s_len += MONS_StringLength(Strings[i]);
+     TotalLength += MONS_StringLength(Strings[i]);
   }
 
-  char* r_s = malloc(s_len+1);
-  if (!r_s) return NULL;
+  char* ReturnString = malloc(TotalLength+1);
+  if (!ReturnString) return NULL;
 
-  uint64_t s = 0;
+  uint64_t StringIndex = 0;
   for (uint64_t i = 0 ; i < Length ; i++)
   {
     for (uint64_t j = 0 ; j < MONS_StringLength(Strings[i]) ; j++)
     {
-      r_s[s] = Strings[i][j];
-      s++;
+      ReturnString[StringIndex] = Strings[i][j];
+      StringIndex++;
     }
   }
 
-  r_s[s_len] = 0;
-  return r_s;
+  ReturnString[TotalLength] = 0;
+  return ReturnString;
 }
 
 MSBool MONS_CheckIfEqualStringFromPos(char* Original,char* Find)

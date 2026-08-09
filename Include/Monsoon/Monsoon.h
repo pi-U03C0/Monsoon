@@ -41,12 +41,13 @@ extern "C" {
 #endif
 
 #ifdef MONSOON_PLATFORM_NT
-  #define MONSOON_PATH_SPLIT ';'
+  #define MONSOON_PATH_SPLIT ";"
 #endif
 
 #ifdef MONSOON_PLATFORM_POSIX
-  #define MONSOON_PATH_SPLIT ':'
+  #define MONSOON_PATH_SPLIT ":"
 #endif
+
 
 #include <Monsoon/MONS_Types.h>
 extern MONS_Library* __Monsoon;

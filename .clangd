@@ -8,3 +8,7 @@ CompileFlags:
     - "-DMONSOON_LOG_LEVEL=10"
     - "-DMONSOON_VERSION"
     - -Wno-incompatible-pointer-types-discards-qualifiers
+
+Diagnostics:
+  Suppress:
+    - err_pp_including_mainfile_in_preamble

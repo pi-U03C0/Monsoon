@@ -5,7 +5,7 @@
 
 #define Make_Code(ErrorReason) EnCodeError(__LINE__,__FILE_NUMBER__,__PROJECT_PART__,ErrorReason)
 #define Error_Memory() \
-     LOG("Memory Error",MONSOON_LOG_FATAL,100);\
+     LOG("Memory Error Unable to alloc Memory",MONSOON_LOG_FATAL,100);\
      MONS_SetErrorCode(Make_Code(100))
 
 

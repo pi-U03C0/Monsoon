@@ -6,7 +6,10 @@
 
 int main(int argc, char** argv)
 {
-  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_INIT_OPENGL),MONSOON_LOG_INFO))
+  if (!MONSInit(
+    MakeInit_ComponentsOption(MONSOON_INIT_OPENGL),
+    MONSOON_LOG_DEBUG
+  ))
   {
      MONS_WriteStdOutput("MONSInit filed\n");
      return 1;

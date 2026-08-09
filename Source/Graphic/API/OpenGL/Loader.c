@@ -10,9 +10,17 @@ MSBool MONS_InitComponentOpenGL()
 
 char* MONS_FindOpenGLDLL()
 {
+  char* DLLPath = NULL;
+
   #ifdef MONSOON_PLATFORM_NT
-     MONS_FindFile("OpenGL32.DLL");
+     DLLPath = MONS_FindFile("OpenGL32.DLL",NULL,True);
   #endif
+
+  #ifdef MONSOON_PLATFORM_POSIX
+     DLLPath = MONS_FindFile("libGL.so.1")
+  #endif
+
+  MONS_DynamicLibrary* OpenGL_Library = MONS_LoadLibrary(DLLPath,0);
 
   return NULL;
 }

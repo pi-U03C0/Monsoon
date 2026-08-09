@@ -36,7 +36,7 @@ $INCLUDE = "$OWD/include"
 $CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
-$VERSION = 1
+$VERSION = 2
 
 $Verbose = $false
 
@@ -165,21 +165,20 @@ function Compile-Test
 
   if (Test-Path -Path "$TEST/$Name.c")
   {
-    Write-Host "TEST: Test/$Name.c -> Bin/$Name.exe"
     if ($Verbose)
     {
-      Write-Host "gcc -o $BIN/$Name.exe $TEST/$Name.c -L$LIBRARY -I$INCLUDE -l:monsoon.a $CFLAG"
+      return (& "$TOOLS/CompileTest.ps1" -TestName $Name -Verbose)
     }
-    & "ccache" "gcc" "-o" "$BIN/$Name.exe" "$TEST/$Name.c" "-L$LIBRARY" "-I$INCLUDE" "-l:monsoon.a" $CFLAG
-    return $?
+    else
+    {
+      return (& "$TOOLS/CompileTest.ps1" -TestName $Name)
+    }
   }
   else
   {
     Write-Host "File $TEST/$Name.c was not Found"
     return $false
   }
-
-  return $true
 }
 
 if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent)
@@ -256,7 +255,12 @@ if ($TestName -ne "-=-")
 
   if ($RunExe)
   {
-    & "$BIN/$TestName.exe"
+    if ($Verbose)
+    {
+      Write-Host "$BIN/Test/$TestName.exe"
+    }
+
+    & "$BIN/Test/$TestName.exe"
 
     $Message = "`e[32mSUCCESS`e[0m"
     if ($LASTEXITCODE -eq -1073741819)

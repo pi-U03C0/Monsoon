@@ -29,20 +29,20 @@ char* MONS_GetEnvironmentVariable(char* Name)
 {
   char* envBuffer = NULL;
   #ifdef MONSOON_PLATFORM_NT
-    uint32_t envLenght = GetEnvironmentVariableA(Name,envBuffer,0);
-    if (!envLenght)
+    uint32_t envLength = GetEnvironmentVariableA(Name,envBuffer,0);
+    if (!envLength)
     {
        return NULL;
     }
 
-    envBuffer = GetMemory(envLenght+1);
+    envBuffer = GetMemory(envLength+1);
     if (!envBuffer)
     {
        Error_Memory();
        return NULL;
     };
 
-    GetEnvironmentVariableA(Name, envBuffer, envLenght);
+    GetEnvironmentVariableA(Name, envBuffer, envLength);
   #endif
 
   #ifdef MONSOON_PLATFORM_POSIX

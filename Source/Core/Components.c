@@ -7,9 +7,9 @@ MONS_InitComponent MONS_InitComponentsArraryPart[] = {
   NULL
 };
 
-MSBool MONS_InitComponentArray(uint16_t Lenght)
+MSBool MONS_InitComponentArray(uint16_t Length)
 {
-  if (!Lenght)return False;
+  if (!Length)return False;
 
   MONS_Components = GetMemory(sizeof(MONS_ComponentList));
   if (!MONS_Components)
@@ -18,7 +18,7 @@ MSBool MONS_InitComponentArray(uint16_t Lenght)
     return False;
   }
 
-  MONS_Components -> Components = GetMemory(sizeof(MONS_Component) * Lenght);
+  MONS_Components -> Components = GetMemory(sizeof(MONS_Component) * Length);
   if (!MONS_Components -> Components)
   {
     Error_Memory();
@@ -30,7 +30,7 @@ MSBool MONS_InitComponentArray(uint16_t Lenght)
     MONS_Components -> Components[i].Type = 0;
     MONS_Components -> Components[i].Init = NULL;
   }
-  MONS_Components -> Lenght = MONSOON_COMPONENT_LENGHT;
+  MONS_Components -> Length = MONSOON_COMPONENT_LENGHT;
 
   for (uint16_t i = 0 ; MONS_InitComponentsArraryPart[i] ; i++)
   {
@@ -45,7 +45,7 @@ MSBool MONS_InitComponentArray(uint16_t Lenght)
 
 MSBool MONS_AppendComponent(MSBool Type,void* Init)
 {
-  for (uint16_t i = 0 ; i < MONS_Components -> Lenght ; i++)
+  for (uint16_t i = 0 ; i < MONS_Components -> Length ; i++)
   {
     if ((MONS_Components -> Components[i].Type == 0) || (MONS_Components -> Components[i].Type == Type))
     {
@@ -65,7 +65,7 @@ MSBool MONS_InitOpenGLArrayPart()
 
 MSBool MONS_SetComponentInit(uint16_t Type)
 {
-   for (uint16_t i = 0 ; i < MONS_Components -> Lenght ; i++)
+   for (uint16_t i = 0 ; i < MONS_Components -> Length ; i++)
    {
      if (MONS_Components -> Components[i].Type == Type)
      {
@@ -87,7 +87,7 @@ char* MONS_ComponentToString(uint16_t Component)
 
 MSBool MONS_IsComponent(uint16_t Component)
 {
-  for (uint16_t i = 0 ; i < MONS_Components -> Lenght ; i++)
+  for (uint16_t i = 0 ; i < MONS_Components -> Length ; i++)
   {
     if (MONS_Components -> Components[i].Type == Component)
     {

@@ -3,6 +3,13 @@
 
 #include <stdint.h>
 
+#ifndef MONSOON_LIBRARY_LIMIT
+  #define MONSOON_LIBRARY_LIMIT 10
+#endif
+
+#ifndef MONSOON_FILEOPEN_LIMIT
+  #define MONSOON_FILEOPEN_LIMIT 10
+#endif
 
 typedef char MSBool;
 
@@ -64,32 +71,6 @@ struct MONSError {
   char* Message;
 }; typedef struct MONSError MONSError;
 
-struct LibraryState {
-  uint8_t WindowCount;
-  uint8_t LogLevel;
-  uint16_t LoadedLibraryCount;
-  char* FileSearchPath;
-  char extra[128];
-}; typedef struct LibraryState LibraryState;
-
-struct MONS_Library
-{
-  MSBool IsInitialized;
-  LibraryState state;
-  MONSError Error;
-  void (**OnExit)(void);
-  MONS_DynamicLibrary* LoadedLibrary;
-  uint16_t* Components;
-}; typedef struct MONS_Library MONS_Library;
-
-struct MONS_Window
-{
-  OSWindowHandle OSHandle;
-  MONS_Rect* WindowArea;
-  char* Title;
-  MONS_Queue* Events;
-}; typedef struct MONS_Window MONS_Window;
-
 struct MONS_File
 {
   OSFileHandle OSHandle;
@@ -119,9 +100,42 @@ struct MONS_Component
 struct MONS_ComponentList
 {
   MONS_Component* Components;
-  uint16_t Lenght;
+  uint16_t Length;
 };typedef struct MONS_ComponentList MONS_ComponentList;
 
+struct MONS_Window
+{
+  OSWindowHandle OSHandle;
+  MONS_Rect* WindowArea;
+  char* Title;
+  MONS_Queue* Events;
+}; typedef struct MONS_Window MONS_Window;
+
+struct LibraryState {
+  uint8_t WindowCount;
+  uint8_t LogLevel;
+  uint16_t LoadedLibraryCount;
+  char* FileSearchPath;
+  char extra[128];
+}; typedef struct LibraryState LibraryState;
+
+struct MONS_Library
+{
+  //Is Monsoon Library Initialized
+  MSBool IsInitialized;
+  //The Last Error
+  MONSError Error;
+  //The Function that run on Monsoon Terminate
+  void (**OnExit)(void);
+  //All Library that was Loaded by Monsoon
+  MONS_DynamicLibrary** LoadedLibrary;
+  //All File Open By Monsoon
+  MONS_File** OpenFiles;
+  //All Initialized Components
+  uint16_t* Components;
+  //The Library state
+  LibraryState state;
+}; typedef struct MONS_Library MONS_Library;
 
 
 #endif

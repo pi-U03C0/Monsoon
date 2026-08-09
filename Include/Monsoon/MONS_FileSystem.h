@@ -7,6 +7,10 @@
 #define MONSOON_FILE_WRITE 1
 #define MONSOON_FILE_READ_WRITE 2
 
+#define MONSOON_SPLIT_PATH 0x1
+
+#define MONSOON_FILE_UNUSED 1
+
 //check if a file exists
 //----------------------------------------
 //`FilePath`:The Path to the file
@@ -59,10 +63,16 @@ char* MONS_OpenModeToString(char Mode);
 //`FileSearchPath`:The Path To Search
 //`SearchSystemPath`:Should function check the SystemPath for that File
 //----------------------------------------
-//`The` SearchPath Paths are Split by byte 0x01 which is define as MONSOON_SPLIT_PATH 1 for example:
+//`The` SearchPath Paths are Split by byte 0x01 which is define as MONSOON_SPLIT_PATH for example:
 //`"c:\somethings{0x1}c:\somethingelse"`
 //`　　　　　　　　^`
 //`This` is what it will split in to {"c:\somethings","c:\somethingelse"},
 char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath);
+
+//Close all File that are current Open
+//----------------------------------------
+//`This` Function runs on Monsoon Exit
+void MONS_CloseAllFile();
+
 
 #endif

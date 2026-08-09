@@ -14,7 +14,7 @@ enum ComponentType
 extern MONS_ComponentList* MONS_Components;
 
 //Init the Component Array
-MSBool MONS_InitComponentArray(uint16_t Lenght);
+MSBool MONS_InitComponentArray(uint16_t Length);
 
 //Check if a Component Exists
 MSBool MONS_IsComponent(uint16_t Component);
