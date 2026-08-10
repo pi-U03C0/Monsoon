@@ -2,6 +2,8 @@
 
 MONS_DynamicLibrary* MONS_LoadLibrary(char* DLLPath,uint16_t LoadFlags)
 {
+   LOG("Loading Library %s with LoadFlags %d",MONSOON_LOG_DEBUG,255,DLLPath,LoadFlags);
+
    if ((!MONS_IsAtLimitLibrary()) || !(__Monsoon -> state.LoadedLibraryCount > MONSOON_LIBRARY_LIMIT))
    {
      LOG(
@@ -16,6 +18,10 @@ MONS_DynamicLibrary* MONS_LoadLibrary(char* DLLPath,uint16_t LoadFlags)
    }
 
    MONS_DynamicLibrary* Library = GetMemory(sizeof(MONS_DynamicLibrary));
+   if (!Library)
+   {
+     Error_Memory();
+   }
 
    #ifdef MONSOON_PLATFORM_NT
       Library -> OSHandle = MONS_Win32_LoadLibrary(DLLPath);

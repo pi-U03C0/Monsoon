@@ -1,4 +1,5 @@
 #include <Monsoon/Monsoon.h>
+#include <stdio.h>
 
 MSBool MONS_InitComponentOpenGL()
 {

@@ -31,18 +31,27 @@ uint64_t MONS_StringCopy(char* CopyTo,char* From)
 
 char** MONS_SplitString(char* text,char on)
 {
+  if (!text)return NULL;
+
+  //count how many times to split
   int Split_Count = 1;
   for (int i = 0 ; text[i] ; i++)
     if (text[i] == on) Split_Count++;
 
-  char** Return_Split = (char**)GetMemory(sizeof(char**)*(Split_Count+1));
+  //alloc buffer
+  char** Return_Split = (char**)GetMemory(sizeof(char**)*(Split_Count+2));
   if (!Return_Split)return NULL;
 
+  //add the array count
   Return_Split[0] =  ((char*)(long long)Split_Count);
   Return_Split++;
 
   char* text_buffer = GetMemory(MONS_StringLength(text)+1);
-  if (!text_buffer)return NULL;
+  if (!text_buffer)
+  {
+    RemoveMemory(Return_Split-1);
+    return NULL;
+  }
   int String_Count = 0;
   int c_char = 0;
 
@@ -65,7 +74,7 @@ char** MONS_SplitString(char* text,char on)
     text_buffer[c_char] = 0;
     Return_Split[String_Count] = MONS_DupeString(text_buffer);
   }
-  Return_Split[Split_Count+1] = NULL;
+  Return_Split[Split_Count] = NULL;
 
   RemoveMemory(text_buffer);
 

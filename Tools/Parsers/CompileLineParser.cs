@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class CompileLineParser
 {
   public string SourceLine;
-  public bool Error;
+  public bool Error = false;
   public string Type = "EXE";
-  public Dictionary<string,string>Functions;
+  public string Message = "";
+  public Dictionary<string,string[]>Functions;
 
   public CompileLineParser(string Line)
   {
     this.SourceLine = Line;
-    this.Functions = new Dictionary<string,string>{};
+    this.Functions = new Dictionary<string,string[]>{};
     this.Parse();
   }
 
@@ -23,7 +26,9 @@ public class CompileLineParser
     }
     else
     {
-      Error = true;
+      this.Error = true;
+      this.Message = "The Code is not Vaild";
+      return;
     }
 
     string[] sections = this.GetSections(Code);
@@ -54,8 +59,31 @@ public class CompileLineParser
      }
      if (SectionType)
      {
-       t_s.Replace("|","");
+       this.Type = t_s.Replace("|","");
+       return true;
      }
+
+     string fn = "";
+     string param = "";
+     foreach (char i in section)
+     {
+         if (i == '(')
+         {
+           break;
+         }
+         fn += i;
+     }
+     section = section.Replace(fn+"(","");
+     foreach (char i in section)
+     {
+         if (i == ')')
+         {
+           break;
+         }
+         param += i;
+     }
+
+     this.Functions[fn] = this.Functions[fn].Append(param).ToArray();
 
      return true;
   }
@@ -89,7 +117,7 @@ public class CompileLineParser
   public bool VaildSection(string section)
   {
     string fn = "";
-    for (int i = 0 ; section[i] != "(" ; i++)
+    for (int i = 0 ; (section.Length > i) && (section[i] != '(') ; i++)
     {
       fn += section[i];
     }
@@ -159,5 +187,26 @@ public class CompileLineParser
       }
     }
     return true;
+  }
+}
+
+class Program
+{
+  public static void Main(string[] args)
+  {
+    CompileLineParser clp = new("// *|DLL|,D(jk)*");
+    Console.WriteLine($"Error = {clp.Error}");
+    Console.WriteLine($"Message = {clp.Message}");
+    Console.WriteLine($"type = {clp.Type}");
+
+    foreach (KeyValuePair<string, string[]> item in clp.Functions)
+    {
+        Console.WriteLine($"Function: {item.Key}");
+
+        foreach (string param in item.Value)
+        {
+            Console.WriteLine($"  Parameter: {param}");
+        }
+    }
   }
 }

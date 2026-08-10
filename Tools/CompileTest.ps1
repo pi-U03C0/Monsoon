@@ -42,7 +42,7 @@ function Main
      mkdir "$BIN/Test/$TestLang"
    }
 
-   Write-Host "TEST: Test/$TestName.c -> Bin/Test/$TestLang/$TestName.exe"
+   Write-Host "TEST: Test/$TestName.c -> Bin/Test/$TestName.exe"
 
    if ($Verbose)
    {

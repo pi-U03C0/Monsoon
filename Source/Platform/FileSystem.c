@@ -1,3 +1,4 @@
+#include <stdio.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 
@@ -147,9 +148,10 @@ char* MONS_OpenModeToString(char Mode)
 
 char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
 {
+  LOG("Finding File %s",MONSOON_LOG_DEBUG,255,FileName);
   if (!FileName)
   {
-    LOG("FineName was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    LOG("FileName was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return NULL;
   }
 
@@ -182,7 +184,14 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
   }
 
   char** SplitPaths = MONS_SplitString(PathBuffer,MONSOON_SPLIT_PATH);
-  char* Path = GetMemory(MAX_PATH);
+  char* Path = GetMemory(1024);
+
+  if (!Path)
+  {
+    RemoveMemory(PathBuffer);
+    return NULL;
+  }
+
   for (uint64_t i = 0 ; i < GET_SPLIT_SIZE(SplitPaths) ; i++)
   {
     if (!SplitPaths[i])
