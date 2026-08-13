@@ -36,7 +36,7 @@ $INCLUDE = "$OWD/include"
 $CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
-$VERSION = 3
+$VERSION = 4
 
 $Verbose = $false
 
@@ -152,7 +152,7 @@ function Make-MonsoonDLL
   }
 
   Write-Host "DLL: -> Bin/Monsoon.dll"
-  & "ccache" "gcc" "-o" "$BIN/Monsoon.dll" $OBJECT "-shared" "-Wl,--out-implib,$LIBRARY/Monsoon.a" "-lShlwapi"
+  & "ccache" "gcc" "-o" "$BIN/Monsoon.dll" $OBJECT "-shared" "-Wl,--out-implib,$LIBRARY/Monsoon.a" "-lShlwapi" "-lgdi32"
 
   return $true
 }
@@ -171,7 +171,7 @@ function Compile-Test
     }
     else
     {
-      return (& "$TOOLS/CompileTest.ps1" -TestName $Name)
+      return (& "$TOOLS/CompileTest.ps1" -TestName $Name -CFLAG $CFLAG)
     }
   }
   else

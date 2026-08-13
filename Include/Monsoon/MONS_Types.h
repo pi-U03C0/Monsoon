@@ -15,7 +15,7 @@ typedef char MSBool;
 
 #ifdef _WIN32
 typedef void* OSFileHandle;
-typedef void* OSWindowHandle;
+typedef void* OSHandle;
 #define PATH_SEP '\\'
 #else
 #define PATH_SEP '/'
@@ -105,11 +105,25 @@ struct MONS_ComponentList
 
 struct MONS_Window
 {
-  OSWindowHandle OSHandle;
+  OSHandle OSHandle;
+  OSHandle RenderSurface;
   MONS_Rect* WindowArea;
   char* Title;
   MONS_Queue* Events;
 }; typedef struct MONS_Window MONS_Window;
+
+struct MONS_OpenGLContext
+{
+  void* GLContext;
+  void* RenderSurface;
+};typedef struct MONS_OpenGLContext MONS_OpenGLContext;
+
+struct MONS_OpenGLVersion
+{
+  char Major;
+  char Minor;
+};
+typedef struct MONS_OpenGLVersion MONS_OpenGLVersion;
 
 struct LibraryState {
   uint8_t WindowCount;
@@ -136,6 +150,5 @@ struct MONS_Library
   //The Library state
   LibraryState state;
 }; typedef struct MONS_Library MONS_Library;
-
 
 #endif

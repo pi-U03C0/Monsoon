@@ -3,10 +3,12 @@
 
 #include <Monsoon/MONS_Types.h>
 
-MSBool MONS_LoadOpenGLFunctions(char* DLLPath);
-
 char* MONS_FindOpenGLDLL();
 
 MSBool MONS_InitComponentOpenGL();
+
+MSBool MONS_LoadOpenGLCore();
+
+MSBool MONS_LoadOpenGLFunctions();
 
 #endif

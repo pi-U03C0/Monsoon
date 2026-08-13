@@ -1,6 +1,7 @@
 #ifndef MONSOON_PROC_H
 #define MONSOON_PROC_H
 
+#include <Monsoon/Monsoon.h>
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/MONS_Types.h>
 
@@ -11,10 +12,10 @@
     #define MONSOON_PROC_WINDOW_NAME MONSOON_PROC_WIN32_WINDOW_NAME
 #endif
 
-extern MONS_Proc* MONS_Procs;
+MONS_API extern MONS_Proc* MONS_Procs;
 
-extern MONS_Proc MONS_ProcsDefine[];
+MONS_API extern MONS_Proc MONS_ProcsDefine[];
 
-void* MONS_GetProc(uint16_t ProcType);
+MONS_API void* MONS_GetProc(uint16_t ProcType);
 
 #endif

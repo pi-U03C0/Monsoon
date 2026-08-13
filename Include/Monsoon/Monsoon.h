@@ -5,6 +5,14 @@
 extern "C" {
 #endif
 
+#define MONSOON_DLL
+
+#ifdef MONSOON_DLL
+    #define MONS_API __declspec(dllexport)
+#else
+    #define MONS_API __declspec(dllimport)
+#endif
+
 #if defined(_WIN32)
   #define MONSOON_OS_WINDOWS 1
   #define MONSOON_PLATFORM_NT 1
@@ -48,6 +56,8 @@ extern "C" {
   #define MONSOON_PATH_SPLIT ":"
 #endif
 
+#define ToString_(x) #x
+#define ToString(x)  ToString_(x)
 
 #include <Monsoon/MONS_Types.h>
 extern MONS_Library* __Monsoon;
@@ -65,10 +75,8 @@ extern MONS_Library* __Monsoon;
 #include <Monsoon/MONS_Time.h>
 #include <Monsoon/MONS_Components.h>
 
-#include <Monsoon/Platform/Platform.h>
 #include <Monsoon/Structure/Structure.h>
 #include <Monsoon/Utils/Utils.h>
-#include <Monsoon/Graphic/Graphic.h>
 
 #ifdef INCLUDE_STD
   #include <stdio.h>

@@ -1,3 +1,5 @@
+#include "Monsoon/MONS_Proc.h"
+#include <stdio.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 
@@ -22,6 +24,7 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
 
   if (Components)//check if Components is NULL
   {
+
     MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
     //Initialized Components
     if (!MONS_InitializComponents(Components))
@@ -57,8 +60,13 @@ MSBool MONSTerminate()
   }
 
   //free memory
+  if (__Monsoon -> Components)RemoveMemory(__Monsoon -> Components);
   RemoveMemory(__Monsoon -> OnExit);
+  RemoveMemory(__Monsoon -> LoadedLibrary);
+  RemoveMemory(__Monsoon -> OpenFiles);
   RemoveMemory(__Monsoon);
+
+  if (MONS_Procs) RemoveMemory(MONS_Procs);
 
   LOG("Terminated Monsoon",MONSOON_LOG_SUCCESS,1);
 

@@ -1,6 +1,7 @@
 param(
   [string]$TestName,
   [switch]$IsSource,
+  [string[]]$CFLAG,
   [switch]$Verbose
 )
 
@@ -9,7 +10,6 @@ $SOURCE = "$OWD/source"
 $BIN = "$OWD/bin"
 $LIBRARY = "$OWD/Library"
 $INCLUDE = "$OWD/include"
-$CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
 

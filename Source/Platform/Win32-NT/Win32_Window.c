@@ -1,6 +1,7 @@
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
 #include <stdio.h>
+#include <wingdi.h>
 
 LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -57,6 +58,7 @@ HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
   WNDCLASS window_class = {0};
   window_class.lpszClassName = window_class_name;
   window_class.lpfnWndProc = WinProc;
+  window_class.style = CS_OWNDC;
 
   if (!RegisterClassA(&window_class))
   {
@@ -108,4 +110,37 @@ MSBool MONS_Win32_WindowPollEvent(HANDLE Window)
     return DispatchMessage(&msg);
   }
   return False;
+}
+
+void* MONS_Win32_GetWindowDrawSurface(HANDLE Window)
+{
+  return GetDC(Window);
+}
+
+MSBool MONS_Win32_SetPixelFormat(HDC WindowDC)
+{
+    PIXELFORMATDESCRIPTOR pfd = {0};
+
+    pfd.nSize = sizeof(pfd);
+
+    pfd.nVersion = 1;
+
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+
+    pfd.iPixelType = PFD_TYPE_RGBA;
+
+    pfd.cColorBits = 24;
+    pfd.cAlphaBits = 8;
+
+    pfd.cDepthBits = 24;
+
+    pfd.cStencilBits = 8;
+
+    pfd.iLayerType = PFD_MAIN_PLANE;
+
+    int format = ChoosePixelFormat( WindowDC, &pfd);
+    if (!format) return False;
+    SetPixelFormat(WindowDC, format, &pfd);
+
+  return True;
 }

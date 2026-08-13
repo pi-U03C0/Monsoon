@@ -1,2 +1,3 @@
 (main<Source/LibInit.c>)
 (log<Source/Core/Log.c>)
+(sw-w<source/Window/Window.c)

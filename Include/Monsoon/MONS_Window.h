@@ -26,4 +26,6 @@ MONS_Event* MONS_PopWindowEvent(MONS_Window* Window);
 //Push a Event to the window Event
 MSBool MONS_PushWindowEvent(MONS_Window* Window,MONS_Event* Event);
 
+OSHandle MONS_GetWindowDrawSurface(MONS_Window* Window);
+
 #endif

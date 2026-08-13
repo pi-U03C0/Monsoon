@@ -1,4 +1,5 @@
 #include <Monsoon/Monsoon.h>
+#include <Monsoon/Graphic/Graphic.h>
 
 MONS_ComponentList* MONS_Components = NULL;
 
@@ -41,6 +42,19 @@ MSBool MONS_InitComponentArray(uint16_t Length)
   }
 
   return True;
+}
+
+void MONS_DeInitComponentArray()
+{
+  if (MONS_Components -> Components)
+  {
+    RemoveMemory(MONS_Components -> Components);
+  }
+
+  if (MONS_Components)
+  {
+    RemoveMemory(MONS_Components);
+  }
 }
 
 MSBool MONS_AppendComponent(MSBool Type,void* Init)

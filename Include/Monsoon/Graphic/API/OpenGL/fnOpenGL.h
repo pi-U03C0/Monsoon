@@ -1,2 +1,37 @@
 #ifndef MONSOON_GRAPHIC_API_OPENGL_FUNCTION_H
+#define MONSOON_GRAPHIC_API_OPENGL_FUNCTION_H
+
+#include "Monsoon/Graphic/API/OpenGL/OpenGL.h"
+#include <Monsoon/Monsoon.h>
+
+MONS_API extern PFNWGLCREATECONTEXTPROC  MONS_wglCreateContext;
+MONS_API extern PFNWGLMAKECURRENTPROC    MONS_wglMakeCurrent;
+MONS_API extern PFNWGLDELETECONTEXTPROC  MONS_wglDeleteContext;
+MONS_API extern PFNWGLGETPROCADDRESSPROC MONS_wglGetProcAddress;
+MONS_API extern PFNWGLCREATECONTEXTATTRIBSARBPROC MONS_wglCreateContextAttribsARB;
+MONS_API extern PFNWGLCHOOSEPIXELFORMATARBPROC MONS_wglChoosePixelFormatARB;
+MONS_API extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
+MONS_API extern PFNGLGETSTRINGPROC MONS_glGetString;
+
+#define wglCreateContext MONS_wglCreateContext
+#define wglMakeCurrent MONS_wglMakeCurrent
+#define wglDeleteContext MONS_wglDeleteContext
+#define wglGetProcAddress MONS_wglGetProcAddress
+#define glGetString MONS_glGetString
+
+#ifdef MONSOON_PLATFORM_NT
+#define glCreateContext wglCreateContext
+#define glMakeCurrent wglMakeCurrent
+#define glDeleteContext wglDeleteContext
+#define glGetProcAddress wglGetProcAddress
+#endif
+
+#ifdef MONSOON_PLATFORM_NT
+#define sglCreateContext  "wglCreateContext"
+#define sglMakeCurrent    "wglMakeCurrent"
+#define sglDeleteContext  "wglDeleteContext"
+#define sglGetProcAddress "wglGetProcAddress"
+#define sglGetString      "glGetString"
+#endif
+
 #endif

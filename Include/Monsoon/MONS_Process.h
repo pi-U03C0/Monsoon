@@ -2,12 +2,13 @@
 #define MONSOON_PROCESS_INFO_H
 
 #include <Monsoon/MONS_Types.h>
+#include <Monsoon/Monsoon.h>
 
 //Get the Process Working Directory
-char* MONS_GetCurrentWorkingDirectory();
+MONS_API char* MONS_GetCurrentWorkingDirectory();
 
-uint32_t MONS_GetProcessId();
+MONS_API uint32_t MONS_GetProcessId();
 
-char* MONS_GetEnvironmentVariable(char* Name);
+MONS_API char* MONS_GetEnvironmentVariable(char* Name);
 
 #endif

@@ -21,7 +21,7 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
   }
 
   #ifdef _WIN32 //Create Window for Win32
-     OSWindowHandle WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
+     OSHandle WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
      uint64_t Code = MONS_Win32_GetErrorCode();
 
     if (!WindowHandle) //check Window Handle
@@ -41,6 +41,8 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
   Window -> WindowArea = rect;
   Window -> Title = Title;
   Window -> Events = MONS_InitQueue(256);
+  Window -> RenderSurface = MONS_GetWindowDrawSurface(Window);
+
   if (!Window -> Events)
   {
     LOG("Unable to Create Window Event Queue",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
