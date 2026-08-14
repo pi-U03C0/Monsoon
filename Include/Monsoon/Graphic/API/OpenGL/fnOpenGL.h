@@ -12,26 +12,36 @@ MONS_API extern PFNWGLCREATECONTEXTATTRIBSARBPROC MONS_wglCreateContextAttribsAR
 MONS_API extern PFNWGLCHOOSEPIXELFORMATARBPROC MONS_wglChoosePixelFormatARB;
 MONS_API extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 MONS_API extern PFNGLGETSTRINGPROC MONS_glGetString;
+MONS_API extern PFNGLCLEARPROC MONS_glClear;
+MONS_API extern PFNGLCLEARCOLORPROC MONS_glClearColor;
 
 #define wglCreateContext MONS_wglCreateContext
 #define wglMakeCurrent MONS_wglMakeCurrent
 #define wglDeleteContext MONS_wglDeleteContext
 #define wglGetProcAddress MONS_wglGetProcAddress
+#define wglCreateContextAttribsARB MONS_wglCreateContextAttribsARB
 #define glGetString MONS_glGetString
+#define glClear MONS_glClear
+#define glClearColor MONS_glClearColor
 
 #ifdef MONSOON_PLATFORM_NT
 #define glCreateContext wglCreateContext
 #define glMakeCurrent wglMakeCurrent
 #define glDeleteContext wglDeleteContext
 #define glGetProcAddress wglGetProcAddress
+#define glCreateContextAttribsARB wglCreateContextAttribsARB
 #endif
 
 #ifdef MONSOON_PLATFORM_NT
-#define sglCreateContext  "wglCreateContext"
-#define sglMakeCurrent    "wglMakeCurrent"
-#define sglDeleteContext  "wglDeleteContext"
-#define sglGetProcAddress "wglGetProcAddress"
-#define sglGetString      "glGetString"
+#define sglCreateContext           "wglCreateContext"
+#define sglMakeCurrent             "wglMakeCurrent"
+#define sglDeleteContext           "wglDeleteContext"
+#define sglGetProcAddress          "wglGetProcAddress"
+#define sglCreateContextAttribsARB "wglCreateContextAttribsARB"
 #endif
+
+#define sglClear                   "glClear"
+#define sglClearColor              "glClearColor"
+#define sglGetString               "glGetString"
 
 #endif

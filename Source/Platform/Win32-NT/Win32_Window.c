@@ -1,18 +1,18 @@
+#define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
-#include <stdio.h>
-#include <wingdi.h>
 
 LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
         case WM_CLOSE: {
-          MONS_Event* event = GetMemory(sizeof(MONS_Event));
-          event -> Type = MONSOON_EVENT_WINDOW_CLOSE;
-          event -> Prarms = NULL;
+          MONS_Event event = {
+            .Type = MONSOON_EVENT_WINDOW_CLOSE,
+            .Prarms = NULL,
+          };
 
-          MONS_PushWindowEvent((MONS_Window*)GetWindowLongPtrA(hwnd,GWLP_USERDATA),event);
+          MONS_PushWindowEvent((MONS_Window*)GetWindowLongPtrA(hwnd,GWLP_USERDATA),&event);
           return 0;
         };
 

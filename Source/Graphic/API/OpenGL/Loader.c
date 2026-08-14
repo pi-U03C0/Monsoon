@@ -1,3 +1,4 @@
+#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
@@ -20,6 +21,7 @@ MSBool MONS_InitComponentOpenGL()
   MONS_MakeCurrentOpenGLContext(Context);
 
   MONS_LoadOpenGLFunctions();
+  MONS_RemoveCurrentOpenGLContect();
   LOG("Initialized OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
   return True;
@@ -69,6 +71,10 @@ MSBool MONS_CreateDummyOpenGLContext(MONS_Window* Window)
 MSBool MONS_LoadOpenGLFunctions()
 {
   glGetString = (PFNGLGETSTRINGPROC)MONS_LoadOpenGLFunction(sglGetString);
+  glCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)MONS_LoadOpenGLFunction(sglCreateContextAttribsARB);
+  glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
+  glClear = (PFNGLCLEARPROC)MONS_LoadOpenGLFunction(sglClear);
+  glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
 
   return True;
 }

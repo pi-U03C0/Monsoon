@@ -105,7 +105,10 @@ struct MONS_ComponentList
 
 struct MONS_Window
 {
+  //The Window Handle
   OSHandle OSHandle;
+  //The Render surface to draw to
+  //`On` NT This is the Window DC
   OSHandle RenderSurface;
   MONS_Rect* WindowArea;
   char* Title;

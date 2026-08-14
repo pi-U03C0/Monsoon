@@ -1,8 +1,11 @@
+#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
+#include <stdio.h>
 
 MONS_OpenGLContext* MONS_CreateBasicOpenGLContext(MONS_Window* Window)
 {
+  LOG("Window = 0x%p",MONSOON_LOG_DEBUG,255,Window);
   MONS_OpenGLContext* Context = GetMemory(sizeof(MONS_OpenGLContext));
   if (!Context)
   {
@@ -17,7 +20,6 @@ MONS_OpenGLContext* MONS_CreateBasicOpenGLContext(MONS_Window* Window)
     }
   #endif
 
-  LOG("glCreateContext = 0x%p",MONSOON_LOG_DEBUG,255,glCreateContext);
   Context -> GLContext = glCreateContext(Window -> RenderSurface);
   if (!Context -> GLContext)goto err_frees;
   Context -> RenderSurface = Window -> RenderSurface;
@@ -26,26 +28,44 @@ MONS_OpenGLContext* MONS_CreateBasicOpenGLContext(MONS_Window* Window)
 
 err_frees:
   if (Context) RemoveMemory(Context);
+  LOG("Error Create Context",MONSOON_LOG_ERROR,10);
   return NULL;
 }
 
 MONS_OpenGLContext* MONS_CreateOpenGLContext(MONS_Window* Window,int* GLAttributes)
 {
+  if (!Window)
+  {
+    LOG("Window was NULL",MONSOON_LOG_ERROR,255,Window);
+    return NULL;
+  }
+
+  LOG("Window = 0x%p",MONSOON_LOG_DEBUG,255,Window);
   MONS_OpenGLContext* Context = GetMemory(sizeof(MONS_OpenGLContext));
   if (!Context)
   {
     Error_Memory();
     return NULL;
   }
+  #ifdef MONSOON_PLATFORM_NT
+    if (!MONS_Win32_SetPixelFormat(Window -> RenderSurface))
+    {
+      goto err_frees;
+    }
+  #endif
 
-  Context -> GLContext = MONS_wglCreateContextAttribsARB(Window -> RenderSurface,NULL,GLAttributes);
+  Context -> GLContext = glCreateContextAttribsARB(Window -> RenderSurface,NULL,GLAttributes);
   Context -> RenderSurface = Window -> RenderSurface;
 
   return Context;
+err_frees:
+  if (Context) RemoveMemory(Context);
+  return NULL;
 }
 
 MSBool MONS_MakeCurrentOpenGLContext(MONS_OpenGLContext* Context)
 {
+  LOG("Context = 0x%p,Context -> GLContext = 0x%p,Context -> RenderSurface = 0x%p",MONSOON_LOG_DEBUG,255,Context,Context -> GLContext,Context -> RenderSurface);
   if (!Context)
   {
     LOG("Context was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
@@ -61,6 +81,7 @@ MSBool MONS_MakeCurrentOpenGLContext(MONS_OpenGLContext* Context)
     LOG("The Context RenderSurface was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
+  printf("glMakeCurrent = 0x%p\n",glMakeCurrent);
   return glMakeCurrent(Context -> RenderSurface,Context -> GLContext);
 }
 
@@ -68,3 +89,4 @@ MSBool MONS_RemoveCurrentOpenGLContect()
 {
   return glMakeCurrent(NULL,NULL);
 }
+

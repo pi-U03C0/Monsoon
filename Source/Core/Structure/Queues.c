@@ -121,7 +121,9 @@ MSBool MONS_IsQueueEmpty(MONS_Queue* Queue)
     return False;
   }
 
+  //if the Next Queues Pop index equeal PushPos than return true
   if ((MONS_NextQueuePopIndex(Queue)) == (Queue -> PushPos)) return True;
+  //if both are 0 than return true
   if ((Queue -> PopPos == 0) == (Queue -> PushPos == 0)) return True;
 
   return False;
@@ -135,6 +137,7 @@ MSBool MONS_IsQueueFull(MONS_Queue* Queue)
     return False;
   }
 
+  //if the next PushPos index is equeal to PopPos then return true
   if (((Queue -> PushPos+1) % Queue -> Capacity) == Queue -> PopPos) return True;
   return False;
 }

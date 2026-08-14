@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_Error.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
@@ -69,6 +70,7 @@ MSBool MONS_CloseWindow(MONS_Window* Window)
   }
 
   #ifdef _WIN32
+     ReleaseDC(Window -> OSHandle,Window -> RenderSurface);
      MSBool Success = MONS_Win32_CloseWindow(Window -> OSHandle);
      uint64_t Code = MONS_Win32_GetErrorCode();
   #endif
@@ -77,14 +79,14 @@ MSBool MONS_CloseWindow(MONS_Window* Window)
 
   if (Success)
   {
-    LOG("Closed Window \"%s\"",MONSOON_LOG_INFO,3,Window -> Title);
+    LOG("Closed Window \"%s\"",MONSOON_LOG_SUCCESS,3,Window -> Title);
     MONS_TerminateQueue(Window -> Events);
     RemoveMemory(Window);
     __Monsoon -> state.WindowCount--;
   }
   else
   {
-     LOG("Unable to Close Window \"%s\" Win32 Error %d",MONSOON_LOG_ERROR,2,Window -> Title,Code);
+    LOG("Unable to Close Window \"%s\" Win32 Error %d",MONSOON_LOG_ERROR,2,Window -> Title,Code);
   }
   return Success;
 }
@@ -143,10 +145,20 @@ MONS_Event* MONS_PopWindowEvent(MONS_Window* Window)
     LOG("Window was NULL",MONSOON_LOG_ERROR,1);
     return NULL;
   }
-  return  (MONS_Event*)MONS_PopQueue(Window -> Events);
+
+  return (void*)MONS_PopQueue(Window -> Events);
 }
 
 MSBool MONS_PushWindowEvent(MONS_Window* Window,MONS_Event* Event)
 {
-  return MONS_PushQueue(Window -> Events, (uint64_t)Event);
+  MONS_Event* cEvent = GetMemory(sizeof(MONS_Event));
+  if (!cEvent)
+  {
+    Error_Memory();
+    return False;
+  }
+  cEvent -> Type = Event -> Type;
+  cEvent -> Prarms = Event -> Prarms;
+
+  return MONS_PushQueue(Window -> Events, (uint64_t)cEvent);
 }
