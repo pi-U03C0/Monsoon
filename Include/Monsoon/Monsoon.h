@@ -60,7 +60,7 @@ extern "C" {
 #define ToString(x)  ToString_(x)
 
 #include <Monsoon/MONS_Types.h>
-extern MONS_Library* __Monsoon;
+MONS_API extern MONS_Library* __Monsoon;
 
 #include <Monsoon/MONS_Init.h>
 #include <Monsoon/MONS_Window.h>

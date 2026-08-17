@@ -120,6 +120,25 @@ struct MONS_OpenGLContext
   void* GLContext;
   void* RenderSurface;
 };typedef struct MONS_OpenGLContext MONS_OpenGLContext;
+struct MONS_OpenGLShader
+{
+  char* FragmentSource;
+  char* VertexSource;
+  uint32_t VertexShaderHandle;
+  uint32_t FragmentShaderHandle;
+  uint32_t ShaderProgrameHandle;
+};typedef struct MONS_OpenGLShader MONS_OpenGLShader;
+
+struct MONS_OpenGLVertextData
+{
+  float* Vertices;
+  uint32_t VerticesCount;
+  uint32_t* Indices;
+  uint32_t IndicesCount;
+  uint32_t VertextBufferObject;
+  uint32_t VertextArrayObject;
+  uint32_t ElementBufferObject;
+};typedef struct MONS_OpenGLVertextData MONS_OpenGLVertextData;
 
 struct MONS_OpenGLVersion
 {

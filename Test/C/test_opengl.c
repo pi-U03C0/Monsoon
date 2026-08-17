@@ -5,28 +5,20 @@
 int main(int argc, char** argv)
 {
   MSBool IsRunning = True;
-  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_INIT_OPENGL), MONSOON_LOG_DEBUG))
+  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_INIT_OPENGL), MONSOON_LOG_INFO))
   {
     return 1;
   }
 
-  int attributes[] =
-  {
-      WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-      WGL_CONTEXT_MINOR_VERSION_ARB, 6,
-      WGL_CONTEXT_PROFILE_MASK_ARB,
-      WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-      0
-  };
-
-  MONS_Window* Window = MONS_CreateWindow("jj", &(MONS_Rect){100,100,10,100});
-  MONS_ShoWindow(Window,MONS_SHOW_WINDOW);
+  MONS_Window* Window = MONS_CreateWindow("Monsoon: OpenGL Clear Window test", &(MONS_Rect){200,200,600,600});
   if (!Window)
   {
-    printf("unable to open window");
+    printf("unable to open window\n");
     return 1;
   }
-  MONS_OpenGLContext* Context = MONS_CreateOpenGLContext(Window, attributes);
+  MONS_ShoWindow(Window,MONS_SHOW_WINDOW);
+
+  MONS_OpenGLContext* Context = MONS_CreateOpenGLContext(Window, NULL);
   if (!MONS_MakeCurrentOpenGLContext(Context))
   {
     printf("could not set opengl context as currre\n");
@@ -45,7 +37,6 @@ int main(int argc, char** argv)
     {
       if (Event -> Type == MONSOON_EVENT_WINDOW_CLOSE)
       {
-
         IsRunning = False;
       }
       FreeEvent(Event);
@@ -57,5 +48,6 @@ int main(int argc, char** argv)
   MONS_CloseWindow(Window);
 
   MONSTerminate();
+
   return 0;
 }

@@ -22,6 +22,7 @@
 #define MONSOON_LOG_UNKNOWN 304
 #define MONSOON_LOG_FREE 305
 #define MONSOON_LOG_INIT 306
+#define MONSOON_LOG_UNABLE_DO 307
 
 #ifndef MONSOON_NO_LOG
    #define LOG(Message,Severity,ErrorReason,...)\

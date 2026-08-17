@@ -1,3 +1,4 @@
+#include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
 #include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
@@ -44,12 +45,12 @@ char* MONS_FindOpenGLDLL()
 
 void* MONS_LoadOpenGLFunction(char* ProcName)
 {
-  LOG("ProcName = %s",MONSOON_LOG_DEBUG,255,ProcName);
   void* address = glGetProcAddress(ProcName);
   if (!address)
   {
     address = MONS_GetProcAddress(ProcName, OpenGL32);
   }
+  LOG("ProcName = %s,address = 0x%p",MONSOON_LOG_DEBUG,255,ProcName,address);
   return address;
 }
 
@@ -75,6 +76,25 @@ MSBool MONS_LoadOpenGLFunctions()
   glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
   glClear = (PFNGLCLEARPROC)MONS_LoadOpenGLFunction(sglClear);
   glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
+  glCreateShader = (PFNGLCREATESHADERPROC)MONS_LoadOpenGLFunction(sglCreateShader);
+  glShaderSource = (PFNGLSHADERSOURCEPROC)MONS_LoadOpenGLFunction(sglShaderSource);
+  glGetShaderiv = (PFNGLGETSHADERIVPROC)MONS_LoadOpenGLFunction(sglGetShaderiv);
+  glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetShaderInfoLog);
+  glCreateProgram = (PFNGLCREATEPROGRAMPROC)MONS_LoadOpenGLFunction(sglCreateProgram);
+  glAttachShader = (PFNGLATTACHSHADERPROC)MONS_LoadOpenGLFunction(sglAttachShader);
+  glLinkProgram = (PFNGLLINKPROGRAMPROC)MONS_LoadOpenGLFunction(sglLinkProgram);
+  glGetProgramiv =  (PFNGLGETPROGRAMIVPROC)MONS_LoadOpenGLFunction(sglGetProgramiv);
+  glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetProgramInfoLog);
+  glGenBuffers = (PFNGLGENBUFFERSPROC)MONS_LoadOpenGLFunction(sglGenBuffers);
+  glBindBuffer = (PFNGLBINDBUFFERPROC)MONS_LoadOpenGLFunction(sglBindBuffer);
+  glBufferData = (PFNGLBUFFERDATAPROC)MONS_LoadOpenGLFunction(sglBufferData);
+  glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)MONS_LoadOpenGLFunction(sglEnableVertexAttribArray);
+  glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)MONS_LoadOpenGLFunction(sglVertexAttribPointer);
+  glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)MONS_LoadOpenGLFunction(sglBindVertexArray);
+  glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)MONS_LoadOpenGLFunction(sglGenVertexArrays);
+  glDrawElements = (PFNGLDRAWELEMENTSPROC)MONS_LoadOpenGLFunction(sglDrawElements);
+  glUseProgram = (PFNGLUSEPROGRAMPROC)MONS_LoadOpenGLFunction(sglUseProgram);
+  glCompileShader = (PFNGLCOMPILESHADERPROC)MONS_LoadOpenGLFunction(sglCompileShader);
 
   return True;
 }

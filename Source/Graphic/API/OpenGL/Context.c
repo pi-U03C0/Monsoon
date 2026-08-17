@@ -1,7 +1,16 @@
-#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <stdio.h>
+
+#ifdef MONSOON_PLATFORM_NT
+int Win32_WGLAttributes[] = (int[]){
+  WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+  WGL_CONTEXT_MINOR_VERSION_ARB, 6,
+  WGL_CONTEXT_PROFILE_MASK_ARB,
+  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+  0
+};
+#endif
 
 MONS_OpenGLContext* MONS_CreateBasicOpenGLContext(MONS_Window* Window)
 {
@@ -52,6 +61,9 @@ MONS_OpenGLContext* MONS_CreateOpenGLContext(MONS_Window* Window,int* GLAttribut
     {
       goto err_frees;
     }
+    if (!GLAttributes)
+    {
+    }
   #endif
 
   Context -> GLContext = glCreateContextAttribsARB(Window -> RenderSurface,NULL,GLAttributes);
@@ -81,7 +93,6 @@ MSBool MONS_MakeCurrentOpenGLContext(MONS_OpenGLContext* Context)
     LOG("The Context RenderSurface was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
-  printf("glMakeCurrent = 0x%p\n",glMakeCurrent);
   return glMakeCurrent(Context -> RenderSurface,Context -> GLContext);
 }
 

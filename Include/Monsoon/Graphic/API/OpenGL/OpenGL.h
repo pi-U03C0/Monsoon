@@ -11,5 +11,6 @@
 #include <Monsoon/Graphic/API/OpenGL/fnOpenGL.h>
 #include <Monsoon/Graphic/API/OpenGL/Loader.h>
 #include <Monsoon/Graphic/API/OpenGL/Context.h>
+#include <Monsoon/Graphic/API/OpenGL/Shader.h>
 
 #endif
