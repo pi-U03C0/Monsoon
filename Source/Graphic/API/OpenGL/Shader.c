@@ -1,5 +1,8 @@
+#include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
 #include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
+#include <Monsoon/Graphic/Graphic.h>
+#include <stdio.h>
 
 MSBool MONS_CompileOpenGLShader(MONS_OpenGLShader* Shader,char* VertextSource,char* FragmentSource)
 {
@@ -9,11 +12,15 @@ MSBool MONS_CompileOpenGLShader(MONS_OpenGLShader* Shader,char* VertextSource,ch
      return False;
   }
 
-  Shader -> VertexSource = VertextSource;
-  Shader -> FragmentSource = FragmentSource;
+  Shader -> VertexSource = MONS_DupeString(VertextSource);
+  Shader -> FragmentSource = MONS_DupeString(FragmentSource);
+  Shader -> FragmentShaderHandle = 0;
+  Shader -> VertexShaderHandle = 0;
+  Shader -> ShaderProgrameHandle = 0;
+  Shader -> ShaderUniforms = NULL;
 
   int Success = 0;
-  char Log[1024];
+  char Log[512];
 
   //Compile Vertext shader
   Shader -> VertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
@@ -36,10 +43,11 @@ MSBool MONS_CompileOpenGLShader(MONS_OpenGLShader* Shader,char* VertextSource,ch
 
   //checkk Success if not log and return
   glGetShaderiv(Shader -> FragmentShaderHandle, GL_COMPILE_STATUS, &Success);
+  LOG("Success = %d",MONSOON_LOG_DEBUG,255,Success);
   if (!Success)
   {
     glGetShaderInfoLog(Shader -> FragmentShaderHandle, 512, NULL, Log);
-    LOG("Unable to Compile FRAGMENT Shader\n%s",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
+    LOG("Unable to Compile FRAGMENT Shader\n%s",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO,Log);
     return False;
   }
 
@@ -89,61 +97,35 @@ MSBool MONS_CreateAndLinkOpenGLShaderProgram(MONS_OpenGLShader* Shader)
   return True;
 }
 
-MSBool MONS_CreateOpenGLVertextBufferObject(MONS_OpenGLVertextData* Vertext,float* Vertices,uint32_t Count)
+MSBool MONS_FreeOpenGLShader(MONS_OpenGLShader* Shader)
 {
-  if (!Vertext)
+  if (!Shader)
   {
-    LOG("Vertext was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    LOG("Shader was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
 
-  Vertext -> Vertices = Vertices;
-  Vertext -> VerticesCount = Count;
+  if(!Shader -> FragmentSource)
+     RemoveMemory(Shader -> FragmentSource);
 
-  glGenBuffers(1,&(Vertext -> VertextBufferObject));
-  glBindBuffer(GL_ARRAY_BUFFER,Vertext -> VertextBufferObject);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(float)*(Vertext -> VerticesCount),Vertext -> Vertices,GL_STATIC_DRAW);
-  LOG("Create OpenGL VertextBufferObject at index %d",MONSOON_LOG_SUCCESS,0,Vertext -> VertextBufferObject);
+  if (!Shader -> VertexSource)
+    RemoveMemory(Shader -> VertexSource);
+
+  if (!Shader -> VertexShaderHandle)
+    glDeleteShader(Shader -> VertexShaderHandle);
+
+  if (!Shader -> FragmentShaderHandle)
+    glDeleteShader(Shader -> FragmentShaderHandle);
+
+  if (!Shader -> ShaderProgrameHandle)
+    glDeleteProgram(Shader -> ShaderProgrameHandle);
 
   return True;
 }
 
-MSBool MONS_CreateOpenGLVertextArrayObject(MONS_OpenGLVertextData* Vertext)
+uint32_t MONS_GetCurrentOpenGLPrograme()
 {
-  if (!Vertext)
-  {
-    LOG("Vertext was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
-    return False;
-  }
-
-  glGenVertexArrays(1,&Vertext -> VertextArrayObject);
-  glBindVertexArray(Vertext -> VertextArrayObject);
-  glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE,3 * sizeof(float),NULL);
-  glEnableVertexAttribArray(0);
-
-  return True;
-}
-
-MSBool MONS_CreateOpenGLVertextElementObject(MONS_OpenGLVertextData* Vertext,uint32_t* Indices,uint32_t IndicesCount)
-{
-  if (!Vertext)
-  {
-    LOG("Vertext was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
-    return False;
-  }
-
-  if (!Indices)
-  {
-    LOG("Indices was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
-    return False;
-  }
-
-  Vertext -> Indices = Indices;
-  Vertext -> IndicesCount = IndicesCount;
-
-  glGenBuffers(1,&Vertext -> ElementBufferObject);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,Vertext -> ElementBufferObject);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, Vertext -> IndicesCount*sizeof(uint32_t), Indices, GL_STATIC_DRAW);
-
-  return True;
+  int32_t Progame;
+  glGetIntegerv(GL_CURRENT_PROGRAM,&Progame);
+  return Progame;
 }

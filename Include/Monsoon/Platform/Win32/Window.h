@@ -25,4 +25,6 @@ MONS_API void* MONS_Win32_GetWindowDrawSurface(HANDLE Window);
 
 MONS_API MSBool MONS_Win32_SetPixelFormat(HDC WindowDC);
 
+uint8_t MONS_Win32_WindowReSizeToStd(uint8_t How);
+
 #endif

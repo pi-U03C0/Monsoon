@@ -11,6 +11,10 @@
   #define MONSOON_FILEOPEN_LIMIT 10
 #endif
 
+#ifndef MONSOON_OPENGL_MAX_UNIFORM_LENGTH
+  #define MONSOON_OPENGL_MAX_UNIFORM_LENGTH 256
+#endif
+
 typedef char MSBool;
 
 #ifdef _WIN32
@@ -22,7 +26,7 @@ typedef void* OSHandle;
 #endif
 
 #if defined (__unix__)
-  typedef int OSFileHandle
+  typedef int OSFileHandle;
 #endif
 
 #ifndef True
@@ -61,10 +65,10 @@ struct MONS_DynamicLibrary
   uint16_t LoadFlags;
 };typedef struct MONS_DynamicLibrary MONS_DynamicLibrary;
 
-struct MONSError {
+struct MONSError
+{
   uint64_t Code;
-  uint8_t  ErrorReason;
-  uint8_t  ProjectPart;
+  uint16_t ErrorReason;
   uint16_t Function;
   uint16_t SourceFile;
   uint16_t ErrorLine;
@@ -92,8 +96,9 @@ struct MONS_Proc
 
 struct MONS_Component
 {
-  uint16_t Type;
   MONS_InitComponent Init;
+  MONS_InitComponent DeInit;
+  uint16_t Type;
   MSBool IsInitialized;
 };typedef struct MONS_Component MONS_Component;
 
@@ -115,15 +120,48 @@ struct MONS_Window
   MONS_Queue* Events;
 }; typedef struct MONS_Window MONS_Window;
 
+struct MONS_WindowPrarmSize
+{
+  uint16_t Width;
+  uint16_t Height;
+  uint8_t  How;
+};typedef struct MONS_WindowPrarmSize MONS_WindowPrarmSize;
+
+struct MONS_WindowPrarmPosition
+{
+  int32_t X;
+  int32_t Y;
+};typedef struct MONS_WindowPrarmPosition MONS_WindowPrarmPosition;
+
+struct MONS_WindowPrarmKey
+{
+  uint32_t Key;
+  uint16_t Repeat;
+  uint8_t  ScanCode;
+  MSBool   IsExtended;
+  MSBool   IsRepeat;
+};typedef struct MONS_WindowPrarmKey MONS_WindowPrarmKey;
+
 struct MONS_OpenGLContext
 {
   void* GLContext;
   void* RenderSurface;
 };typedef struct MONS_OpenGLContext MONS_OpenGLContext;
+
+struct MONS_OpenGLShaderUniform
+{
+  uint16_t Size;
+  uint32_t ID;
+  uint32_t GLType;
+  char UniformName[MONSOON_OPENGL_MAX_UNIFORM_LENGTH];
+};typedef struct MONS_OpenGLShaderUniform MONS_OpenGLShaderUniform;
+
 struct MONS_OpenGLShader
 {
   char* FragmentSource;
   char* VertexSource;
+  MONS_OpenGLShaderUniform* ShaderUniforms;
+  uint32_t UniformCount;
   uint32_t VertexShaderHandle;
   uint32_t FragmentShaderHandle;
   uint32_t ShaderProgrameHandle;

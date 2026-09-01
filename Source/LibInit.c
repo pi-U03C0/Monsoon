@@ -1,5 +1,3 @@
-#include "Monsoon/MONS_Proc.h"
-#include <stdio.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 
@@ -24,7 +22,6 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
 
   if (Components)//check if Components is NULL
   {
-
     MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
     //Initialized Components
     if (!MONS_InitializComponents(Components))
@@ -112,6 +109,7 @@ MSBool MONS_AllocatMonsoon()
     Error_Memory();
     return False;
   } for (uint16_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++) __Monsoon -> OpenFiles[i] = (void*)MONSOON_FILE_UNUSED;
+  __Monsoon -> state.FileSearchPath = MONS_GetCurrentWorkingDirectory();
 
   return True;
 }
@@ -146,19 +144,10 @@ MSBool MONS_InitializComponents(uint16_t* Components)
 {
   for (uint16_t i = 0 ; Components[i] ; i++)
   {
+    //check if is a Component
     if (MONS_IsComponent(Components[i]))
     {
-       for (uint16_t j = 0 ; j < MONS_Components -> Length ; j++)
-       {
-          if (MONS_Components -> Components[j].Type == Components[i])
-          {
-             if (!(MONS_Components -> Components[j].Init()))
-             {
-                LOG("Unable to Initializ Component \"%s\"",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_GET);
-                return False;
-             }
-          }
-       }
+      MONS_InitializComponent(Components[i]);
     }
     else
     {

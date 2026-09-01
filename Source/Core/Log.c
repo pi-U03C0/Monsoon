@@ -1,3 +1,4 @@
+#include "Monsoon/Utils/String.h"
 #include <Monsoon/Monsoon.h>
 
 #include <stdarg.h>
@@ -13,9 +14,9 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
 
   if (!Message)
   {
-    MONS_WriteStdOutput("MONS_Log: Message was NULL FunctionName=");
-    MONS_WriteStdOutput(FunctionName);
-    MONS_WriteStdOutput("\n");
+    MONS_WriteStdOutput("MONS_Log: Message was NULL FunctionName=",40);
+    MONS_WriteStdOutput(FunctionName,MONS_StringLength(FunctionName));
+    MONS_WriteStdOutput("\n",1);
 
     return;
   }
@@ -29,7 +30,7 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
   char* buffer = GetMemory(1024);
   if (!buffer)
   {
-    MONS_WriteStdOutput("MONS_LOG: malloc err\n");
+    MONS_WriteStdOutput("MONS_LOG: malloc err\n",21);
     va_end(args);
     va_end(backup_args);
     return;
@@ -42,8 +43,8 @@ void MONS_Log(char* FunctionName,char* Message,uint64_t Code,int Severity,...)
   va_end(args);
   va_end(backup_args);
 
-  MONS_WriteStdOutput(buffer);
-  MONS_WriteStdOutput("\n");
+  MONS_WriteStdOutput(buffer,MONS_StringLength(buffer));
+  MONS_WriteStdOutput("\n",1);
 
   RemoveMemory(buffer);
 }
@@ -54,14 +55,17 @@ char* MONS_SeverityToString(char Severity,MSBool Colour)
   {
     switch (Severity)
     {
-      case MONSOON_LOG_ERROR:return "\033[91mERROR\033[0m";
-      case MONSOON_LOG_CRITICAL:return "\033[91mCRITICAL\033[0m";
-      case MONSOON_LOG_FATAL:return "\033[91mFATAL\033[0m";
-      case MONSOON_LOG_INFO:return "\033[94mINFO\033[0m";
-      case MONSOON_LOG_SUCCESS:return "\033[92mSUCCESS\033[0m";
-      case MONSOON_LOG_WARNING:return "\033[93mWARNING\033[0m";
-      case MONSOON_LOG_DEBUG:return "\033[93mDEBUG\033[0m";
-      case MONSOON_LOG_UNIGNORE:return "\033[90mUNIGNORE\033[0m";
+      case (MONSOON_LOG_ERROR):return "\033[91mERROR\033[0m";
+      case (MONSOON_LOG_CRITICAL):return "\033[91mCRITICAL\033[0m";
+      case (MONSOON_LOG_FATAL):return "\033[91mFATAL\033[0m";
+      case (MONSOON_LOG_INFO):return "\033[94mINFO\033[0m";
+      case (MONSOON_LOG_SUCCESS):return "\033[92mSUCCESS\033[0m";
+      case (MONSOON_LOG_WARNING):return "\033[93mWARNING\033[0m";
+      case (MONSOON_LOG_DEBUG):return "\033[93mDEBUG\033[0m";
+      case (MONSOON_LOG_HIGHT_DEBUG):return "\033[93mDEBUG\033[0m";
+      case (MONSOON_LOG_MID_DEBUG):return "\033[93mDEBUG\033[0m";
+      case (MONSOON_LOG_LOW_DEBUG):return "\033[93mDEBUG\033[0m";
+      case (MONSOON_LOG_UNIGNORE):return "\033[90mUNIGNORE\033[0m";
       default:return "?";
     }
   }
@@ -88,7 +92,7 @@ char* MONS_SeverityToString(char Severity,MSBool Colour)
 
 MSBool MONS_SetLogLevel(uint8_t Level)
 {
-  LOG("Setting LogLevel to %s(%d)",MONSOON_LOG_UNIGNORE,1,MONS_SeverityToString(Level, True));
+  LOG("Setting LogLevel to %s(%d)",MONSOON_LOG_UNIGNORE,MONSOON_LOG_UNABLE_DO,MONS_SeverityToString(Level, True));
   __Monsoon -> state.LogLevel = Level;
   return True;
 }

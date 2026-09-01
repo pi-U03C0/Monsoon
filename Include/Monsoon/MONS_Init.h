@@ -10,7 +10,6 @@
 
 #define MONSOON_ONEXIT_UNUSED (void*)1
 
-#define MONSOON_INIT_OPENGL 1
 
 #define MakeInit_ComponentsOption(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,0}
 
@@ -28,7 +27,7 @@ MONS_API MSBool MONS_AddOnExitFunction(ExitFunciton fn);
 //Remove a Function from OnExit array
 MONS_API MSBool MONS_RemoveOnExitFunction(ExitFunciton fn);
 
-//Initialized a Components of Monsoon or Mutitple
+//Initialized Component of Monsoon or Mutitple Components
 MONS_API MSBool MONS_InitializComponents(uint16_t* Components);
 
 //Get The Monsoon version

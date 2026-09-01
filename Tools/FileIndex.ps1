@@ -36,15 +36,14 @@ function Add-Index
   if (Test-Path -Path $Name -PathType Container)
   {
     $Type = "D"
-    $index = "$script:CurrentFileIndex,$Type,$Name`n"
-    $script:CurrentFileIndex += 1
   }
   else
   {
     $Type = "F"
-    $index = "$script:CurrentDirectoryIndex,$Type,$Name`n"
-    $script:CurrentDirectoryIndex += 1
   }
+
+  $index = "$script:CurrentDirectoryIndex,$Type,$Name`n"
+  $script:CurrentDirectoryIndex += 1
 
   return $index
 }

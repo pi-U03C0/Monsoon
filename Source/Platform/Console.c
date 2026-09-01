@@ -2,7 +2,7 @@
 #include <Monsoon/SystemHeaders.h>
 #include <string.h>
 
-int MONS_WriteStdOutput(char* Message)
+int MONS_WriteStdOutput(char* Message,uint64_t Length)
 {
   #ifdef _WIN32
   static HANDLE hConsole = NULL;
@@ -13,7 +13,7 @@ int MONS_WriteStdOutput(char* Message)
   WriteFile(
     hConsole,
     Message,
-    MONS_StringLength(Message),
+    Length,
     &WriteLen,
     NULL
   );

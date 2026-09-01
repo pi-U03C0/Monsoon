@@ -1,4 +1,3 @@
-#include <stdio.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 
@@ -7,16 +6,18 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
   LOG("FilePath=%s,Mode=%d",MONSOON_LOG_DEBUG,255,FilePath,Mode);
   LOG("Opening File %s for %s",MONSOON_LOG_INFO,3,FilePath,MONS_OpenModeToString(Mode));
 
+  //alloc and check
   MONS_File* FileHandle = GetMemory(sizeof(MONS_File));
-
   if (!FileHandle)
   {
     Error_Memory();
     return NULL;
   }
 
+  //convert to full path
   FileHandle -> FilePath = MONS_FullFilePath(FilePath);
 
+  //platforme functions
   #ifdef _WIN32
     FileHandle -> OSHandle = MONS_Win32_OpenFile(FileHandle -> FilePath, Mode);
     if (FileHandle -> OSHandle == NULL)
@@ -25,6 +26,7 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
 
       RemoveMemory(FileHandle -> FilePath);
       RemoveMemory(FileHandle);
+      return NULL;
     }
   #endif
 
@@ -155,16 +157,17 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
     return NULL;
   }
 
-  char* FilePath = NULL;
+
   char* Env = NULL;
   if (SearchSystemPath)
     Env = MONS_GetEnvironmentVariable("PATH");
 
-  char* PathBuffer = GetMemory(MONS_StringLength(Env)+MONS_StringLength(FileSearchPath)+1);
+  char* PathBuffer = GetMemory(MONS_StringLength(Env)+MONS_StringLength(FileSearchPath)+MONS_StringLength(__Monsoon -> state.FileSearchPath)+1);
   uint64_t PathIndex = 0;
 
   if (!PathBuffer)
   {
+    RemoveMemory(Env);
     Error_Memory();
     return NULL;
   }
@@ -179,8 +182,15 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
   if (SearchSystemPath)
   {
     char* c = MONS_FindAndReplaceString(Env,MONSOON_PATH_SPLIT,(char*)(char[]){MONSOON_SPLIT_PATH,0x0});
-    PathIndex = MONS_StringCopy(PathBuffer+PathIndex,c);
+    PathIndex += MONS_StringCopy(PathBuffer+PathIndex,c);
     RemoveMemory(c);
+  }
+
+  if (__Monsoon -> state.FileSearchPath)
+  {
+    PathBuffer[PathIndex] = *MONSOON_PATH_SPLIT;
+    PathIndex++;
+    MONS_StringCopy(PathBuffer+PathIndex,__Monsoon -> state.FileSearchPath);
   }
 
   char** SplitPaths = MONS_SplitString(PathBuffer,MONSOON_SPLIT_PATH);
@@ -189,6 +199,13 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
   if (!Path)
   {
     RemoveMemory(PathBuffer);
+
+    for (uint64_t i = 0 ; i < GET_SPLIT_SIZE(SplitPaths) ; i++)
+    {
+      RemoveMemory(SplitPaths[i]);
+    }
+
+    RemoveMemory(SplitPaths);
     return NULL;
   }
 
@@ -202,9 +219,10 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
     snprintf(Path,1024,"%s/%s",SplitPaths[i],FileName);
     if (MONS_FileExists(Path))
     {
+      //dealloc SplitPaths
       for (uint64_t j = 0 ; j < GET_SPLIT_SIZE(SplitPaths) ; j++)
       {
-        if (!SplitPaths[i])continue;
+        if (!SplitPaths[j])continue;
         RemoveMemory(SplitPaths[j]);
       }
 
@@ -215,11 +233,35 @@ char* MONS_FindFile(char* FileName,char* FileSearchPath,MSBool SearchSystemPath)
   return Path;
 }
 
+MSBool MONS_AddSearchPath(char* Path)
+{
+   if (!__Monsoon -> state.FileSearchPath)
+   {
+      __Monsoon -> state.FileSearchPath = GetMemory(MONS_StringLength(Path)+1);
+      if (!__Monsoon -> state.FileSearchPath)
+      {
+        Error_Memory();
+        return False;
+      }
+      return MONS_StringCopy(__Monsoon -> state.FileSearchPath,Path) != 0;
+   }
+
+   char* M = MONS_MergeString((char*[]){__Monsoon -> state.FileSearchPath, MONSOON_PATH_SPLIT, Path}, 3);
+   if (!M)
+   {
+     return False;
+   }
+   RemoveMemory(__Monsoon -> state.FileSearchPath);
+   __Monsoon -> state.FileSearchPath = M;
+
+   return True;
+}
+
 void MONS_CloseAllFile()
 {
    for (uint16_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++)
    {
-      if (__Monsoon -> OpenFiles[i] == (void*)MONSOON_FILE_UNUSED)
+      if ((__Monsoon -> OpenFiles[i] == (void*)MONSOON_FILE_UNUSED) || !(__Monsoon -> OpenFiles[i]))
       {
         continue;
       }

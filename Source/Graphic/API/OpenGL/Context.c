@@ -15,6 +15,12 @@ int Win32_WGLAttributes[] = (int[]){
 MONS_OpenGLContext* MONS_CreateBasicOpenGLContext(MONS_Window* Window)
 {
   LOG("Window = 0x%p",MONSOON_LOG_DEBUG,255,Window);
+  if (!Window)
+  {
+    LOG("Window was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    return NULL;
+  }
+
   MONS_OpenGLContext* Context = GetMemory(sizeof(MONS_OpenGLContext));
   if (!Context)
   {

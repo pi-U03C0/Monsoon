@@ -6,6 +6,10 @@
 
 #define MONS_SHOW_WINDOW 1
 
+#define MONS_WINDOW_RESIZE 1
+#define MONS_WINDOW_MINIMIZED 2
+#define MONS_WINDOW_MAXIMIZED 3
+
 // Create A Window
 MONS_API MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect);
 

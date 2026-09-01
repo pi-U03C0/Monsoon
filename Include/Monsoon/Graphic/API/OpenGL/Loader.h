@@ -11,4 +11,6 @@ MSBool MONS_LoadOpenGLCore();
 
 MSBool MONS_LoadOpenGLFunctions();
 
+MSBool MONS_DeInitComponentOpenGL();
+
 #endif

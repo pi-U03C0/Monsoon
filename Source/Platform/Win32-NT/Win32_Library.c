@@ -41,7 +41,7 @@ void* MONS_Win32_GetProcAddress(const char* ProcName,HMODULE ModuleHandle)
       &MONS_Module
     ))
     {
-      LOG("Unable to get Module Handle for Monsoon",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_GET);
+      LOG("Unable to get Module Handle for Monsoon Win32Error=%d",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_GET,MONS_Win32_GetErrorCode());
       return NULL;
     }
 

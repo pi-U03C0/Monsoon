@@ -7,8 +7,9 @@
 //Write To Stdout
 //---------------------------------------------
 //`Message`:The String to Write
+//`Lenght`:The Amount of byte to Write
 //---------------------------------------------
-MONS_API int MONS_WriteStdOutput(char* Message);
+int MONS_WriteStdOutput(char* Message,uint64_t Length);
 
 //Write To The StdErr
 //---------------------------------------------

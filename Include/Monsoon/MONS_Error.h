@@ -2,30 +2,30 @@
 #define MONSOON_ERROR_H
 
 #include <Monsoon/MONS_Types.h>
+#include <Monsoon/Monsoon.h>
 
-#define Make_Code(ErrorReason) EnCodeError(__LINE__,__FILE_NUMBER__,__PROJECT_PART__,ErrorReason)
+#define Make_Code(ErrorReason) EnCodeError(__LINE__,__FILE_NUMBER__,ErrorReason)
 #define Error_Memory() \
-     LOG("Memory Error Unable to alloc Memory",MONSOON_LOG_FATAL,100);\
+     LOG("Memory Error Unable to alloc Memory",MONSOON_LOG_FATAL,MONSOON_LOG_UNABLE_TO_ALLOC_MEMORY);\
      MONS_SetErrorCode(Make_Code(100))
 
-
-uint64_t MONS_GetErrorCode();
+MONS_API uint64_t MONS_GetErrorCode();
 
 //Set the gloable Error
-void MONS_SetErrorCode(uint64_t Code);
+MONS_API void MONS_SetErrorCode(uint64_t Code);
 
 //Convert the line,source,project,reason to one number
-uint64_t EnCodeError(uint16_t ErrorLine, uint16_t SourceFile, uint16_t ProjectPart, uint16_t ErrorReason);
+MONS_API uint64_t EnCodeError(uint16_t ErrorLine, uint16_t SourceFile, uint16_t ErrorReason) ;
 
 //convert the code to a message
-char* MONS_GetErrorMessage(uint64_t ErrorCode);
+MONS_API char* MONS_GetErrorMessage(uint64_t ErrorCode);
 
-MONSError* DeCodeError(uint64_t Code);
+MONS_API MONSError* DeCodeError(uint64_t Code);
 
-char* MONS_SearchErrorFile(uint16_t SourceFile);
+MONS_API char* MONS_SearchErrorFile(uint16_t SourceFile);
 
-char* MONS_SearchErrorMessage(uint16_t ErrorReason,uint16_t ProjectPart);
+MONS_API char* MONS_SearchErrorMessage(uint16_t ErrorReason,uint16_t ProjectPart);
 
-char* MOND_ReadAndParserFileIndex();
+MONS_API char* MONS_ReadAndParserFileIndex();
 
 #endif

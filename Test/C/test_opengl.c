@@ -5,7 +5,7 @@
 int main(int argc, char** argv)
 {
   MSBool IsRunning = True;
-  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_INIT_OPENGL), MONSOON_LOG_INFO))
+  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_COMPONENT_OPENGL), MONSOON_LOG_INFO))
   {
     return 1;
   }

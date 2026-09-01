@@ -56,7 +56,7 @@ MSBool MONS_FreeLibrary(MONS_DynamicLibrary* Library)
 
 void* MONS_GetProcAddress(const char* ProcName,MONS_DynamicLibrary* Library)
 {
-  LOG("ProcName = %s,Library = 0x%p",MONSOON_LOG_DEBUG,255,ProcName,Library);
+  LOG("ProcName = %s,Library = 0x%p",MONSOON_LOG_HIGHT_DEBUG,255,ProcName,Library);
 
   #ifdef MONSOON_PLATFORM_NT
     if (Library) return MONS_Win32_GetProcAddress(ProcName,Library -> OSHandle);

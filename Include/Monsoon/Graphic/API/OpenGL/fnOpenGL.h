@@ -34,6 +34,17 @@ MONS_API extern PFNGLENABLEVERTEXATTRIBARRAYPROC MONS_glEnableVertexAttribArray;
 MONS_API extern PFNGLBUFFERDATAPROC MONS_glBufferData;
 MONS_API extern PFNGLUSEPROGRAMPROC MONS_glUseProgram;
 MONS_API extern PFNGLDRAWELEMENTSPROC MONS_glDrawElements;
+MONS_API extern PFNGLPOLYGONMODEPROC MONS_glPolygonMode;
+MONS_API extern PFNGLGETUNIFORMLOCATIONPROC MONS_glGetUniformLocation;
+MONS_API extern PFNGLUNIFORM1FPROC MONS_glUniform1f;
+MONS_API extern PFNGLDELETESHADERPROC MONS_glDeleteShader;
+MONS_API extern PFNGLDELETEPROGRAMPROC MONS_glDeleteProgram;
+MONS_API extern PFNGLGETPROGRAMINTERFACEIVPROC MONS_glGetProgramInterfaceiv;
+MONS_API extern PFNGLGETPROGRAMRESOURCEIVPROC MONS_glGetProgramResourceiv;
+MONS_API extern PFNGLGETPROGRAMRESOURCENAMEPROC MONS_glGetProgramResourceName;
+MONS_API extern PFNGLGETACTIVEUNIFORMPROC MONS_glGetActiveUniform;
+MONS_API extern PFNGLUNIFORM3FPROC MONS_glUniform3f;
+MONS_API extern PFNGLGETINTEGERVPROC MONS_glGetIntegerv;
 
 #define wglCreateContext MONS_wglCreateContext
 #define wglMakeCurrent MONS_wglMakeCurrent
@@ -62,6 +73,17 @@ MONS_API extern PFNGLDRAWELEMENTSPROC MONS_glDrawElements;
 #define glBufferData  MONS_glBufferData
 #define glUseProgram MONS_glUseProgram
 #define glDrawElements MONS_glDrawElements
+#define glPolygonMode MONS_glPolygonMode
+#define glGetUniformLocation MONS_glGetUniformLocation
+#define glUniform1f MONS_glUniform1f
+#define glDeleteShader MONS_glDeleteShader
+#define glDeleteProgram MONS_glDeleteProgram
+#define glGetProgramInterfaceiv MONS_glGetProgramInterfaceiv
+#define glGetProgramResourceiv MONS_glGetProgramResourceiv
+#define glGetProgramResourceName MONS_glGetProgramResourceName
+#define glGetActiveUniform MONS_glGetActiveUniform
+#define glUniform3f MONS_glUniform3f
+#define glGetIntegerv MONS_glGetIntegerv
 
 #ifdef MONSOON_PLATFORM_NT
 #define glCreateContext wglCreateContext
@@ -101,4 +123,16 @@ MONS_API extern PFNGLDRAWELEMENTSPROC MONS_glDrawElements;
 #define sglUseProgram              "glUseProgram"
 #define sglDrawElements            "glDrawElements"
 #define sglCompileShader           "glCompileShader"
+#define sglPolygonMode             "glPolygonMode"
+#define sglGetUniformLocation      "glGetUniformLocation"
+#define sglUniform1f               "glUniform1f"
+#define sglDeleteShader            "glDeleteShader"
+#define sglDeleteProgram           "glDeleteProgram"
+#define sglGetProgramInterfaceiv   "glGetProgramInterfaceiv"
+#define sglGetProgramResourceiv    "glGetProgramResourceiv"
+#define sglGetProgramResourceName  "glGetProgramResourceName"
+#define sglGetActiveUniform        "glGetActiveUniform"
+#define sglUniform3f               "glUniform3f"
+#define sglGetIntegerv             "glGetIntegerv"
+
 #endif

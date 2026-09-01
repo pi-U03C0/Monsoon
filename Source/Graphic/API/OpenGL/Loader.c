@@ -1,5 +1,4 @@
 #include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
-#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
@@ -13,19 +12,42 @@ MSBool MONS_InitComponentOpenGL()
   char* DLLPath = MONS_FindOpenGLDLL();
 
   OpenGL32 = MONS_LoadLibrary(DLLPath,0);
+  if (!OpenGL32)
+  {
+    MONS_SetErrorCode(Make_Code(MONSOON_LOG_UNABLE_DO));
+    LOG("Unable to Load %s",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
+    return False;
+  }
 
   MONS_LoadOpenGLCore();
 
   MONS_Window* Window = MONS_CreateWindow("Monsoon OpenGL Dummy Window",&(MONS_Rect){100,100,100,100});
+  if (!Window)
+  {
+    MONS_SetErrorCode(Make_Code(MONSOON_LOG_UNABLE_DO));
+    LOG("Unable to Create Dummy Window",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
+    return False;
+  }
 
   MONS_OpenGLContext* Context = MONS_CreateBasicOpenGLContext(Window);
   MONS_MakeCurrentOpenGLContext(Context);
 
   MONS_LoadOpenGLFunctions();
   MONS_RemoveCurrentOpenGLContect();
+  MONS_SetComponentInit(MONSOON_COMPONENT_OPENGL,True);
   LOG("Initialized OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
   return True;
+}
+
+MSBool MONS_DeInitComponentOpenGL()
+{
+  if (OpenGL32)
+  {
+    MONS_FreeLibrary(OpenGL32);
+  }
+
+  return False;
 }
 
 char* MONS_FindOpenGLDLL()
@@ -50,7 +72,7 @@ void* MONS_LoadOpenGLFunction(char* ProcName)
   {
     address = MONS_GetProcAddress(ProcName, OpenGL32);
   }
-  LOG("ProcName = %s,address = 0x%p",MONSOON_LOG_DEBUG,255,ProcName,address);
+  LOG("ProcName = %s,address = 0x%p",MONSOON_LOG_HIGHT_DEBUG,255,ProcName,address);
   return address;
 }
 
@@ -95,6 +117,16 @@ MSBool MONS_LoadOpenGLFunctions()
   glDrawElements = (PFNGLDRAWELEMENTSPROC)MONS_LoadOpenGLFunction(sglDrawElements);
   glUseProgram = (PFNGLUSEPROGRAMPROC)MONS_LoadOpenGLFunction(sglUseProgram);
   glCompileShader = (PFNGLCOMPILESHADERPROC)MONS_LoadOpenGLFunction(sglCompileShader);
+  glPolygonMode = (PFNGLPOLYGONMODEPROC)MONS_LoadOpenGLFunction(sglPolygonMode);
+  glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)MONS_LoadOpenGLFunction(sglGetUniformLocation);
+  glUniform1f = (PFNGLUNIFORM1FPROC)MONS_LoadOpenGLFunction(sglUniform1f);
+  glDeleteShader = (PFNGLDELETESHADERPROC)MONS_LoadOpenGLFunction(sglDeleteShader);
+  glDeleteProgram = (PFNGLDELETEPROGRAMPROC)MONS_LoadOpenGLFunction(sglDeleteProgram);
+  glGetProgramInterfaceiv = (PFNGLGETPROGRAMINTERFACEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramInterfaceiv);
+  glGetProgramResourceiv = (PFNGLGETPROGRAMRESOURCEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceiv);
+  glGetProgramResourceName = (PFNGLGETPROGRAMRESOURCENAMEPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceName);
+  glGetActiveUniform = (PFNGLGETACTIVEUNIFORMPROC)MONS_LoadOpenGLFunction(sglGetActiveUniform);
+  glUniform3f = (PFNGLUNIFORM3FPROC)MONS_LoadOpenGLFunction(sglUniform3f);
 
   return True;
 }

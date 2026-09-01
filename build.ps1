@@ -109,8 +109,6 @@ function Compile-Monsoon
     }
   }
 
-  echo $SOURCE_OBJ
-
   $GetLogDefine = ${function:Get-LogDefine}.ToString()
 
   $Results = $SOURCE_OBJ | ForEach-Object -Parallel {

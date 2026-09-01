@@ -56,7 +56,7 @@ MSBool MONS_TerminateQueue(MONS_Queue* Queue)
 
 uint64_t MONS_PopQueue(MONS_Queue* Queue)
 {
-  LOG("Poping Value %020llu from %d",MONSOON_LOG_DEBUG,255,Queue -> Items[Queue -> PopPos],Queue -> PopPos);
+  LOG("Poping Value %020llu from %d",MONSOON_LOG_HIGHT_DEBUG,255,Queue -> Items[Queue -> PopPos],Queue -> PopPos);
   if (!Queue)
   {
     LOG("Queue was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
@@ -79,7 +79,7 @@ uint64_t MONS_PopQueue(MONS_Queue* Queue)
 
 MSBool MONS_PushQueue(MONS_Queue* Queue,uint64_t Item)
 {
-  LOG("Pushing %020llu To Queue at pos %d",MONSOON_LOG_DEBUG,255,Item,Queue -> PushPos);
+  LOG("Pushing %020llu To Queue at pos %d",MONSOON_LOG_HIGHT_DEBUG,255,Item,Queue -> PushPos);
   if (!Queue)
   {
     LOG("Queue was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
