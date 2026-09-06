@@ -7,24 +7,28 @@ MONS_OpenGLShader Shader = {0};
 MONS_OpenGLVertextData Vertext = {0};
 
 float vertices[] = {
-    0.5f,  0.5f, 0.0f,  // top right
-    0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+    0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, 0.0f,
+    1.0f, 1.0f, 0.0f,
+    0.0f, 1.0f, 0.0f
 };
 
-unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,  // first Triangle
-    1, 2, 3   // second Triangle
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3 
 };
 
 MONS_Window* Window = NULL;
 MONS_OpenGLContext* Context = NULL;
+mat4 WindowMat = {0};
+float CoordintionX = 0.0f;
+float CoordintionY = 0.0f;
 
 MSBool CompileShader()
 {
   char* ShaderSource = GetMemory(1024);
-  MONS_File* ShaderFile = MONS_OpenFile("Library/Shaders/Coordinations.glsl",MONSOON_FILE_READ_WRITE);
+  MONS_File* ShaderFile = MONS_OpenFile("Library/Shaders/Coordinations.2D.glsl",MONSOON_FILE_READ_WRITE);
+
   if (!ShaderFile)
   {
     return False;
@@ -46,7 +50,9 @@ MSBool CompileShader()
 
 void Render()
 {
-  glUniform3f(Shader.ShaderUniforms[0].ID,0.1f,0.1f,0.0f);
+  glUniformMatrix4fv(MONS_FindOpenGLUniformFromName(&Shader, "ScreenMat") -> ID,1,False,(float*)WindowMat);
+  glUniform2f(MONS_FindOpenGLUniformFromName(&Shader, "Coordinations") -> ID,CoordintionX,CoordintionY);
+  glUniform2f(MONS_FindOpenGLUniformFromName(&Shader, "WidthAndHeight") -> ID,50.0f,50.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }
@@ -54,7 +60,7 @@ void Render()
 int main(int argc, char** argv)
 {
   MSBool IsRunning = True;
-  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_COMPONENT_OPENGL), MONSOON_LOG_SUCCESS))
+  if (!MONSInit(MakeInit_ComponentsOption(MONSOON_COMPONENT_OPENGL), MONSOON_LOG_INFO))
   {
     printf("Unable to Init Monsoon\n");
     return 1;
@@ -62,6 +68,7 @@ int main(int argc, char** argv)
 
   Window = MONS_CreateWindow("Monsoon Test: test_opengl_rect",&(MONS_Rect){100,100,600,600});
   MONS_ShoWindow(Window,MONS_SHOW_WINDOW);
+  glm_ortho(0,Window -> WindowArea -> Width,Window -> WindowArea -> Height,0,-1.0f,1.0,WindowMat);
 
   Context = MONS_CreateOpenGLContext(Window,NULL);
   MONS_MakeCurrentOpenGLContext(Context);
@@ -81,6 +88,33 @@ int main(int argc, char** argv)
       {
         IsRunning = False;
       }
+      if (Event -> Type == MONSOON_EVENT_WINDOW_CHANGE_SIZE)
+      {
+        glm_ortho(0,Window -> WindowArea -> Width,Window -> WindowArea -> Height,0,-1.0f,1.0,WindowMat);
+      }
+      if (Event -> Type == MONSOON_EVENT_KEY_DOWN)
+      {
+        if (((MONS_WindowPrarmKey*)Event -> Prarms) -> Key == '')
+        {
+          IsRunning = False;
+        }
+        if (((MONS_WindowPrarmKey*)Event -> Prarms) -> Key == 'H')
+        {
+           CoordintionX -= 1.0f;
+        }
+        if (((MONS_WindowPrarmKey*)Event -> Prarms) -> Key == 'L')
+        {
+           CoordintionX += 1.0f;
+        }
+        if (((MONS_WindowPrarmKey*)Event -> Prarms) -> Key == 'K')
+        {
+           CoordintionY -= 1.0f;
+        }
+        if (((MONS_WindowPrarmKey*)Event -> Prarms) -> Key == 'J')
+        {
+           CoordintionY += 1.0f;
+        }
+      }
     }
 
     Render();
@@ -88,6 +122,7 @@ int main(int argc, char** argv)
   }
 
   MONS_FreeOpenGLShader(&Shader);
+  MONS_CloseWindow(Window);
 
   MONSTerminate();
   return 0;

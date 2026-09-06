@@ -4,6 +4,7 @@
 #include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
 #include "Monsoon/Graphic/API/OpenGL/OpenGL.h"
 #include <Monsoon/Monsoon.h>
+#include <excpt.h>
 
 MONS_API extern PFNWGLCREATECONTEXTPROC  MONS_wglCreateContext;
 MONS_API extern PFNWGLMAKECURRENTPROC    MONS_wglMakeCurrent;
@@ -45,6 +46,8 @@ MONS_API extern PFNGLGETPROGRAMRESOURCENAMEPROC MONS_glGetProgramResourceName;
 MONS_API extern PFNGLGETACTIVEUNIFORMPROC MONS_glGetActiveUniform;
 MONS_API extern PFNGLUNIFORM3FPROC MONS_glUniform3f;
 MONS_API extern PFNGLGETINTEGERVPROC MONS_glGetIntegerv;
+MONS_API extern PFNGLUNIFORMMATRIX4FVPROC MONS_glUniformMatrix4fv;
+MONS_API extern PFNGLUNIFORM2FPROC MONS_glUniform2f;
 
 #define wglCreateContext MONS_wglCreateContext
 #define wglMakeCurrent MONS_wglMakeCurrent
@@ -84,6 +87,8 @@ MONS_API extern PFNGLGETINTEGERVPROC MONS_glGetIntegerv;
 #define glGetActiveUniform MONS_glGetActiveUniform
 #define glUniform3f MONS_glUniform3f
 #define glGetIntegerv MONS_glGetIntegerv
+#define glUniformMatrix4fv MONS_glUniformMatrix4fv
+#define glUniform2f MONS_glUniform2f
 
 #ifdef MONSOON_PLATFORM_NT
 #define glCreateContext wglCreateContext
@@ -134,5 +139,7 @@ MONS_API extern PFNGLGETINTEGERVPROC MONS_glGetIntegerv;
 #define sglGetActiveUniform        "glGetActiveUniform"
 #define sglUniform3f               "glUniform3f"
 #define sglGetIntegerv             "glGetIntegerv"
+#define sglUniformMatrix4fv        "glUniformMatrix4fv"
+#define sglUniform2f               "glUniform2f"
 
 #endif

@@ -1,12 +1,17 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
 
-uniform vec3 Coordinations;
+layout(location = 0) in vec2 aPos;
+
+uniform mat4 ScreenMat;
+uniform vec2 Coordinations;
+uniform vec2 WidthAndHeight;
 
 void main()
 {
-   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-}
+    vec2 p = aPos * WidthAndHeight + Coordinations;
+    gl_Position = ScreenMat * vec4(p, 0.0, 1.0);
+}
+
 #version 330 core
 out vec4 FragColor;
 void main()

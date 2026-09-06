@@ -1,3 +1,4 @@
+#include <stdio.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
@@ -21,6 +22,7 @@ int main(int argc, char** argv)
     Event = MONS_PopWindowEvent(Window);
     if (Event)
     {
+      printf("Event.Type = %llu\n",Event -> Type);
       if (Event -> Type == MONSOON_EVENT_WINDOW_CHANGE_SIZE)
       {
         printf("MONSOON_EVENT_WINDOW_CHANGE_SIZE:new Hight=%d,Wigh=%d\n",((MONS_WindowPrarmSize*)Event -> Prarms) -> Height,((MONS_WindowPrarmSize*)Event -> Prarms) -> Width);

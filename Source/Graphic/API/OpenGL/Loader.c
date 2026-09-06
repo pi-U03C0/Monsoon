@@ -127,6 +127,8 @@ MSBool MONS_LoadOpenGLFunctions()
   glGetProgramResourceName = (PFNGLGETPROGRAMRESOURCENAMEPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceName);
   glGetActiveUniform = (PFNGLGETACTIVEUNIFORMPROC)MONS_LoadOpenGLFunction(sglGetActiveUniform);
   glUniform3f = (PFNGLUNIFORM3FPROC)MONS_LoadOpenGLFunction(sglUniform3f);
+  glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)MONS_LoadOpenGLFunction(sglUniformMatrix4fv);
+  glUniform2f = (PFNGLUNIFORM2FPROC)MONS_LoadOpenGLFunction(sglUniform2f);
 
   return True;
 }

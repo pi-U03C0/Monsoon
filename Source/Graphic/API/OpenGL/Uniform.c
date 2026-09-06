@@ -1,6 +1,8 @@
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
+#include <Monsoon/Utils/String.h>
 #include <stdio.h>
+#include <string.h>
 
 MSBool MONS_QureyOpenGLShaderUniforms(MONS_OpenGLShader* Shader)
 {
@@ -47,6 +49,7 @@ MSBool MONS_QureyOpenGLShaderUniforms(MONS_OpenGLShader* Shader)
     Shader -> ShaderUniforms[i].GLType = Type;
     Shader -> ShaderUniforms[i].Size = Size;
     Shader -> ShaderUniforms[i].ID = glGetUniformLocation(Shader -> ShaderProgrameHandle,Shader -> ShaderUniforms[i].UniformName);
+    LOG("Shader Uniform Name = %s,ID = %d",MONSOON_LOG_MID_DEBUG,255,Shader -> ShaderUniforms[i].UniformName,Shader -> ShaderUniforms[i].ID);
   }
 
   return True;
@@ -57,3 +60,15 @@ MSBool MONS_SetOpenGLShaderUniformInt(MONS_OpenGLShader* Shader,uint64_t Data,ui
   return True;
 }
 
+MONS_OpenGLShaderUniform* MONS_FindOpenGLUniformFromName(MONS_OpenGLShader* Shader,char* Name)
+{
+  for (uint16_t i = 0 ; i < Shader -> UniformCount ; i++)
+  {
+    if (!strcmp(Shader -> ShaderUniforms[i].UniformName, Name))
+    {
+      return &(Shader -> ShaderUniforms[i]);
+    }
+  }
+
+  return NULL;
+}

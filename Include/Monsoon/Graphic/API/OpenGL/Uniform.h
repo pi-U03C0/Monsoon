@@ -5,4 +5,6 @@
 
 MONS_API MSBool MONS_QureyOpenGLShaderUniforms(MONS_OpenGLShader* Shader);
 
+MONS_API MONS_OpenGLShaderUniform* MONS_FindOpenGLUniformFromName(MONS_OpenGLShader* Shader,char* Name);
+
 #endif

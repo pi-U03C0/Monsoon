@@ -83,7 +83,7 @@ function Get-LogDefine
   try { $project_part = (& "$__Tools\FileIndex.ps1" -IndexFile "$lib/FileIndex.index" -Name (Split-Path $Name))[0] }
   catch { (& "$__Tools\FileIndex.ps1" -Create -IndexFile "$lib/FileIndex.index" -SourcePath $SOURCE) }
 
-  $define = @("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part","-DMONSOON_VERSION=$ver")
+  $define = @("-D__FILE_NUMBER__=$file_number","-D__PROJECT_PART__=$project_part","-DMONSOON_VERSION=$ver","-DMONSOON_DLL")
 
   return $define
 }

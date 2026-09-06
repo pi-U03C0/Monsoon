@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-#define MONSOON_DLL
 
 #ifdef MONSOON_DLL
     #define MONS_API __declspec(dllexport)

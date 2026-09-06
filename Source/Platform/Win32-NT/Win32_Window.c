@@ -1,3 +1,4 @@
+#include <shlwapi.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
@@ -104,6 +105,7 @@ LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
               .Prarms = Prarms
            };
 
+           LOG("Win32 Window Proc KeyUP: Key=%d(%c)",MONSOON_LOG_HIGHT_DEBUG,255,Prarms -> Key,Prarms -> Key);
            MONS_PushWindowEvent((MONS_Window *)GetWindowLongPtr(hwnd, GWLP_USERDATA), &Event);
            return 0;
         }
@@ -122,6 +124,7 @@ LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
               .Prarms = Prarms
            };
 
+           LOG("Win32 Window Proc KeyDown: Key=%d(%c)",MONSOON_LOG_HIGHT_DEBUG,255,Prarms -> Key,Prarms -> Key);
            MONS_PushWindowEvent((MONS_Window *)GetWindowLongPtr(hwnd, GWLP_USERDATA), &Event);
            return 0;
         }
@@ -202,9 +205,9 @@ HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
 
 MSBool MONS_Win32_CloseWindow(HANDLE Window)
 {
-  if (!Window)
+  if (!Window && (!IsWindow(Window)))
   {
-    LOG("Window was NULL",MONSOON_LOG_ERROR,1);
+    LOG("The Window Handle was InValid",MONSOON_LOG_ERROR,MONSOON_LOG_INVALID);
     return False;
   }
 
@@ -213,14 +216,14 @@ MSBool MONS_Win32_CloseWindow(HANDLE Window)
 
 MSBool MONS_Win32_WindowPollEvent(HANDLE Window)
 {
-  if (!Window)
+  if (!Window && (!IsWindow(Window)))
   {
-    LOG("Window was NULL",MONSOON_LOG_ERROR,1);
+    LOG("The Window Handle was InValid",MONSOON_LOG_ERROR,MONSOON_LOG_INVALID);;
     return False;
   }
 
   MSG msg;
-  if (PeekMessage(&msg,NULL,0,0,True))
+  if (PeekMessage(&msg,Window,0,0,True))
   {
     TranslateMessage(&msg);
     return DispatchMessage(&msg);

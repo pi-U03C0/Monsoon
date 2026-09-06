@@ -344,10 +344,8 @@ glm_vec2_print(vec2              vec,
 #undef m
 }
 
-CGLM_INLINE
-void
-glm_ivec2_print(ivec2             vec,
-                FILE * __restrict ostream) {
+CGLM_INLINE void glm_ivec2_print(ivec2 vec,FILE* __restrict ostream)
+{
   int i;
 
 #define m 2
@@ -362,12 +360,9 @@ glm_ivec2_print(ivec2             vec,
 #undef m
 }
 
-CGLM_INLINE
-void
-glm_versor_print(versor            vec,
-                 FILE * __restrict ostream) {
+CGLM_INLINE void glm_versor_print(versor vec,FILE* __restrict ostream)
+{
   int i;
-
 #define m 4
 
   fprintf(ostream, "Quaternion (float%d): " CGLM_PRINT_COLOR "\n  (", m);
@@ -385,13 +380,8 @@ glm_versor_print(versor            vec,
 #undef m
 }
 
-CGLM_INLINE
-void
-glm_aabb_print(vec3                    bbox[2],
-               const char * __restrict tag,
-               FILE       * __restrict ostream) {
-  int i, j;
-
+CGLM_INLINE void glm_aabb_print(vec3 bbox[2], const char * __restrict tag, FILE* __restrict ostream)
+{ int i, j;
 #define m 3
 
   fprintf(ostream, "AABB (%s): " CGLM_PRINT_COLOR "\n", tag ? tag: "float");
