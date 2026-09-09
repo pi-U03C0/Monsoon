@@ -6,6 +6,12 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
   LOG("FilePath=%s,Mode=%d",MONSOON_LOG_DEBUG,255,FilePath,Mode);
   LOG("Opening File %s for %s",MONSOON_LOG_INFO,3,FilePath,MONS_OpenModeToString(Mode));
 
+  if (!MONS_IsAtLimitFile())
+  {
+    LOG("Can`t Open More than %d Files",MONSOON_LOG_CRITICAL,MONSOON_LOG_WAS_FULL);
+    return NULL;
+  }
+
   //alloc and check
   MONS_File* FileHandle = GetMemory(sizeof(MONS_File));
   if (!FileHandle)
@@ -22,7 +28,7 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
     FileHandle -> OSHandle = MONS_Win32_OpenFile(FileHandle -> FilePath, Mode);
     if (FileHandle -> OSHandle == NULL)
     {
-      LOG("Unable to Open file %s %d",MONSOON_LOG_ERROR,1,FileHandle -> FilePath,GetLastError());
+      LOG("Unable to Open file %s Win32Error:%d",MONSOON_LOG_ERROR,1,FileHandle -> FilePath,MONS_Win32_GetErrorCode());
 
       RemoveMemory(FileHandle -> FilePath);
       RemoveMemory(FileHandle);
@@ -31,6 +37,7 @@ MONS_File* MONS_OpenFile(char* FilePath,char Mode)
   #endif
 
   FileHandle -> FileSize = MONS_GetFileSize(FileHandle);
+  MONS_AddOpenFile(FileHandle);
 
   LOG("Open File %s for %s",MONSOON_LOG_SUCCESS,2,FileHandle -> FilePath,MONS_OpenModeToString(Mode));
 
@@ -53,7 +60,10 @@ MSBool MONS_CloseFile(MONS_File* FileHandle)
 
   LOG("Close File %s Succfully",MONSOON_LOG_SUCCESS,1,FileHandle -> FilePath);
 
+  RemoveMemory(FileHandle -> FilePath);
+  MONS_RemoveOpenFile(FileHandle);
   RemoveMemory(FileHandle);
+
   return dSucced;
 }
 
@@ -262,10 +272,46 @@ void MONS_CloseAllFile()
    for (uint16_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++)
    {
       if ((__Monsoon -> OpenFiles[i] == (void*)MONSOON_FILE_UNUSED) || !(__Monsoon -> OpenFiles[i]))
-      {
         continue;
-      }
 
       MONS_CloseFile(__Monsoon -> OpenFiles[i]);
    }
+}
+
+MSBool MONS_AddOpenFile(MONS_File* File)
+{
+  for(uint8_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++)
+  {
+    if (__Monsoon -> OpenFiles[i] == MONSOON_FILE_UNUSED)
+    {
+      __Monsoon -> OpenFiles[i] = File;
+      return True;
+    }
+  }
+  return False;
+}
+
+MSBool MONS_RemoveOpenFile(MONS_File* File)
+{
+  for(uint8_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++)
+  {
+    if (__Monsoon -> OpenFiles[i] == File)
+    {
+      __Monsoon -> OpenFiles[i] = MONSOON_FILE_UNUSED;
+      return True;
+    }
+  }
+  return False;
+}
+
+MSBool MONS_IsAtLimitFile()
+{
+  for (uint64_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++)
+  {
+    if (__Monsoon -> LoadedLibrary[i] == (void*)MONSOON_FILE_UNUSED)
+    {
+      return True;
+    }
+  }
+  return False;
 }

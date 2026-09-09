@@ -15,8 +15,6 @@
   #define MONSOON_OPENGL_MAX_UNIFORM_LENGTH 256
 #endif
 
-typedef char MSBool;
-
 #ifdef _WIN32
 typedef void* OSFileHandle;
 typedef void* OSHandle;
@@ -29,16 +27,19 @@ typedef void* OSHandle;
   typedef int OSFileHandle;
 #endif
 
-#ifndef True
-  #define True 1
-#endif
-#ifndef False
-  #define False 0
-#endif
+typedef char MSBool;
+#define True 1
+#define False 0
 
 //OnExitFunction type
 typedef void (*ExitFunciton)(void);
 typedef MSBool (*MONS_InitComponent)(void);
+
+struct MONS_Memory {
+  size_t size;
+  void* memory;
+};
+typedef struct MONS_Memory MONS_Memory ;
 
 struct MONS_Rect
 {
@@ -98,6 +99,7 @@ struct MONS_Component
 {
   MONS_InitComponent Init;
   MONS_InitComponent DeInit;
+  void* Storage;
   uint16_t Type;
   MSBool IsInitialized;
 };typedef struct MONS_Component MONS_Component;
@@ -189,8 +191,9 @@ struct LibraryState {
   uint8_t WindowCount;
   uint8_t LogLevel;
   uint16_t LoadedLibraryCount;
+  uint16_t OpenFileCount;
   char* FileSearchPath;
-  char extra[128];
+  uint64_t extra[16];
 }; typedef struct LibraryState LibraryState;
 
 struct MONS_Library

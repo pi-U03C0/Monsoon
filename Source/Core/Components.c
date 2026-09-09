@@ -1,4 +1,4 @@
-#include "Monsoon/MONS_Types.h"
+#include "Monsoon/MONS_Components.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <stdint.h>
@@ -13,6 +13,7 @@ MONS_InitComponent MONS_InitComponentsArraryPart[] = {
 
 MSBool MONS_InitComponentArray(uint16_t Length)
 {
+  LOG("Initializing Component Array",MONSOON_LOG_DEBUG,255);
   if (!Length)return False;
 
   MONS_Components = GetMemory(sizeof(MONS_ComponentList));
@@ -48,6 +49,8 @@ MSBool MONS_InitComponentArray(uint16_t Length)
     }
   }
 
+  LOG("Initialized ComponentArray",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
+
   return True;
 }
 
@@ -79,29 +82,30 @@ MSBool MONS_InitializComponent(uint16_t Component)
   {
     if (MONS_Components -> Components[i].Type == Component)
     {
-        if (!(MONS_Components -> Components[i].Init()))
-        {
-          LOG("Unable to Initializ Component \"%s\"",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_GET,MONS_ComponentToString(MONS_Components -> Components[i].Type));
-          return False;
-        }
-        LOG("Initialized Component \"%s\"",MONSOON_LOG_SUCCESS,0,MONS_ComponentToString(MONS_Components -> Components[i].Type));
-    }
-  }
-  return True;
-}
-
-MSBool MONS_AppendComponent(MSBool Type,void* Init,void* DeInit)
-{
-  for (uint16_t i = 0 ; i < MONS_Components -> Length ; i++)
-  {
-    if ((MONS_Components -> Components[i].Type == 0) || (MONS_Components -> Components[i].Type == Type))
-    {
-      MONS_Components -> Components[i].Type = Type;
-      MONS_Components -> Components[i].Init = Init;
+      LOG("Initializing Component \"%s\"",MONSOON_LOG_DEBUG,255,MONS_ComponentToString(Component));
+      if (!(MONS_Components -> Components[i].Init()))
+      {
+        LOG("Unable to Initializ Component \"%s\"",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO,MONS_ComponentToString(MONS_Components -> Components[i].Type));
+        return False;
+      }
+      LOG("Initialized Component \"%s\"",MONSOON_LOG_SUCCESS,0,MONS_ComponentToString(MONS_Components -> Components[i].Type));
       return True;
     }
   }
   return False;
+}
+
+MONS_Component* MONS_RegisterComponent(uint16_t Type)
+{
+  for (uint16_t i = 0 ; i < MONS_Components -> Length ; i++)
+  {
+    if ((MONS_Components -> Components[i].Type == MONSOON_COMPONENT_NULL) || (MONS_Components -> Components[i].Type == Type))
+    {
+      MONS_Components -> Components[i].Type = Type;
+      return &(MONS_Components -> Components[i]);
+    }
+  }
+  return NULL;
 }
 
 MSBool MONS_SetComponentInit(uint16_t Type,MSBool bool)
@@ -142,7 +146,7 @@ MSBool MONS_IsComponent(uint16_t Component)
 uint16_t MONS_ComponentsCount(uint16_t* Components)
 {
   uint16_t i = 0;
-  for (; Components[i] ; i++);
+  while (Components[i]) i++;
   return i;
 }
 
@@ -160,12 +164,29 @@ MSBool MONS_IsInitComponent(uint16_t Component)
 
 MSBool MONS_InitOpenGLArrayPart()
 {
-   MONS_AppendComponent(MONSOON_COMPONENT_OPENGL, MONS_InitComponentOpenGL,MONS_DeInitComponentOpenGL);
+   MONS_Component* OpenGL = MONS_RegisterComponent(MONSOON_COMPONENT_OPENGL);
+   if (!OpenGL)
+   {
+     LOG("Unable to Register OpenGL as a Component for Monsoon",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_DO);
+     return False;
+   }
+
+   OpenGL -> Init = MONS_InitComponentOpenGL;
+   OpenGL -> DeInit = MONS_DeInitComponentOpenGL;
    return True;
 }
 
 MSBool MONS_InitBasicDrawArrayPart()
 {
-   MONS_AppendComponent(MONSOON_COMPONENT_BASICDRAW, MONS_InitComponentBasicDraw,MONS_DeInitComponentBasicDraw);
+   MONS_Component* BasicDraw = MONS_RegisterComponent(MONSOON_COMPONENT_BASICDRAW);
+   if (!BasicDraw)
+   {
+     LOG("Unable to Register BasicDraw as a Component for Monsoon",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_DO);
+     return False;
+   }
+
+   BasicDraw -> Init = MONS_InitComponentBasicDraw;
+   BasicDraw -> DeInit = MONS_DeInitComponentBasicDraw;
+
    return True;
 }

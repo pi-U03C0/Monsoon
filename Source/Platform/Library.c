@@ -36,6 +36,7 @@ MONS_DynamicLibrary* MONS_LoadLibrary(char* DLLPath,uint16_t LoadFlags)
    Library -> LoadFlags = LoadFlags;
 
    MONS_AppendToGlobalLibrary(Library);
+   __Monsoon -> state.LoadedLibraryCount++;
 
   return Library;
 }
@@ -50,7 +51,9 @@ MSBool MONS_FreeLibrary(MONS_DynamicLibrary* Library)
   {
     RemoveMemory(Library -> DLLPath);
     RemoveMemory(Library);
+    __Monsoon -> state.LoadedLibraryCount--;
   }
+
   return Success;
 }
 

@@ -9,7 +9,7 @@
 
 #define MONSOON_SPLIT_PATH 0x1
 
-#define MONSOON_FILE_UNUSED 1
+#define MONSOON_FILE_UNUSED (void*)1
 
 //check if a file exists
 //----------------------------------------
@@ -80,5 +80,13 @@ MONS_API void MONS_CloseAllFile();
 //`Path`:The Path to add
 //----------------------------------------
 MONS_API MSBool MONS_AddSearchPath(char* Path);
+
+MONS_API MSBool MONS_IsAtLimitFile();
+
+MONS_API MSBool MONS_AddOpenFile(MONS_File* File);
+
+MONS_API MSBool MONS_RemoveOpenFile(MONS_File* File);
+
+
 
 #endif

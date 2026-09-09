@@ -36,7 +36,6 @@ MSBool MONS_InitBasicDrawArrayPart();
 
 MSBool MONS_SetComponentInit(uint16_t Type,MSBool bool);
 
-MSBool MONS_AppendComponent(MSBool Type,void* Init,void* DeInit);
-
+MONS_Component* MONS_RegisterComponent(uint16_t Type);
 
 #endif

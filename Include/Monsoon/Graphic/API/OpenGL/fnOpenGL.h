@@ -1,5 +1,3 @@
-#ifndef MONSOON_GRAPHIC_API_OPENGL_FUNCTION_H
-#define MONSOON_GRAPHIC_API_OPENGL_FUNCTION_H
 
 #include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
 #include "Monsoon/Graphic/API/OpenGL/OpenGL.h"

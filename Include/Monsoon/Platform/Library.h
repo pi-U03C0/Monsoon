@@ -1,7 +1,7 @@
 #ifndef MONSOON_PLATFORM_LIBRARY_H
 #define MONSOON_PLATFORM_LIBRARY_H
 
-#define MONSOON_LIBRARY_UNUSED 1
+#define MONSOON_LIBRARY_UNUSED (void*)1
 
 #include <Monsoon/MONS_Types.h>
 

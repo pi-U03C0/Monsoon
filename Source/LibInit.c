@@ -46,7 +46,7 @@ MSBool MONSTerminate()
   if (!__Monsoon) goto not_init;
   if (!__Monsoon -> IsInitialized) goto not_init;
 
-  LOG("Terminating Monsoon",MONSOON_LOG_INFO,2);
+  LOG("Terminating Monsoon",MONSOON_LOG_INFO,MONSOON_LOG_TERMINATE);
 
   //called the exit functions
   for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++)
@@ -55,6 +55,9 @@ MSBool MONSTerminate()
      if (__Monsoon -> OnExit[i] == MONSOON_ONEXIT_UNUSED)continue;
      __Monsoon -> OnExit[i]();
   }
+
+  MONS_CloseAllLibrary();
+  MONS_CloseAllFile();
 
   //free memory
   if (__Monsoon -> Components)RemoveMemory(__Monsoon -> Components);
@@ -86,6 +89,7 @@ MSBool MONS_AllocatMonsoon()
   __Monsoon -> IsInitialized = True;
   __Monsoon -> state.WindowCount = 0;
 
+  LOG("Initializing OnExit",MONSOON_LOG_HIGHT_DEBUG,255);
   //Initializ OnExit
   __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
   if (!__Monsoon -> OnExit)
@@ -93,7 +97,9 @@ MSBool MONS_AllocatMonsoon()
     Error_Memory();
     return False;
   } for (int i = 0 ; i < MONSOON_ONEXIT_LEN ; i++) __Monsoon -> OnExit[i] = MONSOON_ONEXIT_UNUSED;
+  __Monsoon -> OnExit[MONSOON_ONEXIT_LEN] = NULL;
 
+  LOG("Initializing LoadedLibrary",MONSOON_LOG_HIGHT_DEBUG,255);
   //Init the list of loaded Library
   __Monsoon -> LoadedLibrary = GetMemory(sizeof(MONS_DynamicLibrary*) * MONSOON_LIBRARY_LIMIT);
   if (!__Monsoon -> LoadedLibrary)
@@ -102,6 +108,7 @@ MSBool MONS_AllocatMonsoon()
     return False;
   } for (uint16_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++) __Monsoon -> LoadedLibrary[i] = (void*)MONSOON_LIBRARY_UNUSED;
 
+  LOG("Initializing OpenFiles",MONSOON_LOG_HIGHT_DEBUG,255);
   //Init the list of loaded files
   __Monsoon -> OpenFiles = GetMemory(sizeof(MONS_File*) * MONSOON_FILEOPEN_LIMIT);
   if (!__Monsoon -> OpenFiles)
@@ -110,6 +117,56 @@ MSBool MONS_AllocatMonsoon()
     return False;
   } for (uint16_t i = 0 ; i < MONSOON_FILEOPEN_LIMIT ; i++) __Monsoon -> OpenFiles[i] = (void*)MONSOON_FILE_UNUSED;
   __Monsoon -> state.FileSearchPath = MONS_GetCurrentWorkingDirectory();
+
+  return True;
+}
+
+MSBool MONS_InitializComponents(uint16_t* Components)
+{
+  LOG("Initializing Components",MONSOON_LOG_DEBUG,255);
+  for (uint16_t i = 0 ; Components[i] ; i++)
+  {
+    //check if is a Component
+    if (MONS_IsComponent(Components[i]))
+    {
+      MONS_InitializComponent(Components[i]);
+    }
+    else
+    {
+       LOG("UnKnown Component %d",MONSOON_LOG_ERROR,MONSOON_LOG_UNKNOWN,Components[i]);
+    }
+  }
+  LOG("Initialized All Components",MONSOON_LOG_INFO,MONSOON_LOG_INFO);
+  return True;
+}
+
+MSBool MONS_DeInitializComponents(int Components)
+{
+  return False;
+}
+
+MSBool MONS_InitProcArray()
+{
+  LOG("Initializing ProcArray",MONSOON_LOG_DEBUG,255);
+  //MONS_Procs allocateion
+  MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
+  if (!MONS_Procs)
+  {
+    Error_Memory();
+    return False;
+  }
+
+  //seting procs
+  uint16_t i = 0;
+  for (; i < MONSOON_PROC_LEN ; i++)
+  {
+    MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
+    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc,NULL);
+    if (!MONS_Procs[i].Proc) LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
+  }
+  MONS_Procs[i].Type = 0;
+  MONS_Procs[i].Proc = NULL;
+  LOG("Initialized ProcArray",MONSOON_LOG_HIGHT_DEBUG,255);
 
   return True;
 }
@@ -140,53 +197,8 @@ MSBool MONS_RemoveOnExitFunction(ExitFunciton fn)
   return False;
 }
 
-MSBool MONS_InitializComponents(uint16_t* Components)
-{
-  for (uint16_t i = 0 ; Components[i] ; i++)
-  {
-    //check if is a Component
-    if (MONS_IsComponent(Components[i]))
-    {
-      MONS_InitializComponent(Components[i]);
-    }
-    else
-    {
-       LOG("UnKnown Component %d",MONSOON_LOG_ERROR,MONSOON_LOG_UNKNOWN,Components[i]);
-    }
-  }
-  return True;
-}
-
-MSBool MONS_DeInitializComponents(int Components)
-{
-  return False;
-}
-
-MSBool MONS_InitProcArray()
-{
-  //MONS_Procs allocateion
-  MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
-  if (!MONS_Procs)
-  {
-    Error_Memory();
-    return False;
-  }
-
-  //seting procs
-  uint16_t i = 0;
-  for (; i < MONSOON_PROC_LEN ; i++)
-  {
-    MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
-    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc,NULL);
-    if (!MONS_Procs[i].Proc) LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
-  }
-  MONS_Procs[i].Type = 0;
-  MONS_Procs[i].Proc = NULL;
-
-  return True;
-}
-
 uint64_t MONS_GetVersion()
 {
   return MONSOON_VERSION;
 }
+

@@ -21,8 +21,8 @@ unsigned int indices[] = {
 MONS_Window* Window = NULL;
 MONS_OpenGLContext* Context = NULL;
 mat4 WindowMat = {0};
-float CoordintionX = 0.0f;
-float CoordintionY = 0.0f;
+float CoordintionX = 250.0f;
+float CoordintionY = 250.0f;
 
 MSBool CompileShader()
 {
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  Window = MONS_CreateWindow("Monsoon Test: test_opengl_rect",&(MONS_Rect){100,100,600,600});
+  Window = MONS_CreateWindow("Monsoon Test: test_opengl_rect Move with HJKL",&(MONS_Rect){100,100,600,600});
   MONS_ShoWindow(Window,MONS_SHOW_WINDOW);
   glm_ortho(0,Window -> WindowArea -> Width,Window -> WindowArea -> Height,0,-1.0f,1.0,WindowMat);
 

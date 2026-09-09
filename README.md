@@ -8,3 +8,8 @@ Build State: fully working
 - Window Event Handleing
 - Eazy FileSystem Access
 - OpenGL
+
+### Suported Systmes
+
+- NT-Yes
+- Linux-Planed

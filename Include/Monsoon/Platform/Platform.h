@@ -2,9 +2,13 @@
 #define MONSOON_PLATFORM_H
 
 #include <Monsoon/MONS_Types.h>
-#include <Monsoon/Platform/Platform_Memory.h>
-#include <Monsoon/Platform/Platform_FileSystem.h>
-#include <Monsoon/Platform/Platform_Library.h>
+#include <Monsoon/Platform/Memory.h>
+#include <Monsoon/Platform/FileSystem.h>
+#include <Monsoon/Platform/Library.h>
+#include <Monsoon/Platform/Time.h>
+#include <Monsoon/Platform/Console.h>
+#include <Monsoon/Platform/Process.h>
+#include <Monsoon/Platform/KeyBoard.h>
 
 #include <stddef.h>
 

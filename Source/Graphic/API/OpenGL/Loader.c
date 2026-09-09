@@ -1,4 +1,3 @@
-#include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
@@ -135,5 +134,6 @@ MSBool MONS_LoadOpenGLFunctions()
 
 void MONS_TerminateComponentOpenGL()
 {
+  MONS_FreeLibrary(OpenGL32);
   //MONS_UnLoadOpenGLFunctions();
 }

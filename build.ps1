@@ -36,7 +36,7 @@ $INCLUDE = "$OWD/include"
 $CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
-$VERSION = 4
+$VERSION = 6
 
 $Verbose = $false
 
@@ -284,6 +284,10 @@ if ($TestName -ne "-=-")
     if ($LASTEXITCODE -eq -1073741510)
     {
       $Message = "`e[31mCtrl+C`e[0m"
+    }
+    if ($LASTEXITCODE -eq -1073741571)
+    {
+      $Message = "`e[31mSTACK OVERFLOW`e[0m"
     }
     Write-Host "`nLASTEXITCODE: $LASTEXITCODE $Message" -nonewline
   }

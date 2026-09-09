@@ -36,12 +36,13 @@ void* MONS_DupeMemory(char* Memory,uint64_t Size)
 {
   if (!Memory)
   {
-    LOG("Memory was NULL",MONSOON_LOG_ERROR,1);
+    LOG("Memory was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return NULL;
   }
+
   if (!Size)
   {
-    LOG("Size was 0",MONSOON_LOG_ERROR,2);
+    LOG("Size was 0",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return NULL;
   }
 
