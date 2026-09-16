@@ -11,7 +11,7 @@
 MONS_API LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);;
 
 //Win32 Create Window runing directly Win32 API functions
-MONS_API HANDLE MONS_Win32_CreateWindow(char* window_name,MONS_Rect* rect,void* WinProc);
+MONS_API HANDLE MONS_Win32_CreateWindow(char* window_name,MONS_Rect Rect,void* WinProc);
 
 //Win32 Close Window runing CloseWindow directly
 MONS_API MSBool MONS_Win32_CloseWindow(HANDLE Window);
@@ -25,6 +25,6 @@ MONS_API void* MONS_Win32_GetWindowDrawSurface(HANDLE Window);
 
 MONS_API MSBool MONS_Win32_SetPixelFormat(HDC WindowDC);
 
-uint8_t MONS_Win32_WindowReSizeToStd(uint8_t How);
+MONS_API uint8_t MONS_Win32_WindowReSizeToStd(uint8_t How);
 
 #endif

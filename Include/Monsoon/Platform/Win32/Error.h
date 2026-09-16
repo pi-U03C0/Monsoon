@@ -1,8 +1,8 @@
 #ifndef MONSOON_WIN32_ERROR_H
 #define MONSOON_WIN32_ERROR_H
 
-#include <Monsoon/MONS_Types.h>
+#include <Monsoon/Monsoon.h>
 
-uint64_t MONS_Win32_GetErrorCode();
+MONS_API uint64_t MONS_Win32_GetErrorCode();
 
 #endif

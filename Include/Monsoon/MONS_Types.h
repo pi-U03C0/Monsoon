@@ -100,7 +100,7 @@ struct MONS_Component
   MONS_InitComponent Init;
   MONS_InitComponent DeInit;
   void* Storage;
-  uint16_t Type;
+  uint16_t ID;
   MSBool IsInitialized;
 };typedef struct MONS_Component MONS_Component;
 
@@ -117,7 +117,7 @@ struct MONS_Window
   //The Render surface to draw to
   //`On` NT This is the Window DC
   OSHandle RenderSurface;
-  MONS_Rect* WindowArea;
+  MONS_Rect WindowArea;
   char* Title;
   MONS_Queue* Events;
 }; typedef struct MONS_Window MONS_Window;
@@ -148,6 +148,7 @@ struct MONS_OpenGLContext
 {
   void* GLContext;
   void* RenderSurface;
+  uint32_t CurrentPrograme;
 };typedef struct MONS_OpenGLContext MONS_OpenGLContext;
 
 struct MONS_OpenGLShaderUniform
@@ -182,36 +183,58 @@ struct MONS_OpenGLVertextData
 
 struct MONS_OpenGLVersion
 {
-  char Major;
-  char Minor;
-};
-typedef struct MONS_OpenGLVersion MONS_OpenGLVersion;
+  uint8_t Major;
+  uint8_t Minor;
+};typedef struct MONS_OpenGLVersion MONS_OpenGLVersion;
 
-struct LibraryState {
-  uint8_t WindowCount;
-  uint8_t LogLevel;
-  uint16_t LoadedLibraryCount;
-  uint16_t OpenFileCount;
-  char* FileSearchPath;
-  uint64_t extra[16];
-}; typedef struct LibraryState LibraryState;
+struct MONS_BasicDrawResource
+{
+
+};typedef struct MONS_BasicDrawResource MONS_BasicDrawResource;
+
+struct MONS_BasicDrawContext
+{
+  uint8_t ID;
+  MONS_Window* Window;
+  uint8_t ResourceCount;
+  MONS_BasicDrawResource* Resource;
+};typedef struct MONS_BasicDrawContext MONS_BasicDrawContext;
+
+struct MONS_BasicDrawStorage
+{
+  uint8_t RegistersWindowsCount;
+  uint8_t ContextCount;
+  MONS_BasicDrawContext* Contexts;
+};typedef struct MONS_BasicDrawStorage MONS_BasicDrawStorage;
 
 struct MONS_Library
 {
   //Is Monsoon Library Initialized
   MSBool IsInitialized;
+
   //The Last Error
   MONSError Error;
+
   //The Function that run on Monsoon Terminate
   void (**OnExit)(void);
+
   //All Library that was Loaded by Monsoon
   MONS_DynamicLibrary** LoadedLibrary;
+
   //All File Open By Monsoon
   MONS_File** OpenFiles;
+
   //All Initialized Components
   uint16_t* Components;
+
   //The Library state
-  LibraryState state;
+  struct{
+    uint8_t WindowCount;
+    uint8_t LogLevel;
+    uint16_t LoadedLibraryCount;
+    uint16_t OpenFileCount;
+    char* FileSearchPath;
+  } state;
 }; typedef struct MONS_Library MONS_Library;
 
 #endif

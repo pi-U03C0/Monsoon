@@ -3,6 +3,8 @@
 #include <Monsoon/SystemHeaders.h>
 #include <stdio.h>
 
+uint16_t MONS_OpenGLComponent = 0;
+
 MONS_DynamicLibrary* OpenGL32 = NULL;
 
 MSBool MONS_InitComponentOpenGL()
@@ -14,13 +16,13 @@ MSBool MONS_InitComponentOpenGL()
   if (!OpenGL32)
   {
     MONS_SetErrorCode(Make_Code(MONSOON_LOG_UNABLE_DO));
-    LOG("Unable to Load %s",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
+    LOG("Unable to Load %s",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO,DLLPath);
     return False;
   }
 
   MONS_LoadOpenGLCore();
 
-  MONS_Window* Window = MONS_CreateWindow("Monsoon OpenGL Dummy Window",&(MONS_Rect){100,100,100,100});
+  MONS_Window* Window = MONS_CreateWindow("Monsoon OpenGL Dummy Window",(MONS_Rect){100,100,100,100});
   if (!Window)
   {
     MONS_SetErrorCode(Make_Code(MONSOON_LOG_UNABLE_DO));
@@ -131,6 +133,8 @@ MSBool MONS_LoadOpenGLFunctions()
 
   return True;
 }
+
+
 
 void MONS_TerminateComponentOpenGL()
 {

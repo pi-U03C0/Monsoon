@@ -1,9 +1,8 @@
-#include "Monsoon/MONS_Error.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Platform/Platform.h>
 #include <Monsoon/SystemHeaders.h>
 
-MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
+MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect Rect)
 {
   LOG("Createing Window",MONSOON_LOG_INFO,10);
 
@@ -22,7 +21,7 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
   }
 
   #ifdef _WIN32 //Create Window for Win32
-     OSHandle WindowHandle = MONS_Win32_CreateWindow(Title, rect, proc);
+     OSHandle WindowHandle = MONS_Win32_CreateWindow(Title, Rect, proc);
      uint64_t Code = MONS_Win32_GetErrorCode();
 
     if (!WindowHandle) //check Window Handle
@@ -35,11 +34,11 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect)
     SetWindowLongPtrA(WindowHandle,GWLP_USERDATA,(LONG_PTR)Window);
   #endif
 
-  LOG("Create Window \"%s\" at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,rect -> X,rect -> Y,rect -> Width ,rect -> Height);
+  LOG("Create Window \"%s\" at (%d,%d,%d,%d)",MONSOON_LOG_SUCCESS,11,Title,Rect.X,Rect.Y,Rect.Width ,Rect.Height);
 
   //set Window value
+  Window -> WindowArea = Rect;
   Window -> OSHandle = WindowHandle;
-  Window -> WindowArea = rect;
   Window -> Title = Title;
   Window -> Events = MONS_InitQueue(256);
   Window -> RenderSurface = MONS_GetWindowDrawSurface(Window);

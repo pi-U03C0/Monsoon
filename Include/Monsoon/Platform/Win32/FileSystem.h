@@ -1,23 +1,23 @@
 #ifndef MONSOON_PLATFORM_WIN32_FILESYSTEM
 #define MONSOON_PLATFORM_WIN32_FILESYSTEM
 
-#include <Monsoon/MONS_Types.h>
+#include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
 
 #define MONSOON_MODE_READ 1
 #define MONSOON_MODE_WRITE 2
 #define MONSOON_MODE_READ_WRITE 3
 
-HANDLE MONS_Win32_OpenFile(char* FilePath,char Mode);
+MONS_API HANDLE MONS_Win32_OpenFile(char* FilePath,char Mode);
 
-int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
+MONS_API int MONS_Win32_WriteFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
 
-int MONS_Win32_ReadFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
+MONS_API int MONS_Win32_ReadFile(HANDLE FileHandle,char* Buffer,uint64_t Length);
 
-MSBool MONS_Win32_CloseFile(HANDLE hFile);
+MONS_API MSBool MONS_Win32_CloseFile(HANDLE hFile);
 
-MSBool MONS_Win32_MakeFile(char* FilePath);
+MONS_API MSBool MONS_Win32_MakeFile(char* FilePath);
 
-char* Win32_GetError();
+MONS_API char* Win32_GetError();
 
 #endif

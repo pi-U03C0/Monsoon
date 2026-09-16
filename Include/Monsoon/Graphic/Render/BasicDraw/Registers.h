@@ -1,0 +1,10 @@
+#ifndef MONSOON_GRAPHIC_RENDER_BASICDRAW_REGISTERS_H
+#define MONSOON_GRAPHIC_RENDER_BASICDRAW_REGISTERS_H
+
+#define MONSOON_BASICDRAW_REGISTER_WINDOW_LIMIT 5
+
+#include <Monsoon/Monsoon.h>
+
+MSBool MONS_RegisterBasicDrawWindow(MONS_Window* Window);
+
+#endif

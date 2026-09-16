@@ -27,8 +27,7 @@ MONS_API MSBool MONS_AddOnExitFunction(ExitFunciton fn);
 //Remove a Function from OnExit array
 MONS_API MSBool MONS_RemoveOnExitFunction(ExitFunciton fn);
 
-//Initialized Component of Monsoon or Mutitple Components
-MONS_API MSBool MONS_InitializComponents(uint16_t* Components);
+
 
 //Get The Monsoon version
 MONS_API uint64_t MONS_GetVersion();

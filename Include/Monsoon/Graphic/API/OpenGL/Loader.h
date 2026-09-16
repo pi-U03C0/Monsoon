@@ -1,7 +1,10 @@
 #ifndef MONSOON_GRAPHIC_API_OPENGL_LOADER
 #define MONSOON_GRAPHIC_API_OPENGL_LOADER
 
-#include <Monsoon/MONS_Types.h>
+#include <Monsoon/Monsoon.h>
+
+//The Index that OpenGL Component is at in MONS_Components
+MONS_API extern uint16_t MONS_OpenGLComponent;
 
 char* MONS_FindOpenGLDLL();
 

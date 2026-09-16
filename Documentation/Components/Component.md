@@ -1,6 +1,6 @@
 ### Monsoon Components:
   - Components is how option segments of the Library are seleceted
 
-### Avablesaejdkjdw Components:
+### Available  Components:
   - OpenGL
   - BasicDraw

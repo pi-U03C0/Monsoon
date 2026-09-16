@@ -1,3 +1,4 @@
+#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <stdio.h>
@@ -62,6 +63,7 @@ MONS_OpenGLContext* MONS_CreateOpenGLContext(MONS_Window* Window,int* GLAttribut
     Error_Memory();
     return NULL;
   }
+
   #ifdef MONSOON_PLATFORM_NT
     if (!MONS_Win32_SetPixelFormat(Window -> RenderSurface))
     {
@@ -69,6 +71,7 @@ MONS_OpenGLContext* MONS_CreateOpenGLContext(MONS_Window* Window,int* GLAttribut
     }
     if (!GLAttributes)
     {
+      GLAttributes = Win32_WGLAttributes;
     }
   #endif
 
@@ -77,7 +80,10 @@ MONS_OpenGLContext* MONS_CreateOpenGLContext(MONS_Window* Window,int* GLAttribut
 
   return Context;
 err_frees:
-  if (Context) RemoveMemory(Context);
+  if (Context -> GLContext)
+    glDeleteContext(Context -> GLContext);
+  if (Context)
+    RemoveMemory(Context);
   return NULL;
 }
 
@@ -107,3 +113,18 @@ MSBool MONS_RemoveCurrentOpenGLContect()
   return glMakeCurrent(NULL,NULL);
 }
 
+MONS_OpenGLVersion MONS_GetOpenGLVersion()
+{
+  MONS_OpenGLVersion Version = {0};
+  glGetIntegerv(GL_MAJOR_VERSION,(void*)&Version.Major);
+  glGetIntegerv(GL_MINOR_VERSION,(void*)&Version.Minor);
+
+  return Version;
+}
+
+MSBool MONS_SetCurrentOpenGLPrograme(MONS_OpenGLContext* Context,uint32_t Programe)
+{
+  Context -> CurrentPrograme = Programe;
+  glUseProgram(Programe);
+  return True;
+}

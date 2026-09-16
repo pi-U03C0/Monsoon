@@ -11,7 +11,7 @@
 #define MONS_WINDOW_MAXIMIZED 3
 
 // Create A Window
-MONS_API MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect* rect);
+MONS_API MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect Rect);
 
 //Show a Window
 MONS_API MSBool MONS_ShoWindow(MONS_Window* Window,char act);

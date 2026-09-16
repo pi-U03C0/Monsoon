@@ -1,10 +1,11 @@
 #include <Monsoon/Monsoon.h>
+#include <stdio.h>
 
 MONS_DynamicLibrary* MONS_LoadLibrary(char* DLLPath,uint16_t LoadFlags)
 {
    LOG("Loading Library %s with LoadFlags %d",MONSOON_LOG_DEBUG,255,DLLPath,LoadFlags);
 
-   if ((!MONS_IsAtLimitLibrary()) || !(__Monsoon -> state.LoadedLibraryCount > MONSOON_LIBRARY_LIMIT))
+   if (MONS_IsAtLimitLibrary())
    {
      LOG(
       "Can`t Load More than %d dynamic Library",
@@ -120,10 +121,10 @@ MSBool MONS_IsAtLimitLibrary()
 {
   for (uint64_t i = 0 ; i < MONSOON_LIBRARY_LIMIT ; i++)
   {
-    if (__Monsoon -> LoadedLibrary[i] == (void*)MONSOON_LIBRARY_UNUSED)
+    if (__Monsoon -> LoadedLibrary[i] == MONSOON_LIBRARY_UNUSED)
     {
-      return True;
+      return False;
     }
   }
-  return False;
+  return True;
 }

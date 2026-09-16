@@ -37,8 +37,8 @@ LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
           };
 
           MONS_Window* Window = (MONS_Window*)GetWindowLongPtr(hwnd,GWLP_USERDATA);
-          Window -> WindowArea -> Width = Prames -> Width;
-          Window -> WindowArea -> Height = Prames -> Height;
+          Window -> WindowArea.Width = Prames -> Width;
+          Window -> WindowArea.Height = Prames -> Height;
 
           MONS_PushWindowEvent(Window, &Event);
           return 0;
@@ -62,8 +62,8 @@ LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
           };
 
           MONS_Window* Window = (MONS_Window*)GetWindowLongPtr(hwnd,GWLP_USERDATA);
-          Window -> WindowArea -> X = Prames -> X;
-          Window -> WindowArea -> Y = Prames -> Y;
+          Window -> WindowArea.X = Prames -> X;
+          Window -> WindowArea.Y = Prames -> Y;
 
           MONS_PushWindowEvent(Window, &Event);
           return 0;
@@ -151,7 +151,7 @@ uint32_t MONS_Win32_ActToMode(char act)
   }
 }
 
-HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
+HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect Rect,void* WinProc)
 {
   if (!WinProc)
   {
@@ -185,10 +185,10 @@ HANDLE MONS_Win32_CreateWindow(char* Title,MONS_Rect* rect,void* WinProc)
     window_class.lpszClassName,
     Title,
     WS_OVERLAPPEDWINDOW,
-    rect -> X,
-    rect -> Y,
-    rect -> Width,
-    rect -> Height,
+    Rect.X,
+    Rect.Y,
+    Rect.Width,
+    Rect.Height,
     NULL,
     NULL,
     NULL,

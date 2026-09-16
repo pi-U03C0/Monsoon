@@ -58,6 +58,7 @@ MSBool MONSTerminate()
 
   MONS_CloseAllLibrary();
   MONS_CloseAllFile();
+  MONS_DeInitComponets();
 
   //free memory
   if (__Monsoon -> Components)RemoveMemory(__Monsoon -> Components);
@@ -89,8 +90,8 @@ MSBool MONS_AllocatMonsoon()
   __Monsoon -> IsInitialized = True;
   __Monsoon -> state.WindowCount = 0;
 
-  LOG("Initializing OnExit",MONSOON_LOG_HIGHT_DEBUG,255);
   //Initializ OnExit
+  LOG("Initializing OnExit",MONSOON_LOG_HIGHT_DEBUG,255);
   __Monsoon -> OnExit = GetMemory(sizeof(void*)*(MONSOON_ONEXIT_LEN+1));
   if (!__Monsoon -> OnExit)
   {
@@ -121,24 +122,6 @@ MSBool MONS_AllocatMonsoon()
   return True;
 }
 
-MSBool MONS_InitializComponents(uint16_t* Components)
-{
-  LOG("Initializing Components",MONSOON_LOG_DEBUG,255);
-  for (uint16_t i = 0 ; Components[i] ; i++)
-  {
-    //check if is a Component
-    if (MONS_IsComponent(Components[i]))
-    {
-      MONS_InitializComponent(Components[i]);
-    }
-    else
-    {
-       LOG("UnKnown Component %d",MONSOON_LOG_ERROR,MONSOON_LOG_UNKNOWN,Components[i]);
-    }
-  }
-  LOG("Initialized All Components",MONSOON_LOG_INFO,MONSOON_LOG_INFO);
-  return True;
-}
 
 MSBool MONS_DeInitializComponents(int Components)
 {
