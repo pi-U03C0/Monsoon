@@ -1,3 +1,4 @@
+#include "Monsoon/MONS_Types.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
@@ -10,6 +11,7 @@ MONS_DynamicLibrary* OpenGL32 = NULL;
 MSBool MONS_InitComponentOpenGL()
 {
   LOG("Initializ OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
+  MONS_OpenGLStorage* Storage = (MONS_Components -> Components[MONS_OpenGLComponent].Storage);
   char* DLLPath = MONS_FindOpenGLDLL();
 
   OpenGL32 = MONS_LoadLibrary(DLLPath,0);
@@ -26,9 +28,10 @@ MSBool MONS_InitComponentOpenGL()
   if (!Window)
   {
     MONS_SetErrorCode(Make_Code(MONSOON_LOG_UNABLE_DO));
-    LOG("Unable to Create Dummy Window",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
+    LOG("Unable to Create OpenGL Dummy Window",MONSOON_LOG_ERROR,MONSOON_LOG_UNABLE_DO);
     return False;
   }
+
 
   MONS_OpenGLContext* Context = MONS_CreateBasicOpenGLContext(Window);
   MONS_MakeCurrentOpenGLContext(Context);

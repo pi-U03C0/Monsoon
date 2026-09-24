@@ -15,6 +15,6 @@ MSBool MONS_InitComponentBasicDraw()
 
 MSBool MONS_DeInitComponentBasicDraw()
 {
-  MONS_De
+  MONS_DeInitBasicDrawStorage();
   return True;
 }

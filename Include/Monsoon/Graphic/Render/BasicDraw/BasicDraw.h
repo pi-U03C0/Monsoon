@@ -4,6 +4,8 @@
 #include <Monsoon/Graphic/Render/BasicDraw/Loader.h>
 #include <Monsoon/Graphic/Render/BasicDraw/Registers.h>
 #include <Monsoon/Graphic/Render/BasicDraw/Rectangle.h>
+#include <Monsoon/Graphic/Render/BasicDraw/Resource.h>
 #include <Monsoon/Graphic/Render/BasicDraw/Context.h>
+#include <Monsoon/Graphic/Render/BasicDraw/Targets.h>
 
 #endif

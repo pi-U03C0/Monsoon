@@ -1,6 +1,11 @@
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 
+uint8_t MONS_CreateBasicDrawContext()
+{
+  
+}
+
 MONS_BasicDrawContext* MONS_GetBasicDrawContext(uint16_t ContextID)
 {
   MONS_BasicDrawStorage* Storage = MONS_Components -> Components[MONS_BasicDrawComponent].Storage;
@@ -10,4 +15,9 @@ MONS_BasicDrawContext* MONS_GetBasicDrawContext(uint16_t ContextID)
       return &(Storage -> Contexts[i]);
   }
   return NULL;
+}
+
+MSBool MONS_CheckBasicDrawContextCache()
+{
+  
 }

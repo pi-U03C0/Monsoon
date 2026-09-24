@@ -4,7 +4,12 @@
 #include <Monsoon/MONS_Types.h>
 #include <Monsoon/Monsoon.h>
 
-#define MONS_SHOW_WINDOW 1
+enum Monsoon_ShowWindowActs
+{
+  MONS_SHOW_NULL,
+  MONS_SHOW_WINDOW,
+  MONS_HIDE_WINDOW
+};
 
 #define MONS_WINDOW_RESIZE 1
 #define MONS_WINDOW_MINIMIZED 2

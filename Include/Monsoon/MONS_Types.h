@@ -2,6 +2,7 @@
 #define MONSOON_TYPES_H
 
 #include <stdint.h>
+#include <cglm/types.h>
 
 #ifndef MONSOON_LIBRARY_LIMIT
   #define MONSOON_LIBRARY_LIMIT 10
@@ -27,7 +28,7 @@ typedef void* OSHandle;
   typedef int OSFileHandle;
 #endif
 
-typedef char MSBool;
+typedef uint8_t MSBool;
 #define True 1
 #define False 0
 
@@ -39,7 +40,7 @@ struct MONS_Memory {
   size_t size;
   void* memory;
 };
-typedef struct MONS_Memory MONS_Memory ;
+typedef struct MONS_Memory MONS_Memory;
 
 struct MONS_Rect
 {
@@ -187,24 +188,45 @@ struct MONS_OpenGLVersion
   uint8_t Minor;
 };typedef struct MONS_OpenGLVersion MONS_OpenGLVersion;
 
-struct MONS_BasicDrawResource
+struct MONS_OpenGLStorage
 {
-
-};typedef struct MONS_BasicDrawResource MONS_BasicDrawResource;
+  MONS_OpenGLContext* Context;
+  uint32_t CurrentPrograme;
+};typedef struct MONS_OpenGLStorage MONS_OpenGLStorage;
 
 struct MONS_BasicDrawContext
 {
   uint8_t ID;
-  MONS_Window* Window;
   uint8_t ResourceCount;
-  MONS_BasicDrawResource* Resource;
+  MONS_Window* Window;
+  void** TargetResources;
 };typedef struct MONS_BasicDrawContext MONS_BasicDrawContext;
+
+struct MONS_BasicDrawResource
+{
+  uint8_t Type;
+};typedef struct MONS_BasicDrawResource MONS_BasicDrawResource;
+
+struct MONS_BasicDrawTargetResourceRectangle
+{
+  uint8_t Type;
+  uint8_t Indices;
+  mat4 ScreenMat; 
+  float* Vertices;
+  void* Resource;
+};typedef struct MONS_BasicDrawTargetResourceRectangle MONS_BasicDrawTargetResourceRectangle;
+
+struct MONS_GL_BasicDrawTargetResourceRectangle
+{
+  MONS_OpenGLShader* Shader;
+};typedef struct MONS_GL_BasicDrawTargetResourceRectangle MONS_GL_BasicDrawTargetResourceRectangle;
 
 struct MONS_BasicDrawStorage
 {
   uint8_t RegistersWindowsCount;
   uint8_t ContextCount;
   MONS_BasicDrawContext* Contexts;
+  MONS_BasicDrawContext* LastUsedContext;
 };typedef struct MONS_BasicDrawStorage MONS_BasicDrawStorage;
 
 struct MONS_Library
