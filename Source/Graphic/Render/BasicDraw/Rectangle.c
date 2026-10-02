@@ -50,10 +50,7 @@ MSBool MONS_GL_BasicDrawRectangle(MONS_BasicDrawContext* Context,MONS_Rect Rect,
 MSBool MONS_BasicDrawRectangle(uint16_t ContextID,MONS_Rect* Rect,MONS_Rect* Colour)
 {
   MONS_BasicDrawStorage* Storage = MONS_Components -> Components[MONS_BasicDrawComponent].Storage;
-  if (!MONS_CheckBasicDrawContextCache(ContextID))
-  {
-    return False;
-  }
+  MONS_CheckBasicDrawContextCache(ContextID);
 
   MONS_GL_BasicDrawRectangle(Storage -> LastUsedContext, *Rect, Colour);
 

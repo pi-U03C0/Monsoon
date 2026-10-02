@@ -5,8 +5,7 @@
 
 #include <Monsoon/Monsoon.h>
 
-MONS_API MSBool MONS_RegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
-
-MONS_API MSBool MONS_UnRegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window);
+MONS_API MSBool MONS_RegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window);
+MONS_API MSBool MONS_UnRegisterBasicDrawWindow(uint8_t ContextID);
 
 #endif

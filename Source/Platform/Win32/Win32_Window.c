@@ -1,7 +1,8 @@
-#include <shlwapi.h>
 #define INCLUDE_STD
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/SystemHeaders.h>
+
+#include <shlwapi.h>
 
 LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

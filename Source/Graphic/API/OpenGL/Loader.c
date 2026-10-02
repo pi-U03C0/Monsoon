@@ -1,17 +1,19 @@
-#include "Monsoon/MONS_Types.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
-#include <stdio.h>
 
-uint16_t MONS_OpenGLComponent = 0;
+uint8_t MONS_OpenGLComponent = 0;
+MONS_OpenGLStorage* MONS_OpenGLCompoentStorage = NULL;
 
 MONS_DynamicLibrary* OpenGL32 = NULL;
 
 MSBool MONS_InitComponentOpenGL()
 {
   LOG("Initializ OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
-  MONS_OpenGLStorage* Storage = (MONS_Components -> Components[MONS_OpenGLComponent].Storage);
+  MONS_Component* OpenGL = &(MONS_Components -> Components[MONS_OpenGLComponent]);
+  OpenGL -> Storage = GetMemory(sizeof(MONS_OpenGLStorage));
+  MONS_OpenGLCompoentStorage = OpenGL -> Storage;
+
   char* DLLPath = MONS_FindOpenGLDLL();
 
   OpenGL32 = MONS_LoadLibrary(DLLPath,0);
@@ -32,7 +34,6 @@ MSBool MONS_InitComponentOpenGL()
     return False;
   }
 
-
   MONS_OpenGLContext* Context = MONS_CreateBasicOpenGLContext(Window);
   MONS_MakeCurrentOpenGLContext(Context);
 
@@ -50,6 +51,13 @@ MSBool MONS_DeInitComponentOpenGL()
   {
     MONS_FreeLibrary(OpenGL32);
   }
+
+  MONS_Component* OpenGL = &(MONS_Components -> Components[MONS_OpenGLComponent]);
+  if (OpenGL -> Storage)
+  {
+    RemoveMemory(OpenGL -> Storage);
+  }
+  MONS_OpenGLCompoentStorage = NULL;
 
   return False;
 }
@@ -97,50 +105,84 @@ MSBool MONS_CreateDummyOpenGLContext(MONS_Window* Window)
 
 MSBool MONS_LoadOpenGLFunctions()
 {
-  glGetString = (PFNGLGETSTRINGPROC)MONS_LoadOpenGLFunction(sglGetString);
-  glCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)MONS_LoadOpenGLFunction(sglCreateContextAttribsARB);
-  glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
-  glClear = (PFNGLCLEARPROC)MONS_LoadOpenGLFunction(sglClear);
-  glClearColor = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
-  glCreateShader = (PFNGLCREATESHADERPROC)MONS_LoadOpenGLFunction(sglCreateShader);
-  glShaderSource = (PFNGLSHADERSOURCEPROC)MONS_LoadOpenGLFunction(sglShaderSource);
-  glGetShaderiv = (PFNGLGETSHADERIVPROC)MONS_LoadOpenGLFunction(sglGetShaderiv);
-  glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetShaderInfoLog);
-  glCreateProgram = (PFNGLCREATEPROGRAMPROC)MONS_LoadOpenGLFunction(sglCreateProgram);
-  glAttachShader = (PFNGLATTACHSHADERPROC)MONS_LoadOpenGLFunction(sglAttachShader);
-  glLinkProgram = (PFNGLLINKPROGRAMPROC)MONS_LoadOpenGLFunction(sglLinkProgram);
-  glGetProgramiv =  (PFNGLGETPROGRAMIVPROC)MONS_LoadOpenGLFunction(sglGetProgramiv);
-  glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetProgramInfoLog);
-  glGenBuffers = (PFNGLGENBUFFERSPROC)MONS_LoadOpenGLFunction(sglGenBuffers);
-  glBindBuffer = (PFNGLBINDBUFFERPROC)MONS_LoadOpenGLFunction(sglBindBuffer);
-  glBufferData = (PFNGLBUFFERDATAPROC)MONS_LoadOpenGLFunction(sglBufferData);
-  glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)MONS_LoadOpenGLFunction(sglEnableVertexAttribArray);
-  glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)MONS_LoadOpenGLFunction(sglVertexAttribPointer);
-  glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)MONS_LoadOpenGLFunction(sglBindVertexArray);
-  glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)MONS_LoadOpenGLFunction(sglGenVertexArrays);
-  glDrawElements = (PFNGLDRAWELEMENTSPROC)MONS_LoadOpenGLFunction(sglDrawElements);
-  glUseProgram = (PFNGLUSEPROGRAMPROC)MONS_LoadOpenGLFunction(sglUseProgram);
-  glCompileShader = (PFNGLCOMPILESHADERPROC)MONS_LoadOpenGLFunction(sglCompileShader);
-  glPolygonMode = (PFNGLPOLYGONMODEPROC)MONS_LoadOpenGLFunction(sglPolygonMode);
-  glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)MONS_LoadOpenGLFunction(sglGetUniformLocation);
-  glUniform1f = (PFNGLUNIFORM1FPROC)MONS_LoadOpenGLFunction(sglUniform1f);
-  glDeleteShader = (PFNGLDELETESHADERPROC)MONS_LoadOpenGLFunction(sglDeleteShader);
-  glDeleteProgram = (PFNGLDELETEPROGRAMPROC)MONS_LoadOpenGLFunction(sglDeleteProgram);
-  glGetProgramInterfaceiv = (PFNGLGETPROGRAMINTERFACEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramInterfaceiv);
-  glGetProgramResourceiv = (PFNGLGETPROGRAMRESOURCEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceiv);
-  glGetProgramResourceName = (PFNGLGETPROGRAMRESOURCENAMEPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceName);
-  glGetActiveUniform = (PFNGLGETACTIVEUNIFORMPROC)MONS_LoadOpenGLFunction(sglGetActiveUniform);
-  glUniform3f = (PFNGLUNIFORM3FPROC)MONS_LoadOpenGLFunction(sglUniform3f);
-  glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)MONS_LoadOpenGLFunction(sglUniformMatrix4fv);
-  glUniform2f = (PFNGLUNIFORM2FPROC)MONS_LoadOpenGLFunction(sglUniform2f);
+  glGetString                 = (PFNGLGETSTRINGPROC)MONS_LoadOpenGLFunction(sglGetString);
+  glCreateContextAttribsARB   = (PFNWGLCREATECONTEXTATTRIBSARBPROC)MONS_LoadOpenGLFunction(sglCreateContextAttribsARB);
+  glClearColor                = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
+  glClear                     = (PFNGLCLEARPROC)MONS_LoadOpenGLFunction(sglClear);
+  glClearColor                = (PFNGLCLEARCOLORPROC)MONS_LoadOpenGLFunction(sglClearColor);
+  glCreateShader              = (PFNGLCREATESHADERPROC)MONS_LoadOpenGLFunction(sglCreateShader);
+  glShaderSource              = (PFNGLSHADERSOURCEPROC)MONS_LoadOpenGLFunction(sglShaderSource);
+  glGetShaderiv               = (PFNGLGETSHADERIVPROC)MONS_LoadOpenGLFunction(sglGetShaderiv);
+  glGetShaderInfoLog          = (PFNGLGETSHADERINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetShaderInfoLog);
+  glCreateProgram             = (PFNGLCREATEPROGRAMPROC)MONS_LoadOpenGLFunction(sglCreateProgram);
+  glAttachShader              = (PFNGLATTACHSHADERPROC)MONS_LoadOpenGLFunction(sglAttachShader);
+  glLinkProgram               = (PFNGLLINKPROGRAMPROC)MONS_LoadOpenGLFunction(sglLinkProgram);
+  glGetProgramiv              = (PFNGLGETPROGRAMIVPROC)MONS_LoadOpenGLFunction(sglGetProgramiv);
+  glGetProgramInfoLog         = (PFNGLGETPROGRAMINFOLOGPROC)MONS_LoadOpenGLFunction(sglGetProgramInfoLog);
+  glGenBuffers                = (PFNGLGENBUFFERSPROC)MONS_LoadOpenGLFunction(sglGenBuffers);
+  glBindBuffer                = (PFNGLBINDBUFFERPROC)MONS_LoadOpenGLFunction(sglBindBuffer);
+  glBufferData                = (PFNGLBUFFERDATAPROC)MONS_LoadOpenGLFunction(sglBufferData);
+  glEnableVertexAttribArray   = (PFNGLENABLEVERTEXATTRIBARRAYPROC)MONS_LoadOpenGLFunction(sglEnableVertexAttribArray);
+  glVertexAttribPointer       = (PFNGLVERTEXATTRIBPOINTERPROC)MONS_LoadOpenGLFunction(sglVertexAttribPointer);
+  glBindVertexArray           = (PFNGLBINDVERTEXARRAYPROC)MONS_LoadOpenGLFunction(sglBindVertexArray);
+  glGenVertexArrays           = (PFNGLGENVERTEXARRAYSPROC)MONS_LoadOpenGLFunction(sglGenVertexArrays);
+  glDrawElements              = (PFNGLDRAWELEMENTSPROC)MONS_LoadOpenGLFunction(sglDrawElements);
+  glUseProgram                = (PFNGLUSEPROGRAMPROC)MONS_LoadOpenGLFunction(sglUseProgram);
+  glCompileShader             = (PFNGLCOMPILESHADERPROC)MONS_LoadOpenGLFunction(sglCompileShader);
+  glPolygonMode               = (PFNGLPOLYGONMODEPROC)MONS_LoadOpenGLFunction(sglPolygonMode);
+  glGetUniformLocation        = (PFNGLGETUNIFORMLOCATIONPROC)MONS_LoadOpenGLFunction(sglGetUniformLocation);
+  glUniform1f                 = (PFNGLUNIFORM1FPROC)MONS_LoadOpenGLFunction(sglUniform1f);
+  glDeleteShader              = (PFNGLDELETESHADERPROC)MONS_LoadOpenGLFunction(sglDeleteShader);
+  glDeleteProgram             = (PFNGLDELETEPROGRAMPROC)MONS_LoadOpenGLFunction(sglDeleteProgram);
+  glGetProgramInterfaceiv     = (PFNGLGETPROGRAMINTERFACEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramInterfaceiv);
+  glGetProgramResourceiv      = (PFNGLGETPROGRAMRESOURCEIVPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceiv);
+  glGetProgramResourceName    = (PFNGLGETPROGRAMRESOURCENAMEPROC)MONS_LoadOpenGLFunction(sglGetProgramResourceName);
+  glGetActiveUniform          = (PFNGLGETACTIVEUNIFORMPROC)MONS_LoadOpenGLFunction(sglGetActiveUniform);
+  glUniform3f                 = (PFNGLUNIFORM3FPROC)MONS_LoadOpenGLFunction(sglUniform3f);
+  glUniformMatrix4fv          = (PFNGLUNIFORMMATRIX4FVPROC)MONS_LoadOpenGLFunction(sglUniformMatrix4fv);
+  glUniform2f                 = (PFNGLUNIFORM2FPROC)MONS_LoadOpenGLFunction(sglUniform2f);
 
   return True;
 }
 
-
-
-void MONS_TerminateComponentOpenGL()
+MSBool MONS_UnLoadOpenGLFunctions()
 {
-  MONS_FreeLibrary(OpenGL32);
-  //MONS_UnLoadOpenGLFunctions();
+  glGetString                 = NULL;
+  glCreateContextAttribsARB   = NULL;
+  glClearColor                = NULL;
+  glClear                     = NULL;
+  glClearColor                = NULL;
+  glCreateShader              = NULL;
+  glShaderSource              = NULL;
+  glGetShaderiv               = NULL;
+  glGetShaderInfoLog          = NULL;
+  glCreateProgram             = NULL;
+  glAttachShader              = NULL;
+  glLinkProgram               = NULL;
+  glGetProgramiv              = NULL;
+  glGetProgramInfoLog         = NULL;
+  glGenBuffers                = NULL;
+  glBindBuffer                = NULL;
+  glBufferData                = NULL;
+  glEnableVertexAttribArray   = NULL;
+  glVertexAttribPointer       = NULL;
+  glBindVertexArray           = NULL;
+  glGenVertexArrays           = NULL;
+  glDrawElements              = NULL;
+  glUseProgram                = NULL;
+  glCompileShader             = NULL;
+  glPolygonMode               = NULL;
+  glGetUniformLocation        = NULL;
+  glUniform1f                 = NULL;
+  glDeleteShader              = NULL;
+  glDeleteProgram             = NULL;
+  glGetProgramInterfaceiv     = NULL;
+  glGetProgramResourceiv      = NULL;
+  glGetProgramResourceName    = NULL;
+  glGetActiveUniform          = NULL;
+  glUniform3f                 = NULL;
+  glUniformMatrix4fv          = NULL;
+  glUniform2f                 = NULL;
+
+  return True;
 }

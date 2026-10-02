@@ -30,13 +30,13 @@ param
 
 $OWD = Split-Path $MyInvocation.MyCommand.Path
 $SOURCE = "$OWD/source"
-$BIN = "$OWD/bin"
+$BIN = "$OWD/Bin"
 $LIBRARY = "$OWD/Library"
 $INCLUDE = "$OWD/include"
 $CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
-$VERSION = 6
+$VERSION = 7
 
 $Verbose = $false
 

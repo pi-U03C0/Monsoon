@@ -1,6 +1,5 @@
+#include "Monsoon/MONS_Error.h"
 #include <Monsoon/Monsoon.h>
-#include <Monsoon/Graphic/Graphic.h>
-#include <winnt.h>
 
 MSBool MONS_RegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
 {
@@ -9,8 +8,8 @@ MSBool MONS_RegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
     LOG("Window was NULL",MONSOON_LOG_WAS_NULL,MONSOON_LOG_ERROR);
     return False;
   }
-  MONS_BasicDrawStorage* Storage = (MONS_Components -> Components[MONS_BasicDrawComponent].Storage);
 
+  MONS_BasicDrawStorage* Storage = (MONS_Components -> Components[MONS_BasicDrawComponent].Storage);
   MONS_BasicDrawContext* Context = MONS_GetBasicDrawContext(ContextID);
   if (!Context)
   {
@@ -20,21 +19,16 @@ MSBool MONS_RegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
 
   if (Context -> Window)
   {
-     MONS_UnRegisterBasicDrawWindow(ContextID,Window);
+    MONS_SetErrorCode(Make_Code(MONSOON_LOG_ALRIGHT_THERE));
+    return False;
   }
 
   return True;
 }
 
-MSBool MONS_UnRegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
+MSBool MONS_UnRegisterBasicDrawWindow(uint8_t ContextID)
 {
-  if (!Window)
-  {
-    LOG("Window was NULL",MONSOON_LOG_WAS_NULL,MONSOON_LOG_ERROR);
-    return False;
-  }
   MONS_BasicDrawStorage* Storage = (MONS_Components -> Components[MONS_BasicDrawComponent].Storage);
-
   MONS_BasicDrawContext* Context = MONS_GetBasicDrawContext(ContextID);
   if (!Context)
   {
@@ -42,7 +36,7 @@ MSBool MONS_UnRegisterBasicDrawWindow(uint8_t ContextID,MONS_Window* Window)
     return False;
   }
 
-  Context -> Window = Window;
+  Context -> Window = NULL;
 
   return True;
 }

@@ -1,10 +1,8 @@
+#include "Monsoon/Graphic/API/OpenGL/Shader.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <cglm/cglm.h>
 #include <stdio.h>
-
-MONS_OpenGLShader Shader = {0};
-MONS_OpenGLVertextData Vertext = {0};
 
 float vertices[] = {
     0.0f, 0.0f, 0.0f,
@@ -18,6 +16,8 @@ unsigned int indices[] = {
     1, 2, 3 
 };
 
+MONS_OpenGLShader Shader = {0};
+MONS_OpenGLVertextData Vertext = {0};
 MONS_Window* Window = NULL;
 MONS_OpenGLContext* Context = NULL;
 mat4 WindowMat = {0};
@@ -44,7 +44,7 @@ MSBool CompileShader()
   MONS_CreateOpenGLElementBufferObject(&Vertext,indices,6);
   MONS_QureyOpenGLShaderUniforms(&Shader);
 
-  glUseProgram(Shader.ShaderProgrameHandle);
+  MONS_UseOpenGLShaderPrograme(Context, &Shader);
   return True;
 }
 
@@ -122,6 +122,7 @@ int main(int argc, char** argv)
     MONS_Sleep(10);
   }
 
+  printf("hewedkjewkd");
   MONS_FreeOpenGLShader(&Shader);
   MONS_CloseWindow(Window);
 

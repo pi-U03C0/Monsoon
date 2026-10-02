@@ -21,4 +21,6 @@ MONS_API MSBool MONS_CreateAndLinkOpenGLShaderProgram(MONS_OpenGLShader* Shader)
 
 MONS_API MSBool MONS_FreeOpenGLShader(MONS_OpenGLShader* Shader);
 
+MONS_API MSBool MONS_UseOpenGLShaderPrograme(MONS_OpenGLContext* Context,MONS_OpenGLShader* Shader);
+
 #endif

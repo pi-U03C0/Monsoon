@@ -3,10 +3,10 @@
 
 #include <Monsoon/Monsoon.h>
 
-#define FreeEvent(x) \
+#define FreeEvent(Event) \
     do { \
-        if ((x) -> Prarms) RemoveMemory((x)->Prarms); \
-        RemoveMemory(x); \
+        if ((Event) -> Prarms) RemoveMemory((Event)->Prarms); \
+        RemoveMemory(Event); \
     } while (0)
 
 enum MONSOON_Event

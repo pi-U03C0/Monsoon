@@ -3,14 +3,17 @@
 
 #include <Monsoon/Monsoon.h>
 
-enum MONS_ResourceType
+//Index into the Context Resources,0 is allway NULL
+enum MONS_BasicdrawResourcesIndex
 {
-  MONSOON_RESOURCE_TYPE_NULL,
-  MONSOON_RESOURCE_TYPE_MATRIX,
-  MONSOON_RESOURCE_TYPE_OPENGL_SHADER
+  MONSOON_BASICDRAW_RESOURCES_INDEX_NULL,
+  MONSOON_BASICDRAW_RESOURCES_INDEX_GLOABLE,
+  MONSOON_BASICDRAW_RESOURCES_INDEX_RECTANGLE,
 };
 
-MSBool MONS_LoadBasicDrawResourceShader(uint16_t ContextID,char* Shader);
-MONS_BasicDrawResource* MONS_GetBasicDrawContextResource(uint16_t ContextID,uint16_t Type);
+MONS_API MSBool MONS_GL_BasicDrawLoadContextResources(uint8_t ContextID);
+MONS_API MSBool MONS_GL_UnLoadBasicDrawContextResources(uint8_t ContextID);
+MONS_API MSBool MONS_LoadBasicDrawContextResources(uint8_t ContextID);
+MONS_API MSBool MONS_UnLoadBasicDrawContextResources(uint8_t ContextID);
 
 #endif

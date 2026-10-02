@@ -49,6 +49,13 @@ struct MONS_Rect
   short Width;
   short Height;
 }; typedef struct MONS_Rect MONS_Rect;
+struct MONS_Colour
+{
+  uint8_t Red;
+  uint8_t Green;
+  uint8_t Blue;
+  uint8_t Alpha;
+};typedef struct MONS_Colour MONS_Colour;
 
 struct MONS_Queue
 {
@@ -190,7 +197,7 @@ struct MONS_OpenGLVersion
 
 struct MONS_OpenGLStorage
 {
-  MONS_OpenGLContext* Context;
+  MONS_OpenGLContext* CurrnetContext;
   uint32_t CurrentPrograme;
 };typedef struct MONS_OpenGLStorage MONS_OpenGLStorage;
 
@@ -198,6 +205,7 @@ struct MONS_BasicDrawContext
 {
   uint8_t ID;
   uint8_t ResourceCount;
+  MSBool WindowResourceLoaded;
   MONS_Window* Window;
   void** TargetResources;
 };typedef struct MONS_BasicDrawContext MONS_BasicDrawContext;
@@ -219,12 +227,13 @@ struct MONS_BasicDrawTargetResourceRectangle
 struct MONS_GL_BasicDrawTargetResourceRectangle
 {
   MONS_OpenGLShader* Shader;
+  MONS_OpenGLVertextData VertextData;
 };typedef struct MONS_GL_BasicDrawTargetResourceRectangle MONS_GL_BasicDrawTargetResourceRectangle;
 
 struct MONS_BasicDrawStorage
 {
-  uint8_t RegistersWindowsCount;
   uint8_t ContextCount;
+  uint8_t API;
   MONS_BasicDrawContext* Contexts;
   MONS_BasicDrawContext* LastUsedContext;
 };typedef struct MONS_BasicDrawStorage MONS_BasicDrawStorage;

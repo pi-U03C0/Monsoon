@@ -3,17 +3,14 @@
 
 #include <Monsoon/Monsoon.h>
 
-MONS_API extern uint16_t MONS_BasicDrawComponent;
+MONS_API extern uint8_t MONS_BasicDrawComponent;
 
 MONS_API extern MONS_BasicDrawStorage* MONS_BasicDrawComponentStorage;
 
-MSBool MONS_InitComponentBasicDraw();
+MONS_API extern MSBool MONS_InitComponentBasicDraw();
+MONS_API extern MSBool MONS_DeInitComponentBasicDraw();
+MONS_API extern MSBool MONS_InitBasicDrawStorage();
+MONS_API extern MSBool MONS_DeInitBasicDrawStorage();
 
-MSBool MONS_DeInitComponentBasicDraw();
-
-
-MSBool MONS_InitBasicDrawStorage();
-
-MSBool MONS_DeInitBasicDrawStorage();
 
 #endif

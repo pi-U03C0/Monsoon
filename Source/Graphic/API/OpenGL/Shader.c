@@ -1,5 +1,3 @@
-#include "Monsoon/Graphic/API/OpenGL/GL/glcorearb.h"
-#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <stdio.h>
@@ -104,6 +102,7 @@ MSBool MONS_FreeOpenGLShader(MONS_OpenGLShader* Shader)
     LOG("Shader was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
+  glUseProgram(0);
 
   if(!Shader -> FragmentSource)
      RemoveMemory(Shader -> FragmentSource);
@@ -120,6 +119,8 @@ MSBool MONS_FreeOpenGLShader(MONS_OpenGLShader* Shader)
   if (!Shader -> ShaderProgrameHandle)
     glDeleteProgram(Shader -> ShaderProgrameHandle);
 
+  RemoveMemory(Shader);
+
   return True;
 }
 
@@ -128,4 +129,22 @@ uint32_t MONS_GetCurrentOpenGLPrograme()
   int32_t Progame;
   glGetIntegerv(GL_CURRENT_PROGRAM,&Progame);
   return Progame;
+}
+
+MSBool MONS_UseOpenGLShaderPrograme(MONS_OpenGLContext* Context,MONS_OpenGLShader* Shader)
+{
+  if ((!Context) || (!Shader))
+  {
+    LOG("Params was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
+    MONS_SetErrorCode(Make_Code(MONSOON_LOG_WAS_NULL));
+    return False;
+  }
+
+  MONS_OpenGLStorage* Storage = (MONS_Components -> Components[MONS_OpenGLComponent].Storage);
+  Storage -> CurrentPrograme = Shader -> ShaderProgrameHandle;
+
+  Context -> CurrentPrograme = Shader -> ShaderProgrameHandle;
+  glUseProgram(Shader -> ShaderProgrameHandle);
+
+  return True;
 }

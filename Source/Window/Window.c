@@ -6,13 +6,6 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect Rect)
 {
   LOG("Createing Window",MONSOON_LOG_INFO,10);
 
-  void* proc = MONS_GetProc(MONS_PROC_WINDOW);
-  if (!proc)
-  {
-    LOG("Window proc was NULL",MONSOON_LOG_ERROR,11);
-    return NULL;
-  }
-
   MONS_Window* Window = GetMemory(sizeof(MONS_Window));
   if (!Window) //check memory
   {
@@ -21,7 +14,7 @@ MONS_Window* MONS_CreateWindow(char* Title,MONS_Rect Rect)
   }
 
   #ifdef _WIN32 //Create Window for Win32
-     OSHandle WindowHandle = MONS_Win32_CreateWindow(Title, Rect, proc);
+     OSHandle WindowHandle = MONS_Win32_CreateWindow(Title, Rect, MONS_Win32_WindowProc);
      uint64_t Code = MONS_Win32_GetErrorCode();
 
     if (!WindowHandle) //check Window Handle

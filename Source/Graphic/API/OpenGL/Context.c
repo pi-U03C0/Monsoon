@@ -1,4 +1,3 @@
-#include "Monsoon/Graphic/API/OpenGL/fnOpenGL.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <stdio.h>
@@ -105,11 +104,17 @@ MSBool MONS_MakeCurrentOpenGLContext(MONS_OpenGLContext* Context)
     LOG("The Context RenderSurface was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
-  return glMakeCurrent(Context -> RenderSurface,Context -> GLContext);
+  MONS_OpenGLStorage* Storage = (MONS_Components -> Components[MONS_OpenGLComponent].Storage);
+  Storage -> CurrnetContext = Context;
+
+  #ifdef MONSOON_PLATFORM_NT
+    return wglMakeCurrent(Context -> RenderSurface,Context -> GLContext);
+  #endif
 }
 
 MSBool MONS_RemoveCurrentOpenGLContect()
 {
+  MONS_OpenGLCompoentStorage -> CurrnetContext = NULL;
   return glMakeCurrent(NULL,NULL);
 }
 
@@ -122,9 +127,3 @@ MONS_OpenGLVersion MONS_GetOpenGLVersion()
   return Version;
 }
 
-MSBool MONS_SetCurrentOpenGLPrograme(MONS_OpenGLContext* Context,uint32_t Programe)
-{
-  Context -> CurrentPrograme = Programe;
-  glUseProgram(Programe);
-  return True;
-}

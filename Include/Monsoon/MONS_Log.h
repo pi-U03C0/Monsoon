@@ -30,7 +30,7 @@
 #define MONSOON_LOG_TOO_LONG 308
 #define MONSOON_LOG_INVALID 309
 #define MONSOON_LOG_TERMINATE 310
-
+#define MONSOON_LOG_ALRIGHT_THERE 311
 
 #ifndef MONSOON_NO_LOG
    #define LOG(Message,Severity,ErrorReason,...)\
