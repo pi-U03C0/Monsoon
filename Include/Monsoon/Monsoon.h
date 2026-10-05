@@ -65,9 +65,9 @@ MONS_API extern MONS_Library* __Monsoon;
 #include <Monsoon/MONS_Error.h>
 #include <Monsoon/MONS_Log.h>
 #include <Monsoon/MONS_Event.h>
-#include <Monsoon/MONS_Proc.h>
 #include <Monsoon/MONS_Components.h>
 
+#include <Monsoon/Platform/Platform.h>
 #include <Monsoon/Structure/Structure.h>
 #include <Monsoon/Utils/Utils.h>
 

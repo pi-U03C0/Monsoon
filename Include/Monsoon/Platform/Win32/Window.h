@@ -5,8 +5,6 @@
 #include <Monsoon/SystemHeaders.h>
 #include <Monsoon/Monsoon.h>
 
-#define MONSOON_PROC_WIN32_WINDOW_NAME "MONS_Win32_WindowProc"
-
 //Monsoon Win32 WindowProc
 MONS_API LRESULT CALLBACK MONS_Win32_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);;
 

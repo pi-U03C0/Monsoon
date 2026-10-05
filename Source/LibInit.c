@@ -3,7 +3,9 @@
 
 MONS_Library* __Monsoon = NULL;
 
-MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
+MONS_ComponentList* MONS_Components = NULL;
+
+MSBool MONSInit(uint16_t* Flags,uint8_t LogLevel)
 {
   //check if Monsoon was Initialized
   if (!__Monsoon)
@@ -14,23 +16,23 @@ MSBool MONSInit(uint16_t* Components,uint8_t LogLevel)
 
   LOG("Initializing Monsoon",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
-  //check if ProcArray was Initialized
-  if (!MONS_InitProcArray())
+  if (!MONS_Components)
   {
-    LOG("Unable to Initializ ProcArray",MONSOON_LOG_WARNING,10);
+    MONS_Components = MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
   }
 
-  if (Components)//check if Components is NULL
+  if (Flags)//check if Flags is NULL
   {
-    MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
-    //Initialized Components
-    if (!MONS_InitializComponents(Components))
-    {
-      LOG("Unable to Initialized Components",MONSOON_LOG_CRITICAL,MONSOON_LOG_INIT);
-      return False;
-    }
-    __Monsoon -> Components = (uint16_t*)MONS_DupeMemory((void*)Components, sizeof(uint16_t) * (MONS_ComponentsCount(Components)+1));
+    __Monsoon -> Flags = Flags;
   }
+
+  //Initialized Components
+  if (!MONS_InitializComponents(MONS_Components,Flags))
+  {
+    LOG("Unable to Initialized Components",MONSOON_LOG_CRITICAL,MONSOON_LOG_INIT);
+    return False;
+  }
+  __Monsoon -> Flags = (uint16_t*)MONS_DupeMemory((void*)Flags, sizeof(uint16_t) * (MONS_ComponentsCount(Flags)+1));
 
   MONS_AddOnExitFunction(MONS_CloseAllFile);
   MONS_AddOnExitFunction(MONS_CloseAllLibrary);
@@ -58,16 +60,15 @@ MSBool MONSTerminate()
 
   MONS_CloseAllLibrary();
   MONS_CloseAllFile();
-  MONS_DeInitComponets();
+  MONS_RemoveComponentList(MONS_Components);
 
   //free memory
-  if (__Monsoon -> Components)RemoveMemory(__Monsoon -> Components);
+  if (__Monsoon -> Flags)RemoveMemory(__Monsoon -> Flags);
   RemoveMemory(__Monsoon -> OnExit);
   RemoveMemory(__Monsoon -> LoadedLibrary);
   RemoveMemory(__Monsoon -> OpenFiles);
   RemoveMemory(__Monsoon);
 
-  if (MONS_Procs) RemoveMemory(MONS_Procs);
 
   LOG("Terminated Monsoon",MONSOON_LOG_SUCCESS,1);
 
@@ -126,32 +127,6 @@ MSBool MONS_AllocatMonsoon()
 MSBool MONS_DeInitializComponents(int Components)
 {
   return False;
-}
-
-MSBool MONS_InitProcArray()
-{
-  LOG("Initializing ProcArray",MONSOON_LOG_DEBUG,255);
-  //MONS_Procs allocateion
-  MONS_Procs = GetMemory(sizeof(MONS_Proc)*(MONSOON_PROC_LEN+1));
-  if (!MONS_Procs)
-  {
-    Error_Memory();
-    return False;
-  }
-
-  //seting procs
-  uint16_t i = 0;
-  for (; i < MONSOON_PROC_LEN ; i++)
-  {
-    MONS_Procs[i].Type = MONS_ProcsDefine[i].Type;
-    MONS_Procs[i].Proc = MONS_GetProcAddress(MONS_ProcsDefine[i].Proc,NULL);
-    if (!MONS_Procs[i].Proc) LOG("Unable to set Proc for %d",MONSOON_LOG_WARNING,1,MONS_Procs[i].Type);
-  }
-  MONS_Procs[i].Type = 0;
-  MONS_Procs[i].Proc = NULL;
-  LOG("Initialized ProcArray",MONSOON_LOG_HIGHT_DEBUG,255);
-
-  return True;
 }
 
 MSBool MONS_AddOnExitFunction(ExitFunciton fn)

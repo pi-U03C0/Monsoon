@@ -9,9 +9,10 @@
 #endif
 
 #define MONSOON_ONEXIT_UNUSED (void*)1
+#define MONSOON_INIT_COMPONENT 1000
 
-
-#define MakeInit_ComponentsOption(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,0}
+#define Component(x) MONSOON_INIT_COMPONENT,x
+#define MakeInit_Flags(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,0}
 
 // Initialized The Monsoon Library
 MONS_API MSBool MONSInit(uint16_t* Components,uint8_t LogLevel);
@@ -27,12 +28,7 @@ MONS_API MSBool MONS_AddOnExitFunction(ExitFunciton fn);
 //Remove a Function from OnExit array
 MONS_API MSBool MONS_RemoveOnExitFunction(ExitFunciton fn);
 
-
-
 //Get The Monsoon version
 MONS_API uint64_t MONS_GetVersion();
-
-//Initializ the procs Array
-MONS_API MSBool MONS_InitProcArray();
 
 #endif

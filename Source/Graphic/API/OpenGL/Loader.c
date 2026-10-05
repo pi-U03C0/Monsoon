@@ -2,15 +2,17 @@
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
 
+MONS_ComponentList* MONS_OpenGLComponentList = NULL;
 uint8_t MONS_OpenGLComponent = 0;
 MONS_OpenGLStorage* MONS_OpenGLCompoentStorage = NULL;
 
 MONS_DynamicLibrary* OpenGL32 = NULL;
 
-MSBool MONS_InitComponentOpenGL()
+MSBool MONS_InitComponentOpenGL(MONS_ComponentList* ComponentList)
 {
   LOG("Initializ OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
-  MONS_Component* OpenGL = &(MONS_Components -> Components[MONS_OpenGLComponent]);
+  MONS_OpenGLComponentList = ComponentList;
+  MONS_Component* OpenGL = &(MONS_OpenGLComponentList -> Components[MONS_OpenGLComponent]);
   OpenGL -> Storage = GetMemory(sizeof(MONS_OpenGLStorage));
   MONS_OpenGLCompoentStorage = OpenGL -> Storage;
 
@@ -39,7 +41,7 @@ MSBool MONS_InitComponentOpenGL()
 
   MONS_LoadOpenGLFunctions();
   MONS_RemoveCurrentOpenGLContect();
-  MONS_SetComponentInit(MONSOON_COMPONENT_OPENGL,True);
+  MONS_SetComponentInit(MONS_OpenGLComponentList,MONSOON_COMPONENT_OPENGL,True);
   LOG("Initialized OpenGL",MONSOON_LOG_INFO,MONSOON_LOG_INIT);
 
   return True;
@@ -52,7 +54,7 @@ MSBool MONS_DeInitComponentOpenGL()
     MONS_FreeLibrary(OpenGL32);
   }
 
-  MONS_Component* OpenGL = &(MONS_Components -> Components[MONS_OpenGLComponent]);
+  MONS_Component* OpenGL = &(MONS_OpenGLComponentList -> Components[MONS_OpenGLComponent]);
   if (OpenGL -> Storage)
   {
     RemoveMemory(OpenGL -> Storage);

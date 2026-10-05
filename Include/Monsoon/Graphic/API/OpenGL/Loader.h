@@ -8,7 +8,7 @@ MONS_API extern uint8_t MONS_OpenGLComponent;
 MONS_API extern MONS_OpenGLStorage* MONS_OpenGLCompoentStorage;
 
 MONS_API char* MONS_FindOpenGLDLL();
-MONS_API MSBool MONS_InitComponentOpenGL();
+MONS_API MSBool MONS_InitComponentOpenGL(MONS_ComponentList* ComponentList)
 MONS_API MSBool MONS_LoadOpenGLCore();
 MONS_API MSBool MONS_LoadOpenGLFunctions();
 MONS_API MSBool MONS_DeInitComponentOpenGL();

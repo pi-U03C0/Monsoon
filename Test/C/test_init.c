@@ -8,14 +8,14 @@
 int main(int argc, char** argv)
 {
   if (!MONSInit(
-    MakeInit_ComponentsOption(MONSOON_INIT_OPENGL),
+    MakeInit_Flags(Component(MONSOON_COMPONENT_OPENGL)),
     MONSOON_LOG_DEBUG
   ))
   {
-     MONS_WriteStdOutput("MONSInit filed\n");
+     MONS_WriteStdOutput("MONSInit filed\n",15);
      return 1;
   }
-  printf("version = %llu\n",MONS_GetVersion());
+  printf("Version = %llu\n",MONS_GetVersion());
 
   MONSTerminate();
 

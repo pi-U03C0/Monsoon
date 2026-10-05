@@ -34,9 +34,9 @@ typedef uint8_t MSBool;
 
 //OnExitFunction type
 typedef void (*ExitFunciton)(void);
-typedef MSBool (*MONS_InitComponent)(void);
 
-struct MONS_Memory {
+struct MONS_Memory
+{
   size_t size;
   void* memory;
 };
@@ -97,17 +97,15 @@ struct MONS_Event
   void* Prarms;
 };typedef struct MONS_Event MONS_Event;
 
-struct MONS_Proc
-{
-  uint16_t Type;
-  void* Proc;
-};typedef struct MONS_Proc MONS_Proc;
+typedef struct MONS_ComponentList MONS_ComponentList;
+typedef MSBool (*MONS_InitComponent)(MONS_ComponentList* Component);
 
 struct MONS_Component
 {
   MONS_InitComponent Init;
   MONS_InitComponent DeInit;
   void* Storage;
+  char* Name;
   uint16_t ID;
   MSBool IsInitialized;
 };typedef struct MONS_Component MONS_Component;
@@ -255,8 +253,8 @@ struct MONS_Library
   //All File Open By Monsoon
   MONS_File** OpenFiles;
 
-  //All Initialized Components
-  uint16_t* Components;
+  //All Flags that were passin
+  uint16_t* Flags;
 
   //The Library state
   struct{

@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 #include <cglm/cglm.h>
@@ -30,11 +15,11 @@ MSBool MONS_GL_LoadBasicDrawReactangleResources(MONS_BasicDrawContext* Context)
     1.0,
     RectangleResources -> ScreenMat
   );
-  
+
   return True;
 }
 
-MSBool MONS_GL_BasicDrawRectangle(MONS_BasicDrawContext* Context,MONS_Rect Rect,MONS_Rect* Colour)
+MSBool MONS_GL_BasicDrawRectangle(MONS_BasicDrawContext* Context,MONS_Rect Rect,MONS_Colour Colour)
 {
   MONS_BasicDrawTargetResourceRectangle* Target = (Context -> TargetResources[MONS_BASICDRAE_RENDERTARGET_RECTANGLE]);
   MONS_OpenGLShader* Shader = ((MONS_GL_BasicDrawTargetResourceRectangle*)Target -> Resource) -> Shader;
@@ -47,12 +32,12 @@ MSBool MONS_GL_BasicDrawRectangle(MONS_BasicDrawContext* Context,MONS_Rect Rect,
   return True;
 }
 
-MSBool MONS_BasicDrawRectangle(uint16_t ContextID,MONS_Rect* Rect,MONS_Rect* Colour)
+MSBool MONS_BasicDrawRectangle(uint16_t ContextID,MONS_Rect Rect,MONS_Colour Colour)
 {
   MONS_BasicDrawStorage* Storage = MONS_Components -> Components[MONS_BasicDrawComponent].Storage;
   MONS_CheckBasicDrawContextCache(ContextID);
 
-  MONS_GL_BasicDrawRectangle(Storage -> LastUsedContext, *Rect, Colour);
+  MONS_GL_BasicDrawRectangle(Storage -> LastUsedContext, Rect, Colour);
 
   return True;
 }
