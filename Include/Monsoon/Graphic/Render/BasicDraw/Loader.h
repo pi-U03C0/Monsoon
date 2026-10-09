@@ -7,8 +7,8 @@ MONS_API extern uint8_t MONS_BasicDrawComponent;
 
 MONS_API extern MONS_BasicDrawStorage* MONS_BasicDrawComponentStorage;
 
-MONS_API extern MSBool MONS_InitComponentBasicDraw();
-MONS_API extern MSBool MONS_DeInitComponentBasicDraw();
+MONS_API extern MSBool MONS_InitComponentBasicDraw(MONS_ComponentList* ComponentList);
+MONS_API extern MSBool MONS_DeInitComponentBasicDraw(MONS_ComponentList* ComponentList);
 MONS_API extern MSBool MONS_InitBasicDrawStorage();
 MONS_API extern MSBool MONS_DeInitBasicDrawStorage();
 

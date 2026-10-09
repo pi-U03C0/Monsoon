@@ -2,7 +2,6 @@
 #include <Monsoon/Monsoon.h>
 
 MONS_Library* __Monsoon = NULL;
-
 MONS_ComponentList* MONS_Components = NULL;
 
 MSBool MONSInit(uint16_t* Flags,uint8_t LogLevel)
@@ -21,18 +20,7 @@ MSBool MONSInit(uint16_t* Flags,uint8_t LogLevel)
     MONS_Components = MONS_InitComponentArray(MONSOON_COMPONENT_LENGHT);
   }
 
-  if (Flags)//check if Flags is NULL
-  {
-    __Monsoon -> Flags = Flags;
-  }
-
-  //Initialized Components
-  if (!MONS_InitializComponents(MONS_Components,Flags))
-  {
-    LOG("Unable to Initialized Components",MONSOON_LOG_CRITICAL,MONSOON_LOG_INIT);
-    return False;
-  }
-  __Monsoon -> Flags = (uint16_t*)MONS_DupeMemory((void*)Flags, sizeof(uint16_t) * (MONS_ComponentsCount(Flags)+1));
+  MONS_ExecuteFlags(Flags);
 
   MONS_AddOnExitFunction(MONS_CloseAllFile);
   MONS_AddOnExitFunction(MONS_CloseAllLibrary);
@@ -123,12 +111,6 @@ MSBool MONS_AllocatMonsoon()
   return True;
 }
 
-
-MSBool MONS_DeInitializComponents(int Components)
-{
-  return False;
-}
-
 MSBool MONS_AddOnExitFunction(ExitFunciton fn)
 {
   //check if a slot is free if yes add the function and return
@@ -155,8 +137,26 @@ MSBool MONS_RemoveOnExitFunction(ExitFunciton fn)
   return False;
 }
 
+void MONS_ExecuteFlags(uint16_t* Flags)
+{
+  MSBool CheckComponent = False;
+  for (uint16_t i = 0 ; Flags[i] != MONSOON_FLAG_END ; i++)
+  {
+     if (Flags[i] == MONSOON_INIT_COMPONENT)
+     {
+       CheckComponent = True;
+       continue;
+     }
+
+     if (CheckComponent)
+     {
+        MONS_InitializComponent(MONS_Components,Flags[i]);
+        continue;
+     }
+  }
+}
+
 uint64_t MONS_GetVersion()
 {
   return MONSOON_VERSION;
 }
-

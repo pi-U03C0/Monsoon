@@ -17,7 +17,7 @@ enum ComponentType
 MONS_API extern MONS_ComponentList* MONS_Components;
 
 //Init the Component Array
-MONS_API MONS_ComponentList* MONS_InitComponentArray(uint16_t Length)
+MONS_API MONS_ComponentList* MONS_InitComponentArray(uint16_t Length);
 MONS_API MSBool MONS_RemoveComponentList(MONS_ComponentList* ComponentList);
 
 MONS_API MSBool MONS_InitializComponent(MONS_ComponentList* ComponentList,uint16_t Component);
@@ -41,7 +41,7 @@ MONS_API MSBool MONS_SetComponentInit(MONS_ComponentList* ComponentList,uint16_t
 MONS_API uint16_t MONS_RegisterComponent(MONS_ComponentList* ComponentList,uint16_t Type);
 
 
-MONS_API MSBool MONS_DeInitComponent(MONS_ComponentList* ComponentList,uint16_t ID)
+MONS_API MSBool MONS_DeInitComponent(MONS_ComponentList* ComponentList,uint16_t ID);
 
 //Initialized Component of Monsoon or Mutitple Components
 MONS_API MSBool MONS_InitializComponents(MONS_ComponentList* ComponentList,uint16_t* Components);

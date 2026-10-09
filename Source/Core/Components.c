@@ -1,4 +1,3 @@
-#include "Monsoon/MONS_Types.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/Graphic.h>
 
@@ -146,13 +145,6 @@ MSBool MONS_IsComponent(MONS_ComponentList* ComponentList,uint16_t Component)
   return False;
 }
 
-uint16_t ComponentListCount(uint16_t* Components)
-{
-  uint16_t i = 0;
-  while (Components[i]) i++;
-  return i;
-}
-
 MSBool MONS_IsInitComponent(MONS_ComponentList* ComponentList,uint16_t Component)
 {
   for (uint16_t i = 0 ; i < ComponentList -> Length ; i++)
@@ -189,31 +181,9 @@ MSBool MONS_DeInitAllComponets(MONS_ComponentList* ComponentList)
 {
   for (uint16_t i = 0 ; i < ComponentList -> Length ; i++)
   {
-    if ((ComponentList -> Components[i].IsInitialized) || (ComponentList -> Components[i].ID != 0))
-    {
-      ComponentList -> Components[i].DeInit(ComponentList);
-    }
+    MONS_DeInitComponent(ComponentList, ComponentList -> Components[i].ID);
   }
   return False;
-}
-
-MSBool MONS_InitializComponents(MONS_ComponentList* ComponentList,uint16_t* Components)
-{
-  LOG("Initializing Components",MONSOON_LOG_DEBUG,255);
-  for (uint16_t i = 0 ; Components[i] ; i++)
-  {
-    //check if is a Component
-    if (MONS_IsComponent(ComponentList,Components[i]))
-    {
-      MONS_InitializComponent(ComponentList,Components[i]);
-    }
-    else
-    {
-      LOG("UnKnown Component %d",MONSOON_LOG_ERROR,MONSOON_LOG_UNKNOWN,Components[i]);
-    }
-  }
-  LOG("Initialized All Components",MONSOON_LOG_INFO,MONSOON_LOG_INFO);
-  return True;
 }
 
 MSBool MONS_RemoveComponentList(MONS_ComponentList* ComponentList)
@@ -223,16 +193,21 @@ MSBool MONS_RemoveComponentList(MONS_ComponentList* ComponentList)
     LOG("ComponentList was NULL",MONSOON_LOG_ERROR,MONSOON_LOG_WAS_NULL);
     return False;
   }
-  
 
+  for (uint16_t i = 0 ; i < ComponentList -> Length ; i++)
+  {
+    ComponentList -> Components[i].DeInit(ComponentList);
+  }
+
+  return True;
 }
 
 MSBool MONS_InitOpenGLArrayPart(MONS_ComponentList* ComponentList)
 {
    uint16_t OpenGL = MONS_RegisterComponent(ComponentList,MONSOON_COMPONENT_OPENGL);
-   if (OpenGL == MONSOON_LOG_WAS_FULL)
+   if (!OpenGL)
    {
-     LOG("Unable to Register OpenGL as a Component for Monsoon",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_DO);
+     LOG("Unable to Register OpenGL as a Component for Monsoon %llu",MONSOON_LOG_CRITICAL,MONSOON_LOG_UNABLE_DO,MONS_GetErrorCode());
      return False;
    }
 

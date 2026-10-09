@@ -1,3 +1,5 @@
+#include "Monsoon/MONS_Init.h"
+#include "Monsoon/MONS_Types.h"
 #include <Monsoon/Monsoon.h>
 #include <Monsoon/Graphic/API/OpenGL/OpenGL.h>
 #include <Monsoon/SystemHeaders.h>
@@ -47,14 +49,16 @@ MSBool MONS_InitComponentOpenGL(MONS_ComponentList* ComponentList)
   return True;
 }
 
-MSBool MONS_DeInitComponentOpenGL()
+MSBool MONS_DeInitComponentOpenGL(MONS_ComponentList* ComponentList)
 {
   if (OpenGL32)
   {
     MONS_FreeLibrary(OpenGL32);
   }
 
-  MONS_Component* OpenGL = &(MONS_OpenGLComponentList -> Components[MONS_OpenGLComponent]);
+  uint16_t OpenGLComponent = MONS_GetComponent(ComponentList)
+
+  MONS_Component* OpenGL = &(ComponentList -> Components[MONS_OpenGLComponent]);
   if (OpenGL -> Storage)
   {
     RemoveMemory(OpenGL -> Storage);

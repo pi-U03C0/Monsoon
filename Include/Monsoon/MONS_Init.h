@@ -4,15 +4,18 @@
 #include <Monsoon/MONS_Types.h>
 #include <Monsoon/Monsoon.h>
 
+
 #ifndef MONSOON_ONEXIT_LEN
   #define MONSOON_ONEXIT_LEN 16
 #endif
 
 #define MONSOON_ONEXIT_UNUSED (void*)1
+
+#define MONSOON_FLAG_END 290
 #define MONSOON_INIT_COMPONENT 1000
 
 #define Component(x) MONSOON_INIT_COMPONENT,x
-#define MakeInit_Flags(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,0}
+#define MakeInit_Flags(...) (uint16_t*)(uint16_t[]){__VA_ARGS__,MONSOON_FLAG_END}
 
 // Initialized The Monsoon Library
 MONS_API MSBool MONSInit(uint16_t* Components,uint8_t LogLevel);
@@ -30,5 +33,7 @@ MONS_API MSBool MONS_RemoveOnExitFunction(ExitFunciton fn);
 
 //Get The Monsoon version
 MONS_API uint64_t MONS_GetVersion();
+
+void MONS_ExecuteFlags(uint16_t* Flags);
 
 #endif

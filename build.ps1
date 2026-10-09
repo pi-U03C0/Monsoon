@@ -36,7 +36,7 @@ $INCLUDE = "$OWD/include"
 $CFLAG = @("-std=c11","-Wall","-Wextra","-Wno-discarded-qualifiers","-Wno-unused-parameter")
 $TEST = "$OWD/Test"
 $TOOLS = "$OWD/Tools"
-$VERSION = 7
+$VERSION = 8
 
 $Verbose = $false
 
